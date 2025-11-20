@@ -1,0 +1,50 @@
+{
+  "recommendations": [
+    // React & Next.js
+    "dsznajder.es7-react-js-snippets",
+    
+    // Tailwind CSS
+    "bradlc.vscode-tailwindcss",
+    
+    // TypeScript
+    "ms-vscode.vscode-typescript-next",
+    
+    // ESLint
+    "dbaeumer.vscode-eslint",
+    
+    // Prettier
+    "esbenp.prettier-vscode",
+    
+    // Auto Import
+    "steoates.autoimport",
+    
+    // Path Intellisense
+    "christian-kohler.path-intellisense",
+    
+    // Console Ninja (Live console logs)
+    "wallabyjs.console-ninja",
+    
+    // Error Lens (Inline errors)
+    "usernamehw.errorlens",
+    
+    // GitLens (Git features)
+    "eamodio.gitlens",
+    
+    // Color Highlight
+    "naumovs.color-highlight",
+    
+    // Auto Rename Tag
+    "formulahendry.auto-rename-tag",
+    
+    // Indent Rainbow
+    "oderwat.indent-rainbow"
+  ]
+}
+
+
+
+
+
+
+
+

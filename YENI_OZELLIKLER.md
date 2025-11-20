@@ -259,3 +259,4 @@ Web sitesi artık:
 **Durum:** ✅ Temel özellikler tamamlandı - API entegrasyonu bekleniyor
 
 
+

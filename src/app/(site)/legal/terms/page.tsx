@@ -14,6 +14,9 @@ export default function TermsPage() {
             <span className="gradient-text">Kullanım Şartları</span>
           </h1>
           
+          <p className="text-xl text-text-muted italic max-w-2xl mx-auto border-l-4 border-primary pl-4 py-2 bg-white/5 rounded-r-xl">
+          &quot;Geleceği şekillendiren girişimcilerin yetiştiği topluluk&quot;
+        </p>
           <div className="prose prose-invert max-w-none space-y-8 text-text-secondary">
             <p className="text-lg">
               Son güncelleme: {new Date().toLocaleDateString('tr-TR')}
@@ -43,7 +46,7 @@ export default function TermsPage() {
             <div className="bg-[#0B0F1A] border border-white/10 rounded-2xl p-8 space-y-6">
               <h2 className="text-2xl font-bold text-white">3. Fikri Mülkiyet</h2>
               <p>
-                Bu web sitesindeki tüm içerik, tasarım ve materyaller Startup ve Finans Kulübü'ne aittir. 
+                Bu web sitesindeki tüm içerik, tasarım ve materyaller Startup ve Finans Kulübü&apos;ne aittir. 
                 İzinsiz kopyalama veya dağıtım yasaktır.
               </p>
             </div>
@@ -52,7 +55,7 @@ export default function TermsPage() {
               <h2 className="text-2xl font-bold text-white">4. Sorumluluk Reddi</h2>
               <p>
                 Web sitemizdeki bilgiler genel bilgilendirme amaçlıdır. Yatırım tavsiyesi değildir. 
-                Finansal kararlarınızı almadan önce profesyonel danışmanlık almanızı öneririz.
+                WhatsApp&apos;tan Sorularınızı almadan önce profesyonel danışmanlık almanızı öneririz.
               </p>
             </div>
 

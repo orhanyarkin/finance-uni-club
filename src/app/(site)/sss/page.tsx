@@ -128,7 +128,7 @@ export default function SSSPage() {
                 className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-bold transition-all duration-300 hover-lift"
               >
                 <MessageCircle className="w-5 h-5" />
-                WhatsApp'tan Sor
+                WhatsApp&apos;tan Sor
               </a>
             </div>
           </motion.div>

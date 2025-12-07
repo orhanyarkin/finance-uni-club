@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { ArrowRight, TrendingUp, Users, Calendar, Award, MapPin, Clock } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import Link from "next/link";
-
 import { urlFor } from "@/sanity/lib/image";
 
 interface HeroProps {

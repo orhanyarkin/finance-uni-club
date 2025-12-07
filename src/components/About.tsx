@@ -107,9 +107,9 @@ export default function About() {
               </div>
 
               <div className="bg-background-tertiary rounded-xl p-6">
-                <p className="text-text-secondary text-center italic">
-                  "Geleceği şekillendiren girişimcilerin yetiştiği topluluk"
-                </p>
+                <p className="text-xl text-text-muted italic max-w-2xl mx-auto border-l-4 border-primary pl-4 py-2 bg-white/5 rounded-r-xl">
+          &quot;Geleceği şekillendiren girişimcilerin yetiştiği topluluk&quot;
+        </p>
               </div>
             </div>
 

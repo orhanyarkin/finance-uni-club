@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import { User, Crown, DollarSign, FileText, Users2, Megaphone, Target, Calendar, Shield, Share2 } from "lucide-react";
-import Image from "next/image";
+
+
 
 interface TeamMember {
   name: string;
@@ -207,7 +208,7 @@ export default function Team() {
                       </div>
                     </div>
                   ) : (
-                    <div className="aspect-square overflow-hidden bg-gradient-to-br from-primary to-accent-cyan">
+                    <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-primary to-accent-cyan">
                       <img
                         src={member.photo}
                         alt={member.name}
@@ -294,7 +295,7 @@ export default function Team() {
                             </div>
                           ) : (
                             <div
-                              className={`w-32 h-32 rounded-full overflow-hidden border-4 border-transparent bg-gradient-to-r ${committee.color} p-1`}
+                              className={`relative w-32 h-32 rounded-full overflow-hidden border-4 border-transparent bg-gradient-to-r ${committee.color} p-1`}
                             >
                               <img
                                 src={member.photo}

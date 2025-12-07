@@ -5,6 +5,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useEffect, useState } from "react";
 
 export default function LanguageToggle() {
+  const { language, setLanguage } = useLanguage();
   const [mounted, setMounted] = useState(false);
   
   useEffect(() => {
@@ -16,8 +17,6 @@ export default function LanguageToggle() {
       <div className="w-14 h-8 bg-background-tertiary rounded-full border border-white/10" />
     );
   }
-
-  const { language, setLanguage } = useLanguage();
 
   return (
     <motion.button

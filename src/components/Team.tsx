@@ -123,7 +123,7 @@ export default function Team() {
         {
           name: "Özge Çoban",
           role: "Yönetim Kurulu Üyesi",
-          photo: "https://ui-avatars.com/api/?name=Ozge+Coban&background=F97316&color=fff&size=200",
+          photo: "https://ui-avatars.com/api/?name=Ozge+ZCoban&background=F97316&color=fff&size=200",
         },
         {
           name: "Yakında",

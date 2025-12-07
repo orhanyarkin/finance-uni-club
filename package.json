@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@sanity/image-url": "^2.0.2",
-    "@sanity/vision": "^4.20.3",
+    "@sanity/vision": "^3.50.0",
     "@tabler/icons-react": "^3.35.0",
     "clsx": "^2.1.1",
     "framer-motion": "^11.3.8",
@@ -22,7 +22,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "^9.0.1",
-    "sanity": "^4.20.3",
+    "sanity": "^3.50.0",
     "styled-components": "^6.1.19",
     "tailwind-merge": "^3.4.0"
   },

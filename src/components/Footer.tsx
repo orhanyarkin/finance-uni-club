@@ -1,80 +1,95 @@
 "use client";
 
-import { TrendingUp, Mail, Instagram, Linkedin, Twitter } from "lucide-react";
+import { Mail, Instagram, MessageCircle, MapPin } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   const footerLinks = {
-    company: [
-      { title: "Hakkımızda", href: "#about" },
-      { title: "Etkinlikler", href: "#events" },
-      { title: "Ekibimiz", href: "#team" },
-      { title: "İletişim", href: "#contact" },
+    club: [
+      { title: "Hakkımızda", href: "/about" },
+      { title: "Etkinlikler", href: "/events" },
+      { title: "Ekibimiz", href: "/about#team" },
+      { title: "İletişim", href: "https://chat.whatsapp.com/BTDpU4G758206p2s6JZlEc?mode=wwt", external: true },
     ],
     resources: [
-      { title: "Blog", href: "#" },
-      { title: "Haberler", href: "#" },
-      { title: "SSS", href: "#" },
-      { title: "Kaynaklar", href: "#" },
+      { title: "Blog", href: "/blog" },
+      { title: "Haberler", href: "#", comingSoon: true },
+      { title: "SSS", href: "/sss" },
+      { title: "Kaynaklar", href: "#", comingSoon: true },
     ],
     legal: [
-      { title: "Gizlilik Politikası", href: "#" },
-      { title: "Kullanım Şartları", href: "#" },
-      { title: "Çerez Politikası", href: "#" },
+      { title: "Gizlilik Politikası", href: "/legal/privacy" },
+      { title: "Kullanım Şartları", href: "/legal/terms" },
+      { title: "Çerez Politikası", href: "/legal/cookies" },
     ],
   };
 
   return (
-    <footer id="contact" className="bg-background-secondary border-t border-white/10">
+    <footer id="contact" className="bg-black border-t border-white/10 relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
-          {/* Brand */}
+          {/* Brand with Club Logo */}
           <div className="lg:col-span-2">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="bg-primary p-2 rounded-lg glow-effect">
-                <TrendingUp className="w-6 h-6 text-white" />
+            <Link href="/" className="flex items-center space-x-3 mb-6 group">
+              <div className="relative w-12 h-12 overflow-hidden shrink-0">
+                <Image
+                  src="/assets/images/club_logo.png"
+                  alt="Startup & Finans Topluluğu Logo"
+                  fill
+                  className="object-contain"
+                />
               </div>
-              <div>
-                <h3 className="text-xl font-bold">Startup & Finans</h3>
-                <p className="text-sm text-text-secondary">Kulübü</p>
-              </div>
-            </div>
-            <p className="text-text-secondary mb-6 leading-relaxed">
+              <span className="text-lg font-bold text-white group-hover:text-primary transition-colors">
+                Startup & Finans
+              </span>
+            </Link>
+            <p className="text-slate-400 mb-6 leading-relaxed font-normal text-sm">
               Girişimcilik ve finans dünyasında kariyer yapmak isteyen öğrencilerin 
               buluşma noktası. Geleceği birlikte inşa ediyoruz.
             </p>
+            <a 
+              href="https://maps.app.goo.gl/syUu7YhmeRPrmfjG7"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-start gap-2 text-slate-400 hover:text-white transition-colors mb-6 text-sm group/address"
+            >
+              <MapPin className="w-5 h-5 shrink-0 text-primary group-hover/address:text-red-500 transition-colors" />
+              <span>Hacı Bayram, Talatpaşa Blv No: 4, 06050 Altındağ/Ankara</span>
+            </a>
             <div className="flex space-x-4">
+              <a
+                href="https://maps.app.goo.gl/syUu7YhmeRPrmfjG7"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-slate-500 hover:text-red-500 transition-colors"
+                aria-label="Konum"
+              >
+                <MapPin className="w-5 h-5" />
+              </a>
               <a
                 href="https://www.instagram.com/startupvefinanstoplulugu"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-background-tertiary hover:bg-primary p-3 rounded-lg transition-all duration-300 hover-lift"
+                className="text-slate-500 hover:text-white transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram className="w-5 h-5" />
               </a>
               <a
-                href="#"
+                href="https://chat.whatsapp.com/BTDpU4G758206p2s6JZlEc?mode=wwt"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-background-tertiary hover:bg-primary p-3 rounded-lg transition-all duration-300 hover-lift"
-                aria-label="LinkedIn"
+                className="text-slate-500 hover:text-green-500 transition-colors"
+                aria-label="WhatsApp"
               >
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-background-tertiary hover:bg-primary p-3 rounded-lg transition-all duration-300 hover-lift"
-                aria-label="Twitter"
-              >
-                <Twitter className="w-5 h-5" />
+                <MessageCircle className="w-5 h-5" />
               </a>
               <a
                 href="mailto:startupvefinanstoplulugu@gmail.com"
-                className="bg-background-tertiary hover:bg-primary p-3 rounded-lg transition-all duration-300 hover-lift"
+                className="text-slate-500 hover:text-white transition-colors"
                 aria-label="E-posta"
               >
                 <Mail className="w-5 h-5" />
@@ -82,18 +97,29 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Links - Kurumsal */}
+          {/* Links - Kulübümüz */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Kurumsal</h4>
+            <h4 className="text-sm font-bold mb-6 text-white uppercase tracking-wider">Kulübümüz</h4>
             <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
+              {footerLinks.club.map((link) => (
                 <li key={link.title}>
-                  <a
-                    href={link.href}
-                    className="text-text-secondary hover:text-primary transition-colors"
-                  >
-                    {link.title}
-                  </a>
+                  {link.external ? (
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-slate-400 hover:text-primary transition-colors text-sm"
+                    >
+                      {link.title}
+                    </a>
+                  ) : (
+                    <Link
+                      href={link.href}
+                      className="text-slate-400 hover:text-primary transition-colors text-sm"
+                    >
+                      {link.title}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -101,16 +127,22 @@ export default function Footer() {
 
           {/* Links - Kaynaklar */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Kaynaklar</h4>
+            <h4 className="text-sm font-bold mb-6 text-white uppercase tracking-wider">Kaynaklar</h4>
             <ul className="space-y-3">
               {footerLinks.resources.map((link) => (
                 <li key={link.title}>
-                  <a
-                    href={link.href}
-                    className="text-text-secondary hover:text-primary transition-colors"
-                  >
-                    {link.title}
-                  </a>
+                  {link.comingSoon ? (
+                    <span className="text-slate-600 text-sm cursor-not-allowed">
+                      {link.title} <span className="text-xs">(Yakında)</span>
+                    </span>
+                  ) : (
+                    <Link
+                      href={link.href}
+                      className="text-slate-400 hover:text-primary transition-colors text-sm"
+                    >
+                      {link.title}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -118,57 +150,30 @@ export default function Footer() {
 
           {/* Links - Yasal */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Yasal</h4>
+            <h4 className="text-sm font-bold mb-6 text-white uppercase tracking-wider">Yasal</h4>
             <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
                 <li key={link.title}>
-                  <a
+                  <Link
                     href={link.href}
-                    className="text-text-secondary hover:text-primary transition-colors"
+                    className="text-slate-400 hover:text-primary transition-colors text-sm"
                   >
                     {link.title}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
         </div>
 
-        {/* Newsletter */}
-        <div className="glass-effect rounded-xl p-8 mb-12">
-          <div className="grid md:grid-cols-2 gap-6 items-center">
-            <div>
-              <h4 className="text-2xl font-bold mb-2">Bültene Abone Ol</h4>
-              <p className="text-text-secondary">
-                Etkinlikler ve haberlerden haberdar olmak için e-posta adresinizi bırakın.
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <input
-                type="email"
-                placeholder="E-posta adresiniz"
-                className="flex-1 bg-background-tertiary border border-white/10 rounded-lg px-4 py-3 text-white placeholder-text-muted focus:outline-none focus:border-primary transition-colors"
-              />
-              <a
-                href="https://chat.whatsapp.com/BTDpU4G758206p2s6JZlEc?mode=wwt"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover-lift whitespace-nowrap"
-              >
-                Kulübe Katıl
-              </a>
-            </div>
-          </div>
-        </div>
-
         {/* Bottom Bar */}
         <div className="border-t border-white/10 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-text-secondary text-sm">
+            <p className="text-slate-500 text-sm">
               © {currentYear} Startup ve Finans Kulübü. Tüm hakları saklıdır.
             </p>
-            <p className="text-text-secondary text-sm">
-              Made with ❤️ by Startup ve Finans Kulübü
+            <p className="text-slate-500 text-sm flex items-center gap-1">
+              Made with <span className="text-red-500">❤️</span> by Startup ve Finans Kulübü
             </p>
           </div>
         </div>
@@ -176,9 +181,3 @@ export default function Footer() {
     </footer>
   );
 }
-
-
-
-
-
-

@@ -35,10 +35,11 @@ export default function Team() {
       comingSoon: true,
     },
     {
-      name: "Melek Aloğlu",
+      name: "Yakında",
       role: "Sekreter",
-      photo:"https://ui-avatars.com/api/?name=Melek+Aloğlu&background=375BD2&color=fff&size=200",
+      photo:"",
       icon: FileText,
+      comingSoon: true,
     },
   ];
 

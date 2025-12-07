@@ -1,82 +1,94 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useTheme } from "next-themes";
+import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { urlFor } from "@/sanity/lib/image";
 
-export default function PartnerLogos() {
-  // Gerçek sponsor listesi - public/sponsors/sponsor/ klasöründen
-  // nameless_ ile başlayanlar sadece logo, diğerleri logo + isim
-  const partners = [
-    { name: "Devil's Coffee Shop", logo: "Devil's Coffee Shop.png", nameless: false },
-    { name: "Di Hola Coffe & Art", logo: "Di Hola Coffe & Art.png", nameless: false },
-    { name: "Hamart Atölye Cafe", logo: "Hamart Atölye Cafe.png", nameless: false },
-    { name: "Miniera Coffee", logo: "Miniera Coffee.png", nameless: false },
-    { name: "nameless_ekleristan", logo: "nameless_ekleristan.png", nameless: true },
-    { name: "nameless_fresh_pasta", logo: "nameless_fresh_pasta.png", nameless: true },
-    { name: "nameless_waffle_levent", logo: "nameless_waffle_levent.png", nameless: true },
-  ];
+interface PartnerLogosProps {
+  partners: any[];
+}
+
+export default function PartnerLogos({ partners }: PartnerLogosProps) {
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Duplicate partners array to ensure smooth infinite scroll
+  // If partners is empty or undefined, default to empty array to avoid crash
+  const safePartners = partners || [];
+  const allPartners = [...safePartners, ...safePartners, ...safePartners, ...safePartners];
+
+  if (!mounted) return null;
 
   return (
-    <section className="py-12 border-y border-white/10 bg-background-secondary/50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-8"
+    <section className="py-12 bg-background border-y border-text-muted/10 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 mb-8 text-center">
+      <div className="max-w-7xl mx-auto px-4 mb-8 text-center">
+        <Link 
+          href="/partnerships"
+          className="inline-flex items-center gap-2 text-text-secondary hover:text-primary transition-colors group"
         >
-          <p className="text-text-secondary text-sm uppercase tracking-wider">
-            İşbirliklerimiz
-          </p>
-        </motion.div>
-
-        {/* Infinite Scroll Animation */}
-        <div className="relative overflow-hidden">
-          <motion.div
-            animate={{
-              x: [0, -1920],
-            }}
-            transition={{
-              x: {
-                repeat: Infinity,
-                repeatType: "loop",
-                duration: 40,
-                ease: "linear",
-              },
-            }}
-            className="flex space-x-12 items-center"
-          >
-            {/* Double the partners array for seamless loop */}
-            {[...partners, ...partners].map((partner, index) => (
-              <div
-                key={`${partner.name}-${index}`}
-                className="flex-shrink-0 px-6 py-4 glass-effect rounded-xl min-w-[220px] hover:border-primary/50 hover:scale-105 transition-all duration-300 flex items-center justify-center group"
-              >
-                <div className="flex flex-col items-center justify-center gap-3 w-full">
-                  {/* Logo */}
-                  <div className="relative w-full h-20 flex items-center justify-center">
-                    <Image
-                      src={`/sponsors/sponsor/${partner.logo}`}
-                      alt={partner.nameless ? "İşbirliği Partneri" : partner.name}
-                      width={180}
-                      height={80}
-                      className="object-contain max-h-20 w-auto group-hover:scale-110 transition-transform duration-300"
-                    />
-                  </div>
-                  
-                  {/* İsim (sadece nameless olmayanlar için) */}
-                  {!partner.nameless && (
-                    <p className="text-text-secondary font-semibold text-sm text-center leading-tight">
-                      {partner.name}
-                    </p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </motion.div>
-        </div>
+          <span className="font-semibold text-sm uppercase tracking-wider">İşbirliklerimiz</span>
+        </Link>
       </div>
+      </div>
+      
+      <div className="relative flex overflow-hidden mask-gradient-x">
+        <motion.div
+          className="flex flex-nowrap gap-12 py-4 items-center w-max animate-scroll"
+        >
+          {allPartners.length > 0 && allPartners.map((partner, index) => (
+            <Link
+              href="/partnerships"
+              key={`${partner._id || partner.name}-${index}`}
+              className="flex-shrink-0 min-w-[150px] flex items-center justify-center group opacity-50 hover:opacity-100 transition-all duration-300 transform hover:scale-110 grayscale hover:grayscale-0"
+            >
+              <div className="flex flex-col items-center justify-center">
+                <a 
+                  key={`${partner._id}-${index}`}
+                  href={partner.website || '#'} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="relative w-32 h-16 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300 transform hover:scale-110 cursor-pointer block"
+                >
+                  {partner.logo && (
+                    <Image
+                      src={urlFor(partner.logo).url()}
+                      alt={partner.name}
+                      fill
+                      className="object-contain"
+                    />
+                  )}
+                </a>
+              </div>
+            </Link>
+          ))}
+        </motion.div>
+      </div>
+
+      <style jsx global>{`
+        .mask-gradient-x {
+          mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+          -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+        .animate-scroll {
+          animation: scroll 40s linear infinite;
+        }
+        @keyframes scroll {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-25%);
+          }
+        }
+      `}</style>
     </section>
   );
 }

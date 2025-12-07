@@ -4,12 +4,17 @@ import { motion } from "framer-motion";
 import { Calendar, Clock, ArrowRight, User } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { blogPosts } from "@/data/blogPosts";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { urlFor } from "@/sanity/lib/image";
 
-export default function BlogGrid({ limit }: { limit?: number }) {
+interface BlogGridProps {
+  limit?: number;
+  posts: any[];
+}
+
+export default function BlogGrid({ limit, posts }: BlogGridProps) {
   const { language, t } = useLanguage();
-  const posts = limit ? blogPosts.slice(0, limit) : blogPosts;
+  const displayPosts = limit ? posts.slice(0, limit) : posts;
 
   return (
     <section className="py-16 bg-background-secondary/30">
@@ -21,43 +26,50 @@ export default function BlogGrid({ limit }: { limit?: number }) {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            <span className="gradient-text">{t("blog.title")}</span>
-          </h2>
+          <Link href="/blog" className="group inline-flex items-center gap-2">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <span className="gradient-text group-hover:text-primary transition-colors">{t("blog.title")}</span>
+            </h2>
+            <ArrowRight className="w-8 h-8 text-primary opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+          </Link>
           <p className="text-lg text-text-secondary">
             {t("blog.subtitle")}
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {posts.map((post, index) => (
-            <motion.article
-              key={post.id}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {displayPosts.map((post, index) => (
+            <motion.div
+              key={post.slug.current}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="glass-effect rounded-xl overflow-hidden hover-lift group"
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="group flex flex-col h-full bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl hover:border-primary/50 transition-all duration-300 hover:-translate-y-1"
             >
               {/* Cover Image */}
               <div className="relative h-48 overflow-hidden bg-gradient-to-br from-primary to-accent-cyan">
-                <Image
-                  src={post.coverImage}
-                  alt={post.title[language]}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute top-4 left-4 bg-primary/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm text-white">
-                  {post.category}
-                </div>
+                {post.mainImage && (
+                  <Image
+                    src={urlFor(post.mainImage).url()}
+                    alt={post.title}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                )}
+                {post.categories && (
+                  <div className="absolute top-4 left-4 bg-white text-gray-900 font-semibold px-3 py-1 rounded-full text-sm shadow-sm">
+                    {post.categories}
+                  </div>
+                )}
               </div>
 
               {/* Content */}
-              <div className="p-6">
+              <div className="flex flex-col flex-grow p-6">
                 <div className="flex items-center gap-4 text-sm text-text-secondary mb-4">
                   <div className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
-                    <span>{new Date(post.date).toLocaleDateString(language)}</span>
+                    <span>{new Date(post.publishedAt).toLocaleDateString(language)}</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <Clock className="w-4 h-4" />
@@ -65,12 +77,12 @@ export default function BlogGrid({ limit }: { limit?: number }) {
                   </div>
                 </div>
 
-                <h3 className="text-xl font-bold text-text-primary mb-3 line-clamp-2 group-hover:text-primary transition-colors">
-                  {post.title[language]}
+                <h3 className="text-xl font-bold text-text-primary mb-3 line-clamp-2 group-hover:text-primary transition-colors min-h-[56px]">
+                  {post.title}
                 </h3>
 
-                <p className="text-text-secondary mb-4 line-clamp-3">
-                  {post.excerpt[language]}
+                <p className="text-text-secondary mb-4 line-clamp-3 min-h-[72px]">
+                  {post.excerpt}
                 </p>
 
                 <div className="flex items-center justify-between">
@@ -80,7 +92,7 @@ export default function BlogGrid({ limit }: { limit?: number }) {
                   </div>
 
                   <Link
-                    href={`/blog/${post.slug}`}
+                    href={`/blog/${post.slug.current}`}
                     className="flex items-center gap-2 text-primary hover:text-primary-light transition-colors font-semibold"
                   >
                     {t("blog.readMore")}
@@ -88,27 +100,9 @@ export default function BlogGrid({ limit }: { limit?: number }) {
                   </Link>
                 </div>
               </div>
-            </motion.article>
+            </motion.div>
           ))}
         </div>
-
-        {limit && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-center mt-12"
-          >
-            <Link
-              href="/blog"
-              className="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 hover-lift glow-effect"
-            >
-              Tüm Yazıları Gör
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-          </motion.div>
-        )}
       </div>
     </section>
   );

@@ -4,33 +4,96 @@
 
 @layer base {
   * {
-    @apply border-text-muted/20;
+    @apply border-gray-200 dark:border-white/10;
+  }
+  
+  :root {
+    /* Light Mode - Clean & Crisp */
+    --background: #ffffff;
+    --background-secondary: #f8fafc; /* Slate 50 */
+    --background-tertiary: #f1f5f9; /* Slate 100 */
+    --text-primary: #0f172a; /* Slate 900 */
+    --text-secondary: #475569; /* Slate 600 */
+    --text-muted: #94a3b8; /* Slate 400 */
+    --primary: #2563eb; /* Royal Blue 600 */
+    --primary-light: #3b82f6; /* Royal Blue 500 */
+    --primary-dark: #1d4ed8; /* Royal Blue 700 */
+    --secondary: #0ea5e9; /* Sky 500 */
+    --secondary-light: #38bdf8;
+  }
+
+  .dark {
+    /* Dark Mode - Deep & Professional */
+    --background: #020617; /* Slate 950 */
+    --background-secondary: #0f172a; /* Slate 900 */
+    --background-tertiary: #1e293b; /* Slate 800 */
+    --text-primary: #f8fafc; /* Slate 50 */
+    --text-secondary: #cbd5e1; /* Slate 300 */
+    --text-muted: #64748b; /* Slate 500 */
+    --primary: #3b82f6; /* Blue 500 */
+    --primary-light: #60a5fa; /* Blue 400 */
+    --primary-dark: #2563eb; /* Blue 600 */
+    --secondary: #38bdf8; /* Sky 400 */
+    --secondary-light: #7dd3fc;
   }
   
   body {
-    @apply bg-background text-text-primary;
+    @apply bg-background text-text-primary relative antialiased selection:bg-blue-600 selection:text-white transition-colors duration-300;
+  }
+
+  /* Clean Grid Background Pattern */
+  body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      linear-gradient(to right, rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(circle at center top, black 40%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Top Radial Glow - Blue Accent */
+  body::after {
+    content: "";
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 60%;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, transparent 70%);
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Dark Mode Adjustments for Glow */
+  .dark body::after {
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-bold;
+    @apply font-heading font-bold text-text-primary tracking-tight;
   }
 }
 
 @layer utilities {
   .gradient-text {
-    @apply bg-gradient-to-r from-primary-light via-accent-cyan to-primary bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent;
   }
 
-  .glass-effect {
-    @apply bg-background-secondary/50 backdrop-blur-lg border border-white/10;
+  .keynote-card {
+    @apply bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300;
   }
 
-  .hover-lift {
-    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl;
-  }
-
-  .glow-effect {
-    box-shadow: 0 0 20px rgba(55, 91, 210, 0.3);
+  .keynote-nav {
+    @apply bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800;
   }
 }
 
@@ -40,16 +103,17 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #0B0F1E;
+  background: var(--background);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #375BD2;
+  background: var(--background-tertiary);
   border-radius: 5px;
+  border: 2px solid var(--background);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #4A6FE8;
+  background: var(--primary);
 }
 
 

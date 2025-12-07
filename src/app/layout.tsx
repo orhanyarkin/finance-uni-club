@@ -1,39 +1,75 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-import { LanguageProvider } from "@/contexts/LanguageContext";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Inter, Outfit, Plus_Jakarta_Sans } from "next/font/google"; // Keep fonts if used globally, or move to site layout
+import { Metadata } from "next";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
+const plusJakarta = Plus_Jakarta_Sans({ 
+  subsets: ["latin"], 
+  variable: "--font-plus-jakarta",
+});
 
 export const metadata: Metadata = {
-  title: "Startup ve Finans Kulübü - Üniversite Topluluğu",
-  description: "Startup dünyası ve finans sektörüne meraklı öğrencilerin buluşma noktası. Workshoplar, networking etkinlikleri ve daha fazlası.",
-  keywords: "startup, finans, üniversite, kulüp, girişimcilik, yatırım, blockchain, fintech",
+  metadataBase: new URL("https://startupvefinanstoplulugu.com"),
+  title: {
+    default: "Startup & Finans Topluluğu",
+    template: "%s | Startup & Finans Topluluğu",
+  },
+  description: "Ankara Medipol Üniversitesi Startup ve Finans Kulübü. Geleceğin girişimcilerini ve finans liderlerini yetiştiren öğrenci topluluğu.",
+  keywords: ["startup", "finans", "girişimcilik", "öğrenci kulübü", "ankara", "medipol", "fintech", "yatırım", "borsa"],
+  authors: [{ name: "Startup ve Finans Topluluğu" }],
+  creator: "Startup ve Finans Topluluğu",
+  publisher: "Startup ve Finans Topluluğu",
+  icons: {
+    icon: "/assets/images/club_logo.png",
+    apple: "/assets/images/club_logo.png",
+  },
+  openGraph: {
+    type: "website",
+    locale: "tr_TR",
+    url: "https://startupvefinanstoplulugu.com",
+    title: "Startup & Finans Topluluğu",
+    description: "Ankara Medipol Üniversitesi Startup ve Finans Kulübü. Geleceğin girişimcilerini ve finans liderlerini yetiştiren öğrenci topluluğu.",
+    siteName: "Startup & Finans Topluluğu",
+    images: [
+      {
+        url: "/assets/images/club_logo.png",
+        width: 800,
+        height: 600,
+        alt: "Startup & Finans Topluluğu Logo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Startup & Finans Topluluğu",
+    description: "Geleceğin girişimcilerini yetiştiriyoruz.",
+    images: ["/assets/images/club_logo.png"],
+    creator: "@startupvefinans",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="tr" className="scroll-smooth">
-      <body className={`${inter.className} bg-background text-text-primary antialiased`}>
-        <LanguageProvider>
-          <Navbar />
-          {children}
-          <Footer />
-        </LanguageProvider>
+    <html lang="tr" suppressHydrationWarning>
+      <body className={`${inter.variable} ${outfit.variable} ${plusJakarta.variable} font-sans antialiased`}>
+        {children}
       </body>
     </html>
   );
 }
-
-
-
-
-
-
-

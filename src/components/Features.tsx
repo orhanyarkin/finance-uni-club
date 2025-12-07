@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Lightbulb, Users2, BookOpen, Rocket, Network, Trophy } from "lucide-react";
+import { Lightbulb, Users2, BookOpen, Rocket, Network, Tag } from "lucide-react";
 
 export default function Features() {
   const features = [
@@ -22,8 +22,8 @@ export default function Features() {
     },
     {
       icon: Rocket,
-      title: "Startup Projelerine Destek",
-      description: "Kendi startup projenizi hayata geçirmek için gerekli destek ve kaynakları bulun.",
+      title: "Girişimcilik Desteği",
+      description: "Etkinliklerimizde deneyimli girişimcilerin tecrübelerini dinleyin, fikir edinin ve bağlantılar kurun.",
     },
     {
       icon: Network,
@@ -31,9 +31,9 @@ export default function Features() {
       description: "Finans ve teknoloji sektöründeki lider şirketlerle iş birliği imkanları.",
     },
     {
-      icon: Trophy,
-      title: "Yarışma ve Hackathonlar",
-      description: "Yeteneklerinizi sergileyin, ödüller kazanın ve kariyerinize değer katın.",
+      icon: Tag,
+      title: "Üyelere Özel İndirimler",
+      description: "Anlaşmalı iş ortaklarımızda özel indirimler ve ayrıcalıklardan yararlanın.",
     },
   ];
 

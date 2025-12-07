@@ -1,120 +1,186 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, TrendingUp, Users, Calendar, Award, MapPin, Clock } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import Link from "next/link";
 
-export default function Hero() {
+import { urlFor } from "@/sanity/lib/image";
+
+interface HeroProps {
+  featuredEvent?: any;
+}
+
+export default function Hero({ featuredEvent }: HeroProps) {
   const { t } = useLanguage();
   
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Animated Background */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-cyan/20 rounded-full blur-3xl animate-float" style={{ animationDelay: "1s" }}></div>
-      </div>
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-28 sm:pt-24 lg:pt-20">
+      {/* Keynote style is cleaner, relying on the global gradient */}
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+        <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+          
+          {/* Left Content */}
+          <div className="flex-1 text-center lg:text-left">
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center">
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center space-x-2 bg-primary/10 border border-primary/30 px-4 py-2 rounded-full mb-8"
-          >
-            <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm text-text-secondary">{t("hero.subtitle")}</span>
-          </motion.div>
-
-          {/* Main Heading */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
-          >
-            {t("hero.title1")}{" "}
-            <span className="gradient-text">
-              {t("hero.title2")}
-            </span>
-            <br />
-            {t("hero.title3")}
-          </motion.h1>
-
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-xl md:text-2xl text-text-secondary mb-12 max-w-3xl mx-auto"
-          >
-            {t("hero.subtitle")}
-          </motion.p>
-
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
-          >
-            <a
-              href="https://chat.whatsapp.com/BTDpU4G758206p2s6JZlEc?mode=wwt"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 hover-lift glow-effect flex items-center space-x-2 w-full sm:w-auto justify-center"
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold text-white mb-6 sm:mb-8 leading-[1.1] tracking-tighter"
             >
-              <span>{t("hero.cta1")}</span>
-              <ArrowRight className="w-5 h-5" />
-            </a>
-            <a
-              href="#events"
-              className="glass-effect hover:bg-background-tertiary text-text-primary px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 hover-lift w-full sm:w-auto text-center"
-            >
-              {t("hero.cta2")}
-            </a>
-          </motion.div>
+              {t("hero.title1")}{" "}
+              <span className="text-primary">
+                {t("hero.title2")}
+              </span>
+              <br />
+              {t("hero.title3")}
+            </motion.h1>
 
-          {/* Stats Preview */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="grid grid-cols-3 gap-8 mt-20 max-w-2xl mx-auto"
-          >
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">200+</div>
-              <div className="text-sm text-text-secondary">{t("hero.stat1")}</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">30+</div>
-              <div className="text-sm text-text-secondary">{t("hero.stat2")}</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">10+</div>
-              <div className="text-sm text-text-secondary">{t("hero.stat3")}</div>
-            </div>
-          </motion.div>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-lg sm:text-xl md:text-2xl text-slate-400 mb-8 sm:mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light"
+            >
+              {t("hero.subtitle")}
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="flex flex-col sm:flex-row items-center gap-6 justify-center lg:justify-start"
+            >
+              <a
+                href="https://chat.whatsapp.com/BTDpU4G758206p2s6JZlEc?mode=wwt"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-primary hover:bg-primary-dark text-white px-10 py-4 rounded-full text-lg font-bold transition-all duration-300 shadow-lg shadow-primary/25 flex items-center space-x-2 w-full sm:w-auto justify-center"
+              >
+                <span>{t("hero.cta1")}</span>
+                <ArrowRight className="w-5 h-5" />
+              </a>
+              <a
+                href="#events"
+                className="text-white hover:text-primary px-8 py-4 rounded-full text-lg font-medium transition-all duration-300 w-full sm:w-auto text-center border border-white/10 hover:border-primary/50 hover:bg-white/5"
+              >
+                {t("hero.cta2")}
+              </a>
+            </motion.div>
+
+            {/* Trust Indicators - Minimalist */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              className="mt-10 sm:mt-16 flex items-center justify-center lg:justify-start gap-6 sm:gap-12 text-slate-500"
+            >
+              <div className="text-center lg:text-left">
+                <div className="text-2xl sm:text-3xl font-bold text-white mb-1">200+</div>
+                <div className="text-xs sm:text-sm uppercase tracking-wider">Aktif Üye</div>
+              </div>
+              <div className="w-px h-12 bg-white/10"></div>
+              <div className="text-center lg:text-left">
+                <div className="text-2xl sm:text-3xl font-bold text-white mb-1">30+</div>
+                <div className="text-xs sm:text-sm uppercase tracking-wider">Etkinlik</div>
+              </div>
+              <div className="w-px h-12 bg-white/10"></div>
+              <div className="text-center lg:text-left">
+                <div className="text-2xl sm:text-3xl font-bold text-white mb-1">10+</div>
+                <div className="text-xs sm:text-sm uppercase tracking-wider">Partner</div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Right Visual - Keynote Style Card */}
+          {featuredEvent && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="flex-1 w-full max-w-lg lg:max-w-none relative"
+            >
+              {/* Main Card - Solid Dark with Border */}
+              <div className="relative bg-[#0B0F1A] border border-white/10 rounded-3xl overflow-hidden shadow-2xl group">
+                {/* Card Header Image Placeholder */}
+                <div className="h-48 bg-gradient-to-br from-primary/20 to-purple-900/20 relative overflow-hidden">
+                  {featuredEvent.image && (
+                    <div className="absolute inset-0">
+                      <img 
+                        src={urlFor(featuredEvent.image).url()} 
+                        alt={featuredEvent.title} 
+                        className="w-full h-full object-cover opacity-60" 
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F1A] to-transparent"></div>
+                    </div>
+                  )}
+                  <div className="absolute bottom-4 left-6">
+                    <span className="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Öne Çıkan Etkinlik</span>
+                  </div>
+                </div>
+                
+                <div className="p-5 sm:p-8 relative z-10">
+                  <div className="flex justify-between items-start mb-6">
+                    <Link href={`/events/${featuredEvent.slug?.current}`}>
+                      <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white leading-tight hover:text-primary transition-colors cursor-pointer">{featuredEvent.title}</h3>
+                    </Link>
+                  </div>
+
+                  {/* Event Details - Clean List */}
+                  <div className="space-y-5 mb-8">
+                    <div className="flex items-center gap-4 text-slate-300 group/item">
+                      <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover/item:bg-primary/20 transition-colors">
+                        <Clock className="w-5 h-5 text-primary" />
+                      </div>
+                      <div>
+                        <div className="text-sm text-slate-500">Zaman</div>
+                        <div className="font-medium">
+                          {new Date(featuredEvent.date).toLocaleDateString("tr-TR", { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 text-slate-300 group/item">
+                      <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover/item:bg-primary/20 transition-colors">
+                        <MapPin className="w-5 h-5 text-primary" />
+                      </div>
+                      <div>
+                        <div className="text-sm text-slate-500">Lokasyon</div>
+                        <div className="font-medium relative z-20">
+                          {featuredEvent.locationLink ? (
+                            <a 
+                              href={featuredEvent.locationLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="hover:text-primary transition-colors hover:underline block"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {featuredEvent.location}
+                            </a>
+                          ) : (
+                            <span>{featuredEvent.location}</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action */}
+                  <a href={featuredEvent.registrationLink || "#"} target="_blank" className="w-full bg-white text-black py-4 rounded-xl font-bold hover:bg-slate-200 transition-colors flex items-center justify-center gap-2 group/btn">
+                    Kayıt Ol
+                    <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                  </a>
+                </div>
+              </div>
+              
+              {/* Decorative Elements - Minimalist */}
+              <div className="absolute -top-4 -right-4 w-full h-full border border-white/5 rounded-3xl -z-10"></div>
+              <div className="absolute -bottom-4 -left-4 w-full h-full border border-white/5 rounded-3xl -z-20"></div>
+            </motion.div>
+          )}
         </div>
       </div>
-
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 1 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-      >
-        <div className="w-6 h-10 border-2 border-text-muted rounded-full flex items-start justify-center p-2">
-          <motion.div
-            animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="w-1 h-2 bg-primary rounded-full"
-          ></motion.div>
-        </div>
-      </motion.div>
     </section>
   );
 }

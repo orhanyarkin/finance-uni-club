@@ -19,14 +19,15 @@ export default function About() {
               Hakkımızda
             </h2>
             <p className="text-xl text-text-secondary mb-8 leading-relaxed">
-              Startup ve Finans Topluluğu, girişimcilik ruhu taşıyan ve finans dünyasına ilgi duyan 
-              üniversite öğrencilerinin bir araya geldiği dinamik bir topluluktur.
+              Ankara Medipol Üniversitesi Start-up ve Finans Topluluğu, finans, işletme, teknoloji, 
+              sağlık ve girişimcilik gibi alanlarda kendini geliştirmek isteyen öğrencileri bir araya 
+              getiren dinamik ve yenilikçi bir öğrenci topluluğudur.
             </p>
             <p className="text-lg text-text-secondary mb-8 leading-relaxed">
-              2023 yılında kurulan topluluğumuz, bugüne kadar 200'den fazla öğrenciye ulaşmış 
-              ve 30'dan fazla başarılı etkinlik düzenlemiştir. Amacımız, üyelerimize teorik bilginin 
-              yanı sıra pratik deneyim kazandırmak ve sektör ile güçlü bağlantılar kurmalarına 
-              yardımcı olmaktır.
+              Sektör profesyonelleriyle buluşmalar, finansal okuryazarlık eğitimleri, teknik geziler, 
+              iş ve staj imkanları, interaktif workshoplar ve geniş network olanakları sunarak 
+              öğrencilerin hem teorik bilgilerini artırmalarına hem de pratik deneyim kazanmalarına 
+              destek oluyoruz.
             </p>
 
             <div className="space-y-6">
@@ -37,8 +38,9 @@ export default function About() {
                 <div>
                   <h3 className="text-xl font-semibold mb-2">Misyonumuz</h3>
                   <p className="text-text-secondary">
-                    Öğrencilere girişimcilik ve finans alanında kaliteli eğitim, mentörlük ve 
-                    networking imkanları sunarak kariyer gelişimlerine katkı sağlamak.
+                    Üyelerimizin finans, teknoloji ve girişimcilik alanlarındaki gelişmeleri yakından 
+                    takip etmelerini sağlamak, onları iş dünyasına hazırlamak ve kariyer yolculuklarında 
+                    rehberlik etmek.
                   </p>
                 </div>
               </div>
@@ -50,8 +52,8 @@ export default function About() {
                 <div>
                   <h3 className="text-xl font-semibold mb-2">Vizyonumuz</h3>
                   <p className="text-text-secondary">
-                    Türkiye'nin en etkili öğrenci topluluklarından biri olarak, geleceğin 
-                    girişimcilerini ve finans liderlerini yetiştirmek.
+                    Girişimcilik ve finans dünyasına ilgi duyan herkesin kendini geliştirebileceği, 
+                    bilgiye ulaşabileceği ve değerli bağlantılar kurabileceği bir ortam oluşturmak.
                   </p>
                 </div>
               </div>
@@ -63,8 +65,8 @@ export default function About() {
                 <div>
                   <h3 className="text-xl font-semibold mb-2">Değerlerimiz</h3>
                   <p className="text-text-secondary">
-                    Yenilikçilik, iş birliği, sürekli öğrenme ve topluma değer katma 
-                    ilkelerini benimsiyoruz.
+                    Finansal okuryazarlık, sürekli öğrenme, iş birliği, yenilikçilik ve 
+                    topluma değer katma ilkelerini benimsiyoruz.
                   </p>
                 </div>
               </div>
@@ -106,7 +108,7 @@ export default function About() {
 
               <div className="bg-background-tertiary rounded-xl p-6">
                 <p className="text-text-secondary text-center italic">
-                  "Geleceği şekillendiren öğrencilerin buluşma noktası"
+                  "Geleceği şekillendiren girişimcilerin yetiştiği topluluk"
                 </p>
               </div>
             </div>

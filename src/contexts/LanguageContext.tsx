@@ -22,13 +22,14 @@ const translations = {
     "nav.events": "Etkinlikler",
     "nav.team": "Ekibimiz",
     "nav.contact": "İletişim",
+    "nav.partnerships": "İşbirliklerimiz",
     "nav.joinClub": "Kulübe Katıl",
     
     // Hero
     "hero.title1": "Geleceğin",
     "hero.title2": "Girişimcilerini",
     "hero.title3": "Bugün Yetiştiriyoruz",
-    "hero.subtitle": "Startup ekosistemi ve finans dünyasında kariyer yapmak isteyen öğrencilerin buluşma noktası. Workshoplar, mentörlük programları ve networking etkinlikleriyle yolunuzu aydınlatıyoruz.",
+    "hero.subtitle": "Finans, işletme, teknoloji ve girişimcilik alanlarında kendini geliştirmek isteyen öğrencilerin buluşma noktası. Eğitimler, mentörlük programları ve networking etkinlikleriyle kariyer yolculuğunuzda yanınızdayız.",
     "hero.cta1": "Kulübe Katıl",
     "hero.cta2": "Etkinlikleri Keşfet",
     "hero.stat1": "Toplam Üye",
@@ -50,7 +51,7 @@ const translations = {
     "finance.subtitle": "Borsa İstanbul ve döviz kurları",
     
     // Footer
-    "footer.description": "Girişimcilik ve finans dünyasında kariyer yapmak isteyen öğrencilerin buluşma noktası. Geleceği birlikte inşa ediyoruz.",
+    "footer.description": "Finans, teknoloji ve girişimcilik alanlarında kendini geliştirmek isteyen öğrencilerin buluşma noktası. Geleceği birlikte inşa ediyoruz.",
     "footer.newsletter": "Bültene Abone Ol",
     "footer.newsletterDesc": "Etkinlikler ve haberlerden haberdar olmak için e-posta adresinizi bırakın.",
     "footer.copyright": "Tüm hakları saklıdır.",
@@ -63,6 +64,7 @@ const translations = {
     "nav.events": "Events",
     "nav.team": "Team",
     "nav.contact": "Contact",
+    "nav.partnerships": "Partnerships",
     "nav.joinClub": "Join Club",
     
     // Hero

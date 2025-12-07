@@ -1,6 +1,5 @@
 import About from "@/components/About";
 import Team from "@/components/Team";
-import PartnerLogos from "@/components/PartnerLogos";
 import Features from "@/components/Features";
 
 export const metadata = {
@@ -14,10 +13,6 @@ export default function AboutPage() {
       <About />
       <Team />
       <Features />
-      <PartnerLogos />
     </main>
   );
 }
-
-
-

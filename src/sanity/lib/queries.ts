@@ -74,7 +74,10 @@ export const TEAM_QUERY = groq`*[_type == "teamMember"] | order(order asc) {
   role,
   image,
   linkedin,
-  twitter
+  twitter,
+  committee,
+  comingSoon,
+  order
 }`;
 
 // Get ALL events for the events page

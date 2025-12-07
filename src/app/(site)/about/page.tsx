@@ -7,11 +7,18 @@ export const metadata = {
   description: "Startup ve Finans Kulübü hakkında bilgi edinin. Ekibimiz, misyonumuz ve değerlerimiz.",
 };
 
-export default function AboutPage() {
+import { client } from "@/sanity/lib/client";
+import { TEAM_QUERY } from "@/sanity/lib/queries";
+
+export const revalidate = 0;
+
+export default async function AboutPage() {
+  const teamMembers = await client.fetch(TEAM_QUERY);
+
   return (
     <main className="min-h-screen pt-20">
       <About />
-      <Team />
+      <Team members={teamMembers} />
       <Features />
     </main>
   );

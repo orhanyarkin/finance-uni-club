@@ -34,6 +34,28 @@ export const teamMember = defineType({
       type: 'url',
     }),
     defineField({
+      name: 'committee',
+      title: 'Komite / Grup',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Yönetim Kurulu', value: 'Board' },
+          { title: 'Kurumsal İletişim', value: 'Kurumsal İletişim' },
+          { title: 'Sponsorluk', value: 'Sponsorluk' },
+          { title: 'Etkinlik', value: 'Etkinlik' },
+          { title: 'Denetim Kurulu', value: 'Denetim Kurulu' },
+          { title: 'Sosyal Medya', value: 'Sosyal Medya' },
+        ],
+      },
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'comingSoon',
+      title: 'Yakında Gelecek (Placeholder)',
+      type: 'boolean',
+      initialValue: false,
+    }),
+    defineField({
       name: 'order',
       title: 'Sıralama (Küçükten büyüğe)',
       type: 'number',

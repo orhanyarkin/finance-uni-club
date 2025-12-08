@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { Share2, Check, Copy, Instagram, MessageCircle } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Share2, Check, Copy, MessageCircle } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 // X (Twitter) icon - custom since lucide doesn't have the new X logo
 const XIcon = () => (
@@ -10,13 +11,23 @@ const XIcon = () => (
   </svg>
 );
 
+// Instagram Icon - Custom SVG to ensure visibility
+const InstagramIcon = () => (
+  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+  </svg>
+);
+
 interface ShareButtonProps {
   title?: string;
 }
 
-export default function ShareButton({ title = "Bu etkinliği paylaş" }: ShareButtonProps) {
+export default function ShareButton({ title = "Bu içeriği paylaş" }: ShareButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const handleCopy = async () => {
     try {
@@ -30,6 +41,22 @@ export default function ShareButton({ title = "Bu etkinliği paylaş" }: ShareBu
       console.error("Kopyalama başarısız:", err);
     }
   };
+
+  // Close when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   const shareUrl = typeof window !== "undefined" ? window.location.href : "";
   const shareText = title;
@@ -49,37 +76,35 @@ export default function ShareButton({ title = "Bu etkinliği paylaş" }: ShareBu
     },
     {
       name: "Instagram",
-      icon: <Instagram className="w-5 h-5" />,
+      icon: <InstagramIcon />,
       color: "hover:bg-pink-500/20 hover:text-pink-400",
-      // Instagram doesn't support direct sharing via URL, so we copy the link
       action: handleCopy,
       note: "(Link kopyalanır)",
     },
   ];
 
   return (
-    <div className="relative">
+    <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full py-3 rounded-xl font-medium border border-white/10 hover:bg-white/5 transition-colors flex items-center justify-center gap-2 text-text-secondary"
+        className="w-full py-3 rounded-xl font-medium border border-white/10 hover:bg-white/5 transition-colors flex items-center justify-center gap-2 text-text-secondary active:scale-95 duration-200"
       >
         <Share2 className="w-4 h-4" />
         Paylaş
       </button>
 
       {/* Dropdown Menu */}
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <div 
-            className="fixed inset-0 z-40" 
-            onClick={() => setIsOpen(false)}
-          />
-          
-          {/* Menu */}
-          <div className="absolute bottom-full left-0 right-0 mb-2 bg-[#0B0F1A] border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50">
-            <div className="p-3 border-b border-white/10">
-              <p className="text-xs text-text-muted text-center">Paylaşım Seçenekleri</p>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="absolute bottom-full left-0 mb-3 w-64 bg-[#0B0F1A] border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden"
+          >
+            <div className="p-3 border-b border-white/10 bg-white/5">
+              <p className="text-xs font-medium text-text-muted text-center uppercase tracking-wider">Paylaşım Seçenekleri</p>
             </div>
             
             <div className="p-2 space-y-1">
@@ -89,38 +114,50 @@ export default function ShareButton({ title = "Bu etkinliği paylaş" }: ShareBu
                   href={option.action ? undefined : option.url}
                   target={option.action ? undefined : "_blank"}
                   rel="noopener noreferrer"
-                  onClick={option.action ? option.action : undefined}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors cursor-pointer text-text-secondary ${option.color}`}
+                  onClick={(e) => {
+                    if (option.action) {
+                      e.preventDefault();
+                      option.action();
+                    } else {
+                      setIsOpen(false);
+                    }
+                  }}
+                  className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all cursor-pointer text-text-secondary group ${option.color}`}
                 >
-                  {option.icon}
-                  <span className="flex-1">{option.name}</span>
-                  {option.note && (
-                    <span className="text-xs text-text-muted">{option.note}</span>
-                  )}
+                  <div className="shrink-0 transition-transform group-hover:scale-110">
+                    {option.icon}
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-sm font-medium leading-none">{option.name}</span>
+                    {option.note && (
+                      <span className="text-[10px] text-text-muted mt-1">{option.note}</span>
+                    )}
+                  </div>
                 </a>
               ))}
               
+              <div className="h-px bg-white/5 my-1" />
+
               {/* Copy Link */}
               <button
                 onClick={handleCopy}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-text-secondary hover:bg-primary/20 hover:text-primary"
+                className="w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all text-text-secondary hover:bg-primary/10 hover:text-primary group"
               >
-                {copied ? (
-                  <>
+                <div className="shrink-0 transition-transform group-hover:scale-110">
+                  {copied ? (
                     <Check className="w-5 h-5 text-green-500" />
-                    <span className="text-green-500">Kopyalandı!</span>
-                  </>
-                ) : (
-                  <>
+                  ) : (
                     <Copy className="w-5 h-5" />
-                    <span>Linki Kopyala</span>
-                  </>
-                )}
+                  )}
+                </div>
+                <span className="text-sm font-medium">
+                  {copied ? "Kopyalandı!" : "Linki Kopyala"}
+                </span>
               </button>
             </div>
-          </div>
-        </>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

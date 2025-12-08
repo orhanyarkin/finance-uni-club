@@ -1,15 +1,19 @@
 import { notFound } from "next/navigation";
-import { blogPosts } from "@/data/blogPosts";
 import BlogPostDetail from "@/components/BlogPostDetail";
+import { client } from "@/sanity/lib/client";
+import { POST_QUERY, POSTS_QUERY } from "@/sanity/lib/queries";
+
+export const revalidate = 60; // Revalidate every minute
 
 export async function generateStaticParams() {
-  return blogPosts.map((post) => ({
-    slug: post.slug,
-  }));
+    const posts = await client.fetch(POSTS_QUERY);
+    return posts.map((post: any) => ({
+        slug: post.slug.current,
+    }));
 }
 
-export default function BlogPost({ params }: { params: { slug: string } }) {
-  const post = blogPosts.find((p) => p.slug === params.slug);
+export default async function BlogPost({ params }: { params: { slug: string } }) {
+  const post = await client.fetch(POST_QUERY, { slug: params.slug });
 
   if (!post) {
     notFound();

@@ -48,7 +48,7 @@ export default function BlogGrid({ limit, posts }: BlogGridProps) {
               className="group flex flex-col h-full bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl hover:border-primary/50 transition-all duration-300 hover:-translate-y-1"
             >
               {/* Cover Image */}
-              <div className="relative h-48 overflow-hidden bg-gradient-to-br from-primary to-accent-cyan">
+              <Link href={`/blog/${post.slug.current}`} className="block relative h-48 overflow-hidden bg-gradient-to-br from-primary to-accent-cyan cursor-pointer">
                 {post.mainImage && (
                   <Image
                     src={urlFor(post.mainImage).url()}
@@ -58,11 +58,11 @@ export default function BlogGrid({ limit, posts }: BlogGridProps) {
                   />
                 )}
                 {post.categories && (
-                  <div className="absolute top-4 left-4 bg-white text-gray-900 font-semibold px-3 py-1 rounded-full text-sm shadow-sm">
+                  <div className="absolute top-4 left-4 bg-white text-gray-900 font-semibold px-3 py-1 rounded-full text-sm shadow-sm z-10">
                     {post.categories}
                   </div>
                 )}
-              </div>
+              </Link>
 
               {/* Content */}
               <div className="flex flex-col flex-grow p-6">
@@ -77,9 +77,11 @@ export default function BlogGrid({ limit, posts }: BlogGridProps) {
                   </div>
                 </div>
 
-                <h3 className="text-xl font-bold text-text-primary mb-3 line-clamp-2 group-hover:text-primary transition-colors min-h-[56px]">
-                  {post.title}
-                </h3>
+                <Link href={`/blog/${post.slug.current}`} className="block group-hover:text-primary transition-colors">
+                  <h3 className="text-xl font-bold text-text-primary mb-3 line-clamp-2 min-h-[56px]">
+                    {post.title}
+                  </h3>
+                </Link>
 
                 <p className="text-text-secondary mb-4 line-clamp-3 min-h-[72px]">
                   {post.excerpt}

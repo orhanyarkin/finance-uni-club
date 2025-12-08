@@ -109,3 +109,15 @@ export const EVENT_BY_SLUG_QUERY = groq`*[_type == "event" && slug.current == $s
   category,
   participants
 }`;
+
+// Get latest content for Navbar
+export const NAVBAR_CONTENT_QUERY = groq`{
+  "latestPost": *[_type == "post" && defined(slug.current)] | order(publishedAt desc)[0] {
+    title,
+    slug
+  },
+  "latestEvent": *[_type == "event"] | order(date desc)[0] {
+    title,
+    slug
+  }
+}`;

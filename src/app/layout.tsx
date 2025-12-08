@@ -58,6 +58,9 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  verification: {
+    google: "rHKZwxAunf8m_VZodJKhDGMWMw4x-wVBEfIEuPuXLTU",
+  },
 };
 
 export default function RootLayout({
@@ -68,6 +71,33 @@ export default function RootLayout({
   return (
     <html lang="tr" suppressHydrationWarning>
       <body className={`${inter.variable} ${outfit.variable} ${plusJakarta.variable} font-sans antialiased`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "Startup ve Finans Topluluğu",
+              "url": "https://startupvefinanstoplulugu.com",
+              "logo": "https://startupvefinanstoplulugu.com/assets/images/club_logo.png",
+              "sameAs": [
+                "https://www.linkedin.com/company/startup-ve-finans-toplulu%C4%9Fu/",
+                "https://www.instagram.com/startupvefinans/"
+              ],
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "email": "startupvefinans@gmail.com",
+                "contactType": "customer support"
+              },
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Ankara",
+                "addressCountry": "TR",
+                "streetAddress": "Ankara Medipol Üniversitesi"
+              }
+            })
+          }}
+        />
         {children}
       </body>
     </html>

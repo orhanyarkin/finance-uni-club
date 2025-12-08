@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail, Instagram, MessageCircle, MapPin } from "lucide-react";
+import { Mail, Instagram, MessageCircle, MapPin, Linkedin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -61,15 +61,6 @@ export default function Footer() {
             </a>
             <div className="flex space-x-4">
               <a
-                href="https://maps.app.goo.gl/syUu7YhmeRPrmfjG7"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-slate-500 hover:text-red-500 transition-colors"
-                aria-label="Konum"
-              >
-                <MapPin className="w-5 h-5" />
-              </a>
-              <a
                 href="https://www.instagram.com/startupvefinanstoplulugu"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -77,6 +68,15 @@ export default function Footer() {
                 aria-label="Instagram"
               >
                 <Instagram className="w-5 h-5" />
+              </a>
+              <a
+                href="https://www.linkedin.com/company/start-up-ve-finans-toplulu%C4%9Fuuu/posts/?feedView=all"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-slate-500 hover:text-white transition-colors"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="w-5 h-5" />
               </a>
               <a
                 href="https://chat.whatsapp.com/BTDpU4G758206p2s6JZlEc?mode=wwt"

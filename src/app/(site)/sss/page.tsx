@@ -16,7 +16,7 @@ const faqData: FAQItem[] = [
   },
   {
     question: "Etkinlikler ücretsiz mi?",
-    answer: "Evet, tüm etkinliklerimiz kulüp üyelerine ve üniversite öğrencilerine ücretsizdir. Bazı özel workshoplar için kayıt gerekebilir."
+    answer: "Evet, tüm etkinliklerimiz kulüp üyelerine ve üniversite öğrencilerine ücretsizdir. İstisnai durumlarda ücret gerekebilir."
   },
   {
     question: "Hangi üniversiteden öğrenciler katılabilir?",
@@ -33,6 +33,10 @@ const faqData: FAQItem[] = [
   {
     question: "Etkinlik önerisi yapabilir miyim?",
     answer: "Tabii ki! Etkinlik önerilerinizi WhatsApp grubumuzdan veya e-posta ile bizimle paylaşabilirsiniz. Tüm öneriler değerlendirilir."
+  },
+  {
+    question: "İndirimlerden nasıl faydalanabilirim?",
+    answer: "Etkinliklerimizde veya açtığımız stantlarda topluluğumuza üye olarak S&F Üye Kartı edinebilir, bu kart sayesinde tüm indirimlerden yararlanabilirsiniz."
   },
 ];
 

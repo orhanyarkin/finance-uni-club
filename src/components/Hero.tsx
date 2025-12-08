@@ -77,12 +77,12 @@ export default function Hero({ featuredEvent }: HeroProps) {
               className="mt-10 sm:mt-16 flex items-center justify-center lg:justify-start gap-6 sm:gap-12 text-slate-500"
             >
               <div className="text-center lg:text-left">
-                <div className="text-2xl sm:text-3xl font-bold text-white mb-1">200+</div>
+                <div className="text-2xl sm:text-3xl font-bold text-white mb-1">500+</div>
                 <div className="text-xs sm:text-sm uppercase tracking-wider">Aktif Üye</div>
               </div>
               <div className="w-px h-12 bg-white/10"></div>
               <div className="text-center lg:text-left">
-                <div className="text-2xl sm:text-3xl font-bold text-white mb-1">30+</div>
+                <div className="text-2xl sm:text-3xl font-bold text-white mb-1">20+</div>
                 <div className="text-xs sm:text-sm uppercase tracking-wider">Etkinlik</div>
               </div>
               <div className="w-px h-12 bg-white/10"></div>
@@ -166,10 +166,30 @@ export default function Hero({ featuredEvent }: HeroProps) {
                   </div>
 
                   {/* Action */}
-                  <a href={featuredEvent.registrationLink || "#"} target="_blank" className="w-full bg-white text-black py-4 rounded-xl font-bold hover:bg-slate-200 transition-colors flex items-center justify-center gap-2 group/btn">
-                    Kayıt Ol
-                    <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                  </a>
+                  <div className="mt-8">
+                    {(() => {
+                      const status = featuredEvent.status || 'upcoming';
+                      const isOpen = status === 'open';
+                      const isClosed = status === 'closed';
+                      const isPast = status === 'past';
+                      
+                      const link = isOpen ? (featuredEvent.registrationLink || "#") : undefined;
+                      const text = isOpen ? "Kayıt Ol" : isClosed ? "Kayıtlar Tamamlandı" : isPast ? "Etkinlik Tamamlandı" : "Yakında";
+                      const disabledClass = !isOpen ? "opacity-75 cursor-not-allowed bg-slate-200 text-slate-500" : "bg-white text-black hover:bg-slate-200";
+
+                      return (
+                         <a 
+                          href={isOpen ? link : undefined} 
+                          target={isOpen ? "_blank" : undefined}
+                          className={`w-full py-4 rounded-xl font-bold transition-colors flex items-center justify-center gap-2 group/btn ${disabledClass}`}
+                          onClick={(e) => { if (!isOpen) e.preventDefault(); }}
+                        >
+                          {text}
+                          {isOpen && <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />}
+                        </a>
+                      );
+                    })()}
+                  </div>
                 </div>
               </div>
               

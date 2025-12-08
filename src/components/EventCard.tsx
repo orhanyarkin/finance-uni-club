@@ -22,8 +22,8 @@ interface EventCardProps {
   config?: any;
 }
 
-const defaultConfig = {
-    register: {
+  const defaultConfig = {
+    open: {
       label: "Kayıt Ol",
       color: "from-green-600 to-emerald-600",
       badgeColor: "bg-green-600 text-white",
@@ -34,6 +34,12 @@ const defaultConfig = {
       color: "from-blue-600 to-cyan-600",
       badgeColor: "bg-blue-600 text-white",
       buttonColor: "bg-blue-600 hover:bg-blue-700",
+    },
+    closed: {
+        label: "Kayıtlar Tamamlandı",
+        color: "from-orange-500 to-red-500",
+        badgeColor: "bg-orange-500 text-white",
+        buttonColor: "bg-orange-500/50 cursor-not-allowed",
     },
     past: {
       label: "Geçmiş",
@@ -50,13 +56,10 @@ const defaultConfig = {
   };
 
 export default function EventCard({ event, config = defaultConfig }: EventCardProps) {
-  const status = event.status || 'upcoming';
+  // Status önceliği: Explicit status -> Date logic backup (optional)
+  const status = (event.status as keyof typeof defaultConfig) || 'upcoming';
   const statusStyle = config[status] || defaultConfig.default;
 
-  // Function to handle card click navigation programmatically or via Link wrapper
-  // Using Link wrapper is better for SEO and accessbility, but complex with nested buttons.
-  // We'll wrap the clickable parts or the whole div relative.
-  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -72,7 +75,9 @@ export default function EventCard({ event, config = defaultConfig }: EventCardPr
             {event.category || "Etkinlik"}
           </span>
           <span className={`${statusStyle.badgeColor} backdrop-blur-sm px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm`}>
-            {statusStyle.label}
+             {status === 'upcoming' ? 'Yakında' : 
+              status === 'closed' ? 'Kayıtlar Tamamlandı' :
+              status === 'past' ? 'Geçmiş' : 'Kayıt Ol'}
           </span>
         </div>
         <Link href={`/events/${event.slug?.current || '#'}`} className="block mt-auto">

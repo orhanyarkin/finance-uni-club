@@ -11,6 +11,12 @@ export const post = defineType({
       type: 'string',
     }),
     defineField({
+      name: 'isFeatured',
+      title: 'Öne Çıkar (Menu & Anasayfa)',
+      type: 'boolean',
+      initialValue: false,
+    }),
+    defineField({
       name: 'slug',
       title: 'Slug (URL Kısmı)',
       type: 'slug',

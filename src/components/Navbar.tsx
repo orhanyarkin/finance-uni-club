@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Menu, X, ChevronDown, HelpCircle, Calendar, Newspaper, Users, Handshake, Mail, ArrowRight, Instagram, Linkedin } from "lucide-react";
+import { Menu, X, ChevronDown, HelpCircle, Calendar, Newspaper, Users, Handshake, Mail, ArrowRight, Instagram, Linkedin, MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -17,16 +17,19 @@ interface FeaturedData {
   latestPost?: {
     title: string;
     slug: { current: string };
+    isFeatured?: boolean;
   };
   latestEvent?: {
     title: string;
     slug: { current: string };
+    isFeatured?: boolean;
   };
 }
 
 interface NavbarProps {
   featuredData?: FeaturedData;
 }
+
 
 export default function Navbar({ featuredData }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -240,7 +243,7 @@ export default function Navbar({ featuredData }: NavbarProps) {
                           {(featuredData?.latestPost || featuredData?.latestEvent) && (
                             <div className="mt-6 pt-6 border-t border-white/[0.06]">
                               <h4 className="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-4 px-3">
-                                Son Güncellemeler
+                                Öne Çıkanlar
                               </h4>
                               <div className="grid grid-cols-2 gap-4">
                                 {featuredData?.latestPost && (
@@ -253,7 +256,9 @@ export default function Navbar({ featuredData }: NavbarProps) {
                                       <Newspaper className="w-5 h-5" />
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                      <div className="text-[10px] font-bold text-primary uppercase tracking-wider mb-1">Son Blog</div>
+                                      <div className="text-[10px] font-bold text-primary uppercase tracking-wider mb-1">
+                                        {featuredData.latestPost.isFeatured ? "Öne Çıkan Blog" : "Son Blog"}
+                                      </div>
                                       <div className="font-medium text-white/90 text-sm truncate group-hover:text-white transition-colors">
                                         {featuredData.latestPost.title}
                                       </div>
@@ -271,7 +276,9 @@ export default function Navbar({ featuredData }: NavbarProps) {
                                       <Calendar className="w-5 h-5" />
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                      <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider mb-1">Yaklaşan Etkinlik</div>
+                                      <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider mb-1">
+                                         {featuredData.latestEvent.isFeatured ? "Öne Çıkan Etkinlik" : "Yaklaşan Etkinlik"}
+                                      </div>
                                       <div className="font-medium text-white/90 text-sm truncate group-hover:text-white transition-colors">
                                         {featuredData.latestEvent.title}
                                       </div>
@@ -411,28 +418,28 @@ export default function Navbar({ featuredData }: NavbarProps) {
                 <div className="flex flex-col items-center gap-4 pb-6">
                   <div className="flex items-center gap-4">
                     <a 
-                      href="https://www.instagram.com/startupvefinans/" 
+                      href="https://www.instagram.com/startupvefinanstoplulugu" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="p-3 bg-white/5 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                      className="p-3 bg-white/5 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors pointer-events-auto"
                     >
                       <Instagram className="w-5 h-5" />
                     </a>
                     <a 
-                      href="https://www.linkedin.com/company/startup-ve-finans-toplulu%C4%9Fu/" 
+                      href="https://www.linkedin.com/company/start-up-ve-finans-toplulu%C4%9Fuuu/posts/?feedView=all" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="p-3 bg-white/5 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                      className="p-3 bg-white/5 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors pointer-events-auto"
                     >
                       <Linkedin className="w-5 h-5" />
                     </a>
                     <a 
-                      href="https://twitter.com/startupvefinans" 
+                      href="https://chat.whatsapp.com/BTDpU4G758206p2s6JZlEc?mode=wwt" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="p-3 bg-white/5 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                      className="p-3 bg-white/5 rounded-full text-white/70 hover:text-green-500 hover:bg-white/10 transition-colors pointer-events-auto"
                     >
-                      <XIcon />
+                      <MessageCircle className="w-5 h-5" />
                     </a>
                   </div>
                   <div className="text-center">

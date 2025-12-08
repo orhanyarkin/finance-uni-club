@@ -93,11 +93,11 @@ export default function About() {
                   <div className="text-sm text-text-secondary">Yıllık Deneyim</div>
                 </div>
                 <div className="bg-background-tertiary rounded-xl p-6 text-center">
-                  <div className="text-3xl font-bold text-primary mb-2">30+</div>
+                  <div className="text-3xl font-bold text-primary mb-2">20+</div>
                   <div className="text-sm text-text-secondary">Etkinlik</div>
                 </div>
                 <div className="bg-background-tertiary rounded-xl p-6 text-center">
-                  <div className="text-3xl font-bold text-primary mb-2">200+</div>
+                  <div className="text-3xl font-bold text-primary mb-2">500+</div>
                   <div className="text-sm text-text-secondary">Toplam Üye</div>
                 </div>
                 <div className="bg-background-tertiary rounded-xl p-6 text-center">

@@ -27,46 +27,18 @@ export default function EventsCarousel({ events = [] }: EventsCarouselProps) {
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
 
-  const statusConfig: any = {
-    register: {
-      label: "Kayıt Ol",
-      color: "from-green-500 to-emerald-500",
-      badgeColor: "bg-green-500/20 text-green-300",
-      buttonColor: "bg-green-600 hover:bg-green-700",
-    },
-    upcoming: {
-      label: "Yakında",
-      color: "from-blue-500 to-cyan-500",
-      badgeColor: "bg-blue-500/20 text-blue-300",
-      buttonColor: "bg-blue-600 hover:bg-blue-700",
-    },
-    past: {
-      label: "Geçmiş",
-      color: "from-gray-500 to-gray-600",
-      badgeColor: "bg-gray-500/20 text-gray-400",
-      buttonColor: "bg-gray-600 cursor-not-allowed",
-    },
-  };
-
-  // Filter and process events
+  // Process events to use Sanity status
   const processedEvents = events.map((e: any) => {
-    const eventDate = new Date(e.date);
-    const now = new Date();
-    let status = 'upcoming';
-    if (eventDate < now) status = 'past';
-    else if (e.registrationLink) status = 'register';
-    
     return {
       ...e,
-      status,
-      category: e.category || "Etkinlik", // Use Sanity data or default
-      participants: e.participants // Use Sanity data (undefined if not set)
+      // Fallback: If no status from Sanity, use basic date logic
+      status: e.status || (new Date(e.date) < new Date() ? 'past' : 'upcoming'),
+      category: e.category || "Etkinlik", 
+      participants: e.participants
     };
   });
   
   const displayEvents = processedEvents.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-  // Carousel logic removed for static grid view
 
   return (
     <section id="events" className="py-24 bg-background">
@@ -98,7 +70,7 @@ export default function EventsCarousel({ events = [] }: EventsCarouselProps) {
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
           >
             {displayEvents.slice(0, 3).map((event: any, idx: number) => (
-              <EventCard key={`${event.title}-${idx}`} event={event} config={statusConfig} />
+              <EventCard key={`${event.title}-${idx}`} event={event} />
             ))}
           </div>
 

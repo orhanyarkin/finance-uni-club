@@ -123,7 +123,7 @@ export default function ContactPage() {
             </div>
 
             <a
-              href="https://maps.app.goo.gl/syUu7YhmeRPrmfjG7"
+              href="https://maps.app.goo.gl/y5GoEkxUSQptrFq29"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full bg-white/5 hover:bg-white/10 text-white py-4 rounded-xl font-medium transition-all duration-300 border border-white/10 flex items-center justify-center gap-2 group"
@@ -136,7 +136,7 @@ export default function ContactPage() {
           {/* Map Widget */}
           <div className="h-[300px] lg:h-auto min-h-[300px] rounded-2xl overflow-hidden border border-white/10 relative">
             <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3059.2678550186595!2d32.85324707654271!3d39.93540997152125!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14d34e6060c44c21%3A0x8673323086981881!2sAnkara%20Medipol%20University!5e0!3m2!1sen!2str!4v1701970000000!5m2!1sen!2str" 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3059.252024719821!2d32.8429090771887!3d39.935751984771144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14d34f344bac7d2b%3A0xe6e6907e384e6350!2sAnkara%20Medipol%20%C3%9Cniversitesi%20Merkez%20Kamp%C3%BCs!5e0!3m2!1str!2str!4v1765226042962!5m2!1str!2str" 
               width="100%" 
               height="100%" 
               style={{ border: 0 }} 

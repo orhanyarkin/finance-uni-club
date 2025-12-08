@@ -7,13 +7,13 @@ export default function Stats() {
   const stats = [
     {
       icon: Users,
-      value: "200+",
+      value: "500+",
       label: "Toplam Üye",
       description: "Farklı bölümlerden öğrenciler",
     },
     {
       icon: Calendar,
-      value: "30+",
+      value: "20+",
       label: "Düzenlenen Etkinlik",
       description: "Workshop, seminer ve networking",
     },

@@ -227,16 +227,22 @@ export default function EventDetail({ event }: { event: any }) {
                     )}
                     
                     <a 
-                      href={event.registrationLink || '#'}
-                      target="_blank"
+                      href={event.status === 'open' ? (event.registrationLink || '#') : undefined}
+                      target={event.status === 'open' ? "_blank" : undefined}
                       className={`w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 shadow-lg ${
-                        !event.registrationLink 
+                        event.status !== 'open'
                           ? 'bg-gray-700/50 cursor-not-allowed text-gray-400' 
                           : 'bg-primary hover:bg-primary-dark text-white hover:shadow-primary/30 hover:-translate-y-1'
                       }`}
+                      onClick={(e) => {
+                        if (event.status !== 'open') e.preventDefault();
+                      }}
                     >
-                      {event.registrationLink ? 'Kayıt Ol' : 'Kayıtlar Kapalı'}
-                      {event.registrationLink && <ArrowRight className="w-5 h-5" />}
+                      {event.status === 'open' ? 'Kayıt Ol' : 
+                       event.status === 'closed' ? 'Kayıtlar Tamamlandı' : 
+                       event.status === 'past' ? 'Bir Dahaki Sefere' : 
+                       'Yakında'}
+                      {event.status === 'open' && <ArrowRight className="w-5 h-5" />}
                     </a>
                   </div>
 

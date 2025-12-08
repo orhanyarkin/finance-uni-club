@@ -49,7 +49,8 @@ export const FEATURED_EVENT_QUERY = groq`*[_type == "event" && isFeatured == tru
   registrationLink,
   image,
   participants,
-  category
+  category,
+  status
 }`;
 
 // Get other events
@@ -64,7 +65,8 @@ export const EVENTS_QUERY = groq`*[_type == "event"] | order(date asc) {
   registrationLink,
   image,
   participants,
-  category
+  category,
+  status
 }`;
 
 // Get team members
@@ -90,9 +92,11 @@ export const ALL_EVENTS_QUERY = groq`*[_type == "event"] | order(date desc) {
   locationLink,
   description,
   registrationLink,
+  image,
   isFeatured,
   participants,
-  category
+  category,
+  status
 }`;
 
 // Get event by slug
@@ -107,17 +111,21 @@ export const EVENT_BY_SLUG_QUERY = groq`*[_type == "event" && slug.current == $s
   registrationLink,
   image,
   category,
-  participants
+  participants,
+  status
 }`;
 
 // Get latest content for Navbar
+// Get latest content for Navbar (prioritize featured)
 export const NAVBAR_CONTENT_QUERY = groq`{
-  "latestPost": *[_type == "post" && defined(slug.current)] | order(publishedAt desc)[0] {
+  "latestPost": *[_type == "post" && defined(slug.current)] | order(isFeatured desc, publishedAt desc)[0] {
     title,
-    slug
+    slug,
+    isFeatured
   },
-  "latestEvent": *[_type == "event"] | order(date desc)[0] {
+  "latestEvent": *[_type == "event"] | order(isFeatured desc, date desc)[0] {
     title,
-    slug
+    slug,
+    isFeatured
   }
 }`;

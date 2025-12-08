@@ -13,16 +13,12 @@ export default async function EventsPage() {
   const events = await client.fetch(ALL_EVENTS_QUERY);
 
   // Process events to add status logic
+  // Process events (just category fallback, mostly respecting Sanity)
   const processedEvents = events.map((e: any) => {
-    const eventDate = new Date(e.date);
-    const now = new Date();
-    let status = 'upcoming';
-    if (eventDate < now) status = 'past';
-    else if (e.registrationLink) status = 'register';
-    
     return {
       ...e,
-      status,
+      // Fallback: If no status from Sanity (old data), use basic date logic
+      status: e.status || (new Date(e.date) < new Date() ? 'past' : 'upcoming'),
       category: e.category || (e.isFeatured ? "Özel Etkinlik" : "Etkinlik"),
       participants: e.participants
     };

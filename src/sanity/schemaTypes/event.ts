@@ -66,6 +66,20 @@ export const event = defineType({
       description: 'Tahmini veya gerçek katılımcı sayısı',
     }),
     defineField({
+      name: 'status',
+      title: 'Etkinlik Durumu',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Yakında (Henüz Kayıt Yok)', value: 'upcoming' },
+          { title: 'Kayıtlar Açık', value: 'open' },
+          { title: 'Kayıtlar Tamamlandı', value: 'closed' },
+          { title: 'Geçmiş Etkinlik', value: 'past' },
+        ],
+      },
+      initialValue: 'upcoming',
+    }),
+    defineField({
       name: 'category',
       title: 'Kategori',
       type: 'string',

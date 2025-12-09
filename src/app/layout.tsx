@@ -1,4 +1,5 @@
 import "./globals.css";
+import RollbarProvider from "@/components/RollbarProvider";
 import { Inter, Outfit, Plus_Jakarta_Sans } from "next/font/google"; // Keep fonts if used globally, or move to site layout
 import { Metadata } from "next";
 
@@ -71,6 +72,7 @@ export default function RootLayout({
   return (
     <html lang="tr" suppressHydrationWarning>
       <body className={`${inter.variable} ${outfit.variable} ${plusJakarta.variable} font-sans antialiased`}>
+        <RollbarProvider />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

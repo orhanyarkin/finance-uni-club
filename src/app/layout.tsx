@@ -22,8 +22,8 @@ export const metadata: Metadata = {
   creator: "Startup ve Finans Topluluğu",
   publisher: "Startup ve Finans Topluluğu",
   icons: {
-    icon: "/assets/images/club_logo.png",
-    apple: "/assets/images/club_logo.png",
+    icon: "/icon.png", // Next.js automatically serves src/app/icon.png as /icon.png
+    apple: "/icon.png",
   },
   openGraph: {
     type: "website",
@@ -76,28 +76,41 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "Startup ve Finans Topluluğu",
-              "url": "https://startupvefinanstoplulugu.com",
-              "logo": "https://startupvefinanstoplulugu.com/assets/images/club_logo.png",
-              "sameAs": [
-                "https://www.linkedin.com/company/startup-ve-finans-toplulu%C4%9Fu/",
-                "https://www.instagram.com/startupvefinans/"
-              ],
-              "contactPoint": {
-                "@type": "ContactPoint",
-                "email": "startupvefinans@gmail.com",
-                "contactType": "customer support"
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "name": "Startup ve Finans Topluluğu",
+                "url": "https://startupvefinanstoplulugu.com",
+                "logo": "https://startupvefinanstoplulugu.com/assets/images/club_logo.png",
+                "sameAs": [
+                  "https://www.linkedin.com/company/startup-ve-finans-toplulu%C4%9Fu/",
+                  "https://www.instagram.com/startupvefinans/"
+                ],
+                "contactPoint": {
+                  "@type": "ContactPoint",
+                  "email": "startupvefinans@gmail.com",
+                  "contactType": "customer support"
+                },
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Ankara",
+                  "addressCountry": "TR",
+                  "streetAddress": "Ankara Medipol Üniversitesi"
+                }
               },
-              "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "Ankara",
-                "addressCountry": "TR",
-                "streetAddress": "Ankara Medipol Üniversitesi"
+              {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                "name": "Startup ve Finans Topluluğu",
+                "url": "https://startupvefinanstoplulugu.com",
+                "potentialAction": {
+                  "@type": "SearchAction",
+                  "target": "https://startupvefinanstoplulugu.com/search?q={search_term_string}",
+                  "query-input": "required name=search_term_string"
+                }
               }
-            })
+            ])
           }}
         />
         {children}

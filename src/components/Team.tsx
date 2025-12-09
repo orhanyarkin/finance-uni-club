@@ -115,7 +115,7 @@ export default function Team({ members = [] }: TeamProps) {
                   ) : (
                     <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-primary to-accent-cyan">
                       <Image
-                        src={member.image ? urlFor(member.image).url() : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random&color=fff&size=200`}
+                        src={member.image ? urlFor(member.image).url() : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=0b0f1a&color=fff&size=200`}
                         alt={member.name}
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-500"
@@ -211,7 +211,7 @@ export default function Team({ members = [] }: TeamProps) {
                               className={`relative w-32 h-32 rounded-full overflow-hidden border-4 border-transparent bg-gradient-to-r ${committee.color} p-1`}
                             >
                                 <Image
-                                  src={member.image ? urlFor(member.image).url() : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random&color=fff&size=200`}
+                                  src={member.image ? urlFor(member.image).url() : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=0b0f1a&color=fff&size=200`}
                                   alt={member.name}
                                   fill
                                   className="rounded-full object-cover group-hover:scale-110 transition-transform duration-300"

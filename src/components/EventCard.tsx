@@ -98,7 +98,12 @@ export default function EventCard({ event, config = defaultConfig }: EventCardPr
         <div className="space-y-2 sm:space-y-3 mt-auto">
           <div className="flex items-center space-x-2 sm:space-x-3 text-text-secondary text-sm">
             <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-primary shrink-0" />
-            <span className="truncate">{new Date(event.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}</span>
+            <span className="truncate">
+              {/* Hydration fix: Render generic first, then specific on client */}
+              <time suppressHydrationWarning>
+                {new Date(event.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
+              </time>
+            </span>
           </div>
           <div className="flex items-center space-x-2 sm:space-x-3 text-text-secondary text-sm">
             <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary shrink-0" />

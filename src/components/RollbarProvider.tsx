@@ -12,6 +12,11 @@ export default function RollbarProvider() {
     // Log a simple info message to verify connection in development
     if (process.env.NODE_ENV === 'development') {
       console.log('Rollbar initialized');
+      rollbar.info("Rollbar entegrasyon testi - Development ortamı");
+    } else {
+      // Production ortamında da ilk açılışta bir info gönderelim ki dashboard güncellensin
+      // Daha sonra bu satırı kaldırabilirsiniz.
+      rollbar.info("Rollbar entegrasyon testi - Production ortamı");
     }
   }, []);
 

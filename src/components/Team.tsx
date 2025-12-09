@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { User, Crown, DollarSign, FileText, Users2, Megaphone, Target, Calendar, Shield, Share2 } from "lucide-react";
+import Image from "next/image";
 
 
 
@@ -102,6 +103,7 @@ export default function Team({ members = [] }: TeamProps) {
                 }`}
               >
                 <div className="relative">
+
                   {member.comingSoon ? (
                     // Yakında tasarımı
                     <div className="aspect-square overflow-hidden bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
@@ -112,13 +114,16 @@ export default function Team({ members = [] }: TeamProps) {
                     </div>
                   ) : (
                     <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-primary to-accent-cyan">
-                      <img
+                      <Image
                         src={member.image ? urlFor(member.image).url() : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random&color=fff&size=200`}
                         alt={member.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        fill
+                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                        unoptimized={!member.image} // External avatars might need unoptimized if not in config, but they are in config. Still safe.
                       />
                     </div>
                   )}
+
                   {!member.comingSoon && (
                     <div className="absolute top-4 right-4 bg-primary/90 backdrop-blur-sm p-2 rounded-lg flex gap-2">
                       <Icon className="w-5 h-5 text-white" />
@@ -205,10 +210,12 @@ export default function Team({ members = [] }: TeamProps) {
                             <div
                               className={`relative w-32 h-32 rounded-full overflow-hidden border-4 border-transparent bg-gradient-to-r ${committee.color} p-1`}
                             >
-                                <img
+                                <Image
                                   src={member.image ? urlFor(member.image).url() : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random&color=fff&size=200`}
                                   alt={member.name}
-                                  className="w-full h-full rounded-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                  fill
+                                  className="rounded-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                  unoptimized={!member.image}
                                 />
                             </div>
                           )}

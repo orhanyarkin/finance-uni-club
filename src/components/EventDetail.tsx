@@ -166,11 +166,18 @@ export default function EventDetail({ event }: { event: any }) {
                     <div className="text-text-secondary text-sm">
                       Bu etkinliği arkadaşlarınla paylaş!
                     </div>
-                    <div className="flex items-center gap-3 w-full sm:w-auto">
-                      <div className="w-full sm:w-40">
-                        <ShareButton title={event.title} />
+                      <div className="flex items-center gap-3 w-full sm:w-auto">
+                        <div className="w-full sm:w-40">
+                          <ShareButton 
+                            title={event.title} 
+                            text={
+                              (event.status === 'open' || event.status === 'upcoming' || !event.status)
+                                ? `Startup & Finans Topluluğu seni etkinliğe bekliyor 🚀 | ${event.title}`
+                                : `${event.title} -`
+                            }
+                          />
+                        </div>
                       </div>
-                    </div>
                   </div>
                 </div>
               </div>

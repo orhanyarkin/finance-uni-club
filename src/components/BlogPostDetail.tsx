@@ -259,7 +259,10 @@ export default function BlogPostDetail({ post }: { post: any }) {
                 <div className="flex items-center gap-3">
                   {/* Share Button Entegrasyonu */}
                   <div className="w-40">
-                    <ShareButton title={post.title} />
+                    <ShareButton 
+                      title={post.title} 
+                      text={`${post.title} | Blog –`}
+                    />
                   </div>
                   
                   <Link

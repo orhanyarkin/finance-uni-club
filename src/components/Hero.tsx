@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight, TrendingUp, Users, Calendar, Award, MapPin, Clock } from "lucide-react";
+import Image from "next/image";
 import { useLanguage } from "@/contexts/LanguageContext";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/image";
@@ -107,10 +108,11 @@ export default function Hero({ featuredEvent }: HeroProps) {
                 <div className="h-48 bg-gradient-to-br from-primary/20 to-purple-900/20 relative overflow-hidden">
                   {featuredEvent.image && (
                     <div className="absolute inset-0">
-                      <img 
+                      <Image 
                         src={urlFor(featuredEvent.image).url()} 
                         alt={featuredEvent.title} 
-                        className="w-full h-full object-cover opacity-60" 
+                        fill
+                        className="object-cover opacity-60" 
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F1A] to-transparent"></div>
                     </div>

@@ -22,9 +22,10 @@ const InstagramIcon = () => (
 
 interface ShareButtonProps {
   title?: string;
+  text?: string;
 }
 
-export default function ShareButton({ title = "Bu içeriği paylaş" }: ShareButtonProps) {
+export default function ShareButton({ title = "Bu içeriği paylaş", text }: ShareButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -59,13 +60,14 @@ export default function ShareButton({ title = "Bu içeriği paylaş" }: ShareBut
   }, [isOpen]);
 
   const shareUrl = typeof window !== "undefined" ? window.location.href : "";
-  const shareText = title;
+  const shareText = text || title;
 
   const shareOptions = [
     {
       name: "WhatsApp",
       icon: <MessageCircle className="w-5 h-5" />,
       color: "hover:bg-green-500/20 hover:text-green-400",
+      // WhatsApp allows specialized formatting. We use the custom text + URL.
       url: `https://wa.me/?text=${encodeURIComponent(shareText + " " + shareUrl)}`,
     },
     {

@@ -115,14 +115,16 @@ export default function BlogPostDetail({ post }: { post: any }) {
                 </div>
               )}
               {post.publishedAt && (
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
-                  <span className="text-sm">{new Date(post.publishedAt).toLocaleDateString("tr-TR", {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}</span>
-                </div>
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4" />
+                    <time className="text-sm" suppressHydrationWarning>
+                      {new Date(post.publishedAt).toLocaleDateString("tr-TR", {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </time>
+                  </div>
               )}
               {post.readTime && (
                 <div className="flex items-center gap-2">

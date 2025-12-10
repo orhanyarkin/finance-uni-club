@@ -138,7 +138,9 @@ export default function Hero({ featuredEvent }: HeroProps) {
                       <div>
                         <div className="text-sm text-slate-500">Zaman</div>
                         <div className="font-medium">
-                          {new Date(featuredEvent.date).toLocaleDateString("tr-TR", { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
+                          <time suppressHydrationWarning>
+                            {new Date(featuredEvent.date).toLocaleDateString("tr-TR", { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
+                          </time>
                         </div>
                       </div>
                     </div>

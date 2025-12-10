@@ -112,7 +112,7 @@ export default function EventDetail({ event }: { event: any }) {
                 </div>
                 <div>
                   <div className="text-xs text-white/60">Tarih</div>
-                  <div className="text-sm font-medium">{eventDate.toLocaleDateString("tr-TR", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                  <time className="text-sm font-medium" suppressHydrationWarning>{eventDate.toLocaleDateString("tr-TR", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</time>
                 </div>
               </div>
               
@@ -122,7 +122,7 @@ export default function EventDetail({ event }: { event: any }) {
                 </div>
                 <div>
                   <div className="text-xs text-white/60">Saat</div>
-                  <div className="text-sm font-medium">{eventDate.toLocaleTimeString("tr-TR", { hour: '2-digit', minute: '2-digit' })}</div>
+                  <time className="text-sm font-medium" suppressHydrationWarning>{eventDate.toLocaleTimeString("tr-TR", { hour: '2-digit', minute: '2-digit' })}</time>
                 </div>
               </div>
 

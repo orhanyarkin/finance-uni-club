@@ -17,7 +17,7 @@ export default function BlogGrid({ limit, posts }: BlogGridProps) {
   const displayPosts = limit ? posts.slice(0, limit) : posts;
 
   return (
-    <section className="py-16 bg-background-secondary/30">
+    <section className="py-12 md:py-20 bg-background-secondary/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -26,11 +26,19 @@ export default function BlogGrid({ limit, posts }: BlogGridProps) {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <Link href="/blog" className="group inline-flex items-center gap-2">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <Link href="/blog" className="group inline-block mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold">
               <span className="gradient-text group-hover:text-primary transition-colors">{t("blog.title")}</span>
+              <motion.span
+                initial={{ x: -10, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5, duration: 0.5 }}
+                className="inline-flex align-middle ml-3"
+              >
+                <ArrowRight className="w-8 h-8 text-primary group-hover:translate-x-2 transition-transform duration-300" />
+              </motion.span>
             </h2>
-            <ArrowRight className="w-8 h-8 text-primary opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
           </Link>
           <p className="text-lg text-text-secondary">
             {t("blog.subtitle")}

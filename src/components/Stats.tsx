@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Users, Calendar, TrendingUp, Award } from "lucide-react";
+import { Users, Calendar, TrendingUp, Award, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default function Stats() {
   const stats = [
@@ -32,7 +33,7 @@ export default function Stats() {
   ];
 
   return (
-    <section className="py-24 bg-background-secondary/30">
+    <section className="py-12 md:py-20 bg-background-secondary/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -41,9 +42,20 @@ export default function Stats() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Rakamlarla <span className="gradient-text">Kulübümüz</span>
-          </h2>
+          <Link href="/about" className="group inline-block mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold transition-colors group-hover:text-primary">
+              Rakamlarla <span className="gradient-text">Kulübümüz</span>
+              <motion.span
+                initial={{ x: -10, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5, duration: 0.5 }}
+                className="inline-flex align-middle ml-3"
+              >
+                <ArrowRight className="w-8 h-8 sm:w-10 sm:h-10 text-primary group-hover:translate-x-2 transition-transform duration-300" />
+              </motion.span>
+            </h2>
+          </Link>
           <p className="text-xl text-text-secondary max-w-2xl mx-auto">
             Başarılarımız ve büyüyen topluluğumuz hakkında bilgiler
           </p>

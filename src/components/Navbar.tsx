@@ -12,7 +12,7 @@ const XIcon = () => (
     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
   </svg>
 );
-
+const currentYear = new Date().getFullYear();
 interface FeaturedData {
   latestPost?: {
     title: string;
@@ -443,11 +443,11 @@ export default function Navbar({ featuredData }: NavbarProps) {
                     </a>
                   </div>
                   <div className="text-center">
-                    <a href="mailto:startupvefinans@gmail.com" className="text-sm text-white/50 hover:text-white/80 transition-colors">
-                      startupvefinans@gmail.com
-                    </a>
                     <div className="text-[10px] text-white/30 mt-2">
-                      © 2025 Startup & Finans Topluluğu
+                      © {currentYear} Ankara Medipol Üniversitesi Startup & Finans Topluluğu.
+                    </div>
+                    <div className="text-[10px] text-white/30 mt-2">      
+                        Tüm hakları saklıdır.
                     </div>
                   </div>
                 </div>

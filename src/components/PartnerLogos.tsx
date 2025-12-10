@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { urlFor } from "@/sanity/lib/image";
 
@@ -27,15 +28,26 @@ export default function PartnerLogos({ partners }: PartnerLogosProps) {
   if (!mounted) return null;
 
   return (
-    <section className="py-12 bg-background border-y border-text-muted/10 overflow-hidden">
+    <section className="py-12 md:py-20 bg-background border-y border-text-muted/10 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 mb-8 text-center">
-      <div className="max-w-7xl mx-auto px-4 mb-8 text-center">
-        <Link 
-          href="/partnerships"
-          className="inline-flex items-center gap-2 text-text-secondary hover:text-primary transition-colors group"
-        >
-          <span className="font-semibold text-sm uppercase tracking-wider">İşbirliklerimiz</span>
+      <div className="max-w-7xl mx-auto px-4 mb-12 text-center">
+        <Link href="/partnerships" className="group inline-block">
+          <h2 className="text-3xl md:text-4xl font-bold">
+            <span className="gradient-text group-hover:text-primary transition-colors">İşbirliklerimiz</span>
+            <motion.span
+              initial={{ x: -10, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              className="inline-flex align-middle ml-3"
+            >
+              <ArrowRight className="w-8 h-8 text-primary group-hover:translate-x-2 transition-transform duration-300" />
+            </motion.span>
+          </h2>
         </Link>
+        <p className="text-lg text-text-secondary mt-4 max-w-2xl mx-auto">
+          Sektörün önde gelen şirketleriyle güçlü işbirlikleri
+        </p>
       </div>
       </div>
       

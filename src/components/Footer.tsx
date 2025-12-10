@@ -170,10 +170,7 @@ export default function Footer() {
         <div className="border-t border-white/10 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-slate-500 text-sm">
-              © {currentYear} Startup ve Finans Kulübü. Tüm hakları saklıdır.
-            </p>
-            <p className="text-slate-500 text-sm flex items-center gap-1">
-              Made with <span className="text-red-500">❤️</span> by Startup ve Finans Kulübü
+              © {currentYear} Ankara Medipol Üniversitesi Startup & Finans Topluluğu. Tüm hakları saklıdır.
             </p>
           </div>
         </div>

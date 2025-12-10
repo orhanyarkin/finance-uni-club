@@ -5,8 +5,9 @@ import EventDetail from "@/components/EventDetail";
 
 export const revalidate = 60; // Revalidate every minute
 
-export default async function EventPage({ params }: { params: { slug: string } }) {
-  const event = await client.fetch(EVENT_BY_SLUG_QUERY, { slug: params.slug });
+export default async function EventPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const event = await client.fetch(EVENT_BY_SLUG_QUERY, { slug });
 
   if (!event) {
     notFound();

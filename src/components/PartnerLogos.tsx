@@ -56,8 +56,7 @@ export default function PartnerLogos({ partners }: PartnerLogosProps) {
           className="flex flex-nowrap gap-12 py-4 items-center w-max animate-scroll"
         >
           {allPartners.length > 0 && allPartners.map((partner, index) => (
-            <Link
-              href="/partnerships"
+            <div
               key={`${partner._id || partner.name}-${index}`}
               className="flex-shrink-0 min-w-[150px] flex items-center justify-center group opacity-50 hover:opacity-100 transition-all duration-300 transform hover:scale-110 grayscale hover:grayscale-0"
             >
@@ -79,7 +78,7 @@ export default function PartnerLogos({ partners }: PartnerLogosProps) {
                   )}
                 </a>
               </div>
-            </Link>
+            </div>
           ))}
         </motion.div>
       </div>

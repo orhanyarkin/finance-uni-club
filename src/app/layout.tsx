@@ -21,10 +21,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Startup ve Finans Topluluğu" }],
   creator: "Startup ve Finans Topluluğu",
   publisher: "Startup ve Finans Topluluğu",
-  icons: {
-    icon: "/icon.png", // Next.js automatically serves src/app/icon.png as /icon.png
-    apple: "/icon.png",
-  },
+
   openGraph: {
     type: "website",
     locale: "tr_TR",

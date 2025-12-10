@@ -15,10 +15,6 @@ export default function CookiesPage() {
           </h1>
           
           <div className="prose prose-invert max-w-none space-y-8 text-text-secondary">
-            <p className="text-lg">
-              Son güncelleme: {new Date().toLocaleDateString('tr-TR')}
-            </p>
-
             <div className="bg-[#0B0F1A] border border-white/10 rounded-2xl p-8 space-y-6">
               <h2 className="text-2xl font-bold text-white">1. Çerez Nedir?</h2>
               <p>

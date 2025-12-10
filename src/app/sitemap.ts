@@ -11,19 +11,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "posts": *[_type == "post"] { "slug": slug.current, _updatedAt }
   }`;
 
-  const { events, posts } = await client.fetch(query);
+  let events: any[] = [];
+  let posts: any[] = [];
+
+  try {
+    const result = await client.fetch(query);
+    events = result.events || [];
+    posts = result.posts || [];
+  } catch (error) {
+    console.error('Sitemap fetch error:', error);
+    // Continue with static routes even if dynamic data fails
+  }
 
   const eventUrls = events.map((event: any) => ({
     url: `${baseUrl}/events/${event.slug}`,
     lastModified: new Date(event._updatedAt),
-    changeFrequency: 'weekly',
+    changeFrequency: 'weekly' as const,
     priority: 0.8,
   }));
 
   const postUrls = posts.map((post: any) => ({
     url: `${baseUrl}/blog/${post.slug}`,
     lastModified: new Date(post._updatedAt),
-    changeFrequency: 'weekly',
+    changeFrequency: 'weekly' as const,
     priority: 0.7,
   }));
 

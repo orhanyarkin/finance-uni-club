@@ -101,7 +101,7 @@ export default function EventCard({ event, config = defaultConfig }: EventCardPr
             <span className="truncate">
               {/* Hydration fix: Render generic first, then specific on client */}
               <time suppressHydrationWarning>
-                {new Date(event.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
+                {new Date(event.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Istanbul' })}
               </time>
             </span>
           </div>

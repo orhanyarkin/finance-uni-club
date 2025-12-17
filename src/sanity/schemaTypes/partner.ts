@@ -24,6 +24,12 @@ export const partner = defineType({
       type: 'url',
     }),
     defineField({
+      name: 'googleMapsUrl',
+      title: 'Google Maps Konumu',
+      type: 'url',
+      description: 'İş ortağının Google Maps konumu',
+    }),
+    defineField({
       name: 'discount',
       title: 'İndirim Metni (örn: %15 İndirim)',
       type: 'string',

@@ -33,6 +33,7 @@ export const PARTNERS_QUERY = groq`*[_type == "partner" && isActive == true] {
   name,
   logo,
   website,
+  googleMapsUrl,
   discount,
   description
 }`;

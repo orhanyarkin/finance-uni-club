@@ -3,7 +3,7 @@ import { PARTNERS_QUERY } from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
 import Link from "next/link";
-import { ExternalLink, Tag } from "lucide-react";
+import { ExternalLink, Tag, MapPin } from "lucide-react";
 
 export const revalidate = 0;
 
@@ -68,16 +68,27 @@ export default async function PartnershipsPage() {
                 </p>
 
                 {/* Action Link */}
-                <div className="mt-auto">
+                <div className="mt-auto flex gap-3">
                   <Link
                     href={partner.website || "#"}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center w-full gap-2 px-4 py-3 bg-slate-100 dark:bg-slate-800 text-text-primary rounded-xl font-semibold hover:bg-primary hover:text-white transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/20"
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-slate-100 dark:bg-slate-800 text-text-primary rounded-xl font-semibold hover:bg-primary hover:text-white transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/20"
                   >
                     Siteyi Ziyaret Et
                     <ExternalLink className="w-4 h-4" />
                   </Link>
+                  {partner.googleMapsUrl && (
+                    <Link
+                      href={partner.googleMapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center px-4 py-3 bg-slate-100 dark:bg-slate-800 text-text-primary rounded-xl font-semibold hover:bg-primary hover:text-white transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/20"
+                      title="Konumu Göster"
+                    >
+                      <MapPin className="w-5 h-5" />
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>

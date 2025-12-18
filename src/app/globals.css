@@ -56,6 +56,11 @@
     mask-image: radial-gradient(circle at center top, black 40%, transparent 100%);
     pointer-events: none;
     z-index: 0;
+    /* iOS Safari GPU acceleration fix */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translateZ(0);
+    will-change: transform;
   }
 
   /* Top Radial Glow - Blue Accent */
@@ -64,13 +69,17 @@
     position: absolute;
     top: -20%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) translateZ(0);
     width: 80%;
     height: 60%;
     background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, transparent 70%);
     filter: blur(80px);
     pointer-events: none;
     z-index: 0;
+    /* iOS Safari GPU acceleration fix */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: transform;
   }
 
   /* Dark Mode Adjustments for Glow */

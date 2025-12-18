@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
+import SnowEffect from "@/components/SnowEffect";
 import { client } from "@/sanity/lib/client";
 import { NAVBAR_CONTENT_QUERY } from "@/sanity/lib/queries";
 
@@ -17,6 +18,7 @@ export default async function SiteLayout({
 
   return (
     <Providers>
+      <SnowEffect />
       <div className="flex min-h-screen flex-col">
         <Navbar featuredData={featuredData} />
         <main className="flex-1">{children}</main>

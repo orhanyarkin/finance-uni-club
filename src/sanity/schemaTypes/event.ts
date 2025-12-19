@@ -38,8 +38,9 @@ export const event = defineType({
     defineField({
       name: 'mapEmbedUrl',
       title: 'Harita Embed URL',
-      type: 'url',
-      description: 'Google Maps → Paylaş → Haritayı göm → iframe src="..." içindeki URL',
+      type: 'text',
+      rows: 2,
+      description: 'Google Maps → Paylaş → Haritayı göm → iframe src="..." içindeki URL\'yi buraya yapıştırın',
     }),
     defineField({
       name: 'description',

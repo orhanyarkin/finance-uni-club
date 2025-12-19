@@ -3,7 +3,7 @@ import Team from "@/components/Team";
 import Features from "@/components/Features";
 
 export const metadata = {
-  title: "Hakkımızda - Startup ve Finans Kulübü",
+  title: "Hakkımızda",
   description: "Startup ve Finans Kulübü hakkında bilgi edinin. Ekibimiz, misyonumuz ve değerlerimiz.",
 };
 

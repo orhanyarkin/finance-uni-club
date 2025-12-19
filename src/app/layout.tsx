@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     siteName: "Startup & Finans Topluluğu",
     images: [
       {
-        url: "/assets/images/club_logo.png",
+        url: "https://startupvefinanstoplulugu.com/assets/images/club_logo.png",
         width: 800,
         height: 600,
         alt: "Startup & Finans Topluluğu Logo",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Startup & Finans Topluluğu",
     description: "Geleceğin girişimcilerini yetiştiriyoruz.",
-    images: ["/assets/images/club_logo.png"],
+    images: ["https://startupvefinanstoplulugu.com/assets/images/club_logo.png"],
     creator: "@startupvefinans",
   },
   robots: {
@@ -66,6 +66,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const baseUrl = "https://startupvefinanstoplulugu.com";
+  
   return (
     <html lang="tr" suppressHydrationWarning>
       <body className={`${inter.variable} ${outfit.variable} ${plusJakarta.variable} font-sans antialiased`}>
@@ -78,8 +80,8 @@ export default function RootLayout({
                 "@context": "https://schema.org",
                 "@type": "Organization",
                 "name": "Startup ve Finans Topluluğu",
-                "url": "https://startupvefinanstoplulugu.com",
-                "logo": "https://startupvefinanstoplulugu.com/assets/images/club_logo.png",
+                "url": baseUrl,
+                "logo": `${baseUrl}/assets/images/club_logo.png`,
                 "sameAs": [
                   "https://www.linkedin.com/company/startup-ve-finans-toplulu%C4%9Fu/",
                   "https://www.instagram.com/startupvefinans/"
@@ -100,12 +102,54 @@ export default function RootLayout({
                 "@context": "https://schema.org",
                 "@type": "WebSite",
                 "name": "Startup ve Finans Topluluğu",
-                "url": "https://startupvefinanstoplulugu.com",
+                "url": baseUrl,
                 "potentialAction": {
                   "@type": "SearchAction",
-                  "target": "https://startupvefinanstoplulugu.com/search?q={search_term_string}",
+                  "target": `${baseUrl}/search?q={search_term_string}`,
                   "query-input": "required name=search_term_string"
                 }
+              },
+              // SiteNavigationElement for Google Sitelinks
+              {
+                "@context": "https://schema.org",
+                "@type": "ItemList",
+                "itemListElement": [
+                  {
+                    "@type": "SiteNavigationElement",
+                    "position": 1,
+                    "name": "Hakkımızda",
+                    "description": "Kulübümüz hakkında bilgi edinin",
+                    "url": `${baseUrl}/about`
+                  },
+                  {
+                    "@type": "SiteNavigationElement",
+                    "position": 2,
+                    "name": "Etkinlikler",
+                    "description": "Workshoplar, seminerler ve networking etkinlikleri",
+                    "url": `${baseUrl}/events`
+                  },
+                  {
+                    "@type": "SiteNavigationElement",
+                    "position": 3,
+                    "name": "Blog",
+                    "description": "Finans ve girişimcilik yazıları",
+                    "url": `${baseUrl}/blog`
+                  },
+                  {
+                    "@type": "SiteNavigationElement",
+                    "position": 4,
+                    "name": "İşbirliklerimiz",
+                    "description": "Sponsor ve ortaklarımız",
+                    "url": `${baseUrl}/partnerships`
+                  },
+                  {
+                    "@type": "SiteNavigationElement",
+                    "position": 5,
+                    "name": "İletişim",
+                    "description": "Bize ulaşın",
+                    "url": `${baseUrl}/contact`
+                  }
+                ]
               }
             ])
           }}

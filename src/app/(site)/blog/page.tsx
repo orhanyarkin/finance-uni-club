@@ -3,7 +3,7 @@ import { POSTS_QUERY } from "@/sanity/lib/queries";
 import BlogGrid from "@/components/BlogGrid";
 
 export const metadata = {
-  title: "Blog - Startup ve Finans Kulübü",
+  title: "Blog",
   description: "Finans, girişimcilik ve yatırım dünyasından güncel yazılar ve analizler.",
 };
 

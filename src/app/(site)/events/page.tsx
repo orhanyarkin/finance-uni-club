@@ -5,7 +5,7 @@ import EventCard from "@/components/EventCard";
 export const revalidate = 0;
 
 export const metadata = {
-  title: "Etkinlikler - Startup ve Finans Kulübü",
+  title: "Etkinlikler",
   description: "Kulübümüzün düzenlediği tüm etkinlikler, workshoplar ve seminerler.",
 };
 

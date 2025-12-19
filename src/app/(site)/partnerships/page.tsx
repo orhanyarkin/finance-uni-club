@@ -8,7 +8,7 @@ import { ExternalLink, Tag, MapPin } from "lucide-react";
 export const revalidate = 0;
 
 export const metadata = {
-  title: "İşbirliklerimiz - Startup ve Finans Kulübü",
+  title: "İşbirliklerimiz",
   description: "Kulüp üyelerimize özel indirimler ve işbirlikleri.",
 };
 

@@ -33,6 +33,13 @@ export const event = defineType({
       name: 'locationLink',
       title: 'Location Link (Google Maps)',
       type: 'url',
+      description: 'Tıklanınca gidilecek Google Maps linki (kısa link olabilir)',
+    }),
+    defineField({
+      name: 'mapEmbedUrl',
+      title: 'Harita Embed URL',
+      type: 'url',
+      description: 'Google Maps → Paylaş → Haritayı göm → iframe src="..." içindeki URL',
     }),
     defineField({
       name: 'description',

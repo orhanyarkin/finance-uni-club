@@ -192,7 +192,7 @@ export default function EventDetail({ event }: { event: any }) {
                     loading="lazy"
                     allowFullScreen
                     referrerPolicy="no-referrer-when-downgrade"
-                    src={`https://www.google.com/maps?q=${encodeURIComponent(event.location)}&output=embed`}
+                    src={event.mapEmbedUrl || `https://maps.google.com/maps?q=${encodeURIComponent(event.location)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
                     className="grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
                   ></iframe>
                   <a 

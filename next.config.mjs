@@ -53,7 +53,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://vercel.live; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://cdn.sanity.io https://images.unsplash.com https://ui-avatars.com https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://cdn.sanity.io https://*.sanity.io https://www.google-analytics.com https://vercel.live wss://ws-us3.pusher.com; frame-src 'self' https://www.google.com https://vercel.live; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';"
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://vercel.live; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://cdn.sanity.io https://images.unsplash.com https://ui-avatars.com https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://cdn.sanity.io https://*.sanity.io https://www.google-analytics.com https://vercel.live wss://ws-us3.pusher.com https://api.rollbar.com; frame-src 'self' https://www.google.com https://vercel.live; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';"
           },
           {
             key: 'Cross-Origin-Opener-Policy',

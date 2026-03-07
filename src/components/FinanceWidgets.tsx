@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { TrendingUp, TrendingDown, DollarSign, Euro, Bitcoin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+
 // Dummy data - Borsa MCP ile değiştirilecek
 const marketData = {
   bist100: {
@@ -29,7 +30,7 @@ const marketData = {
 };
 
 export default function FinanceWidgets() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const widgets = [
     {
@@ -83,7 +84,7 @@ export default function FinanceWidgets() {
             {t("finance.subtitle")}
           </p>
           <p className="text-sm text-text-muted mt-2">
-            Son güncelleme: {new Date().toLocaleTimeString("tr-TR")}
+            {t("finance.lastUpdate")}: {new Date().toLocaleTimeString(language === "tr" ? "tr-TR" : "en-US")}
           </p>
         </motion.div>
 
@@ -136,7 +137,7 @@ export default function FinanceWidgets() {
           className="mt-8 text-center"
         >
           <p className="text-sm text-text-muted">
-            📊 Veriler yalnızca bilgilendirme amaçlıdır. Yatırım kararları alırken profesyonel danışmanlık alınız.
+            📊 {t("finance.disclaimer")}
           </p>
         </motion.div>
       </div>

@@ -2,15 +2,17 @@
 
 import { motion } from "framer-motion";
 import { MessageCircle, Mail, Instagram, MapPin, ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ContactPage() {
+  const { t } = useLanguage();
+
   const contactMethods = [
     {
       icon: Instagram,
       title: "Instagram",
-      description: "Güncel duyurular ve etkinliklerden haberdar olmak için takip edin.",
-      action: "Takip Et",
+      descKey: "contact.instagram.desc",
+      actionKey: "contact.instagram.action",
       href: "https://www.instagram.com/startupvefinanstoplulugu",
       color: "text-pink-500",
       bgColor: "bg-pink-500/10",
@@ -20,8 +22,8 @@ export default function ContactPage() {
     {
       icon: MessageCircle,
       title: "WhatsApp",
-      description: "Sorularınız ve toplulukla iletişim için grubumuza katılın.",
-      action: "Gruba Katıl",
+      descKey: "contact.whatsapp.desc",
+      actionKey: "contact.whatsapp.action",
       href: "https://chat.whatsapp.com/BTDpU4G758206p2s6JZlEc?mode=wwt",
       color: "text-green-500",
       bgColor: "bg-green-500/10",
@@ -31,8 +33,8 @@ export default function ContactPage() {
     {
       icon: Mail,
       title: "E-Posta",
-      description: "İşbirlikleri ve resmi görüşmeler için bize yazın.",
-      action: "Mail Gönder",
+      descKey: "contact.email.desc",
+      actionKey: "contact.email.action",
       href: "mailto:startupvefinanstoplulugu@gmail.com",
       color: "text-blue-500",
       bgColor: "bg-blue-500/10",
@@ -42,9 +44,9 @@ export default function ContactPage() {
   ];
 
   return (
-    <main className="min-h-screen pt-32 pb-12 bg-background">
+    <main className="min-h-screen pt-36 sm:pt-40 pb-12 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -53,10 +55,10 @@ export default function ContactPage() {
           className="text-center mb-16"
         >
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            Bizimle <span className="gradient-text">İletişime Geçin</span>
+            {t("contact.title")} <span className="gradient-text">{t("contact.titleHighlight")}</span>
           </h1>
           <p className="text-xl text-text-secondary max-w-2xl mx-auto">
-            Sorularınız, önerileriniz veya işbirliği teklifleri için bize ulaşabilirsiniz.
+            {t("contact.subtitle")}
           </p>
         </motion.div>
 
@@ -78,17 +80,17 @@ export default function ContactPage() {
                 <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-colors duration-300 ${method.bgColor} ${method.hoverBg}`}>
                   <Icon className={`w-7 h-7 ${method.color}`} />
                 </div>
-                
+
                 <h3 className="text-xl font-bold text-white mb-3">
                   {method.title}
                 </h3>
-                
+
                 <p className="text-text-secondary mb-6 min-h-[48px]">
-                  {method.description}
+                  {t(method.descKey)}
                 </p>
 
                 <div className="flex items-center gap-2 font-medium text-white group-hover:gap-3 transition-all">
-                  {method.action}
+                  {t(method.actionKey)}
                   <ArrowRight className="w-4 h-4" />
                 </div>
               </motion.a>
@@ -97,7 +99,6 @@ export default function ContactPage() {
         </div>
 
         {/* Location Section */}
-        {/* Location Section - with Map Widget */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -111,7 +112,7 @@ export default function ContactPage() {
                 <MapPin className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-white mb-2">Bizi Ziyaret Edin</h3>
+                <h3 className="text-xl font-bold text-white mb-2">{t("contact.visitUs")}</h3>
                 <p className="text-lg text-text-secondary mb-1 font-medium">
                   Ankara Medipol Üniversitesi
                 </p>
@@ -128,20 +129,20 @@ export default function ContactPage() {
               rel="noopener noreferrer"
               className="w-full bg-white/5 hover:bg-white/10 text-white py-4 rounded-xl font-medium transition-all duration-300 border border-white/10 flex items-center justify-center gap-2 group"
             >
-              <span>Haritada Yol Tarifi Al</span>
+              <span>{t("contact.getDirections")}</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </a>
           </div>
 
           {/* Map Widget */}
           <div className="h-[300px] lg:h-auto min-h-[300px] rounded-2xl overflow-hidden border border-white/10 relative">
-            <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3059.252024719821!2d32.8429090771887!3d39.935751984771144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14d34f344bac7d2b%3A0xe6e6907e384e6350!2sAnkara%20Medipol%20%C3%9Cniversitesi%20Merkez%20Kamp%C3%BCs!5e0!3m2!1str!2str!4v1765226042962!5m2!1str!2str" 
-              width="100%" 
-              height="100%" 
-              style={{ border: 0 }} 
-              allowFullScreen={true} 
-              loading="lazy" 
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3059.252024719821!2d32.8429090771887!3d39.935751984771144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14d34f344bac7d2b%3A0xe6e6907e384e6350!2sAnkara%20Medipol%20%C3%9Cniversitesi%20Merkez%20Kamp%C3%BCs!5e0!3m2!1str!2str!4v1765226042962!5m2!1str!2str"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen={true}
+              loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               className="absolute inset-0 grayscale hover:grayscale-0 transition-all duration-500"
             ></iframe>

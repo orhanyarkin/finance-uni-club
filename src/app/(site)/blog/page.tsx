@@ -13,7 +13,7 @@ export default async function BlogPage() {
   const posts = await client.fetch(POSTS_QUERY);
 
   return (
-    <main className="min-h-screen pt-20">
+    <main className="min-h-screen pt-36 sm:pt-40">
       <BlogGrid posts={posts} />
     </main>
   );

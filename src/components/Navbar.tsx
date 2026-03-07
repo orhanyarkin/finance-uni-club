@@ -5,6 +5,9 @@ import { Menu, X, ChevronDown, HelpCircle, Calendar, Newspaper, Users, Handshake
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageToggle from "@/components/LanguageToggle";
+import TradingViewTicker from "@/components/TradingViewTicker";
 
 // X (Twitter) icon - custom since lucide doesn't have the new X logo
 const XIcon = () => (
@@ -16,11 +19,13 @@ const currentYear = new Date().getFullYear();
 interface FeaturedData {
   latestPost?: {
     title: string;
+    titleEn?: string;
     slug: { current: string };
     isFeatured?: boolean;
   };
   latestEvent?: {
     title: string;
+    titleEn?: string;
     slug: { current: string };
     isFeatured?: boolean;
   };
@@ -32,6 +37,7 @@ interface NavbarProps {
 
 
 export default function Navbar({ featuredData }: NavbarProps) {
+  const { t, language } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -43,7 +49,6 @@ export default function Navbar({ featuredData }: NavbarProps) {
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          // Scroll eşiğini artırdık ve logic'i basitleştirdik
           const isScrolled = window.scrollY > 50;
           setScrolled(isScrolled);
           ticking = false;
@@ -51,13 +56,13 @@ export default function Navbar({ featuredData }: NavbarProps) {
         ticking = true;
       }
     };
-    
+
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setActiveDropdown(null);
       }
     };
-    
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -87,30 +92,30 @@ export default function Navbar({ featuredData }: NavbarProps) {
   const handleMouseLeave = () => {
     timeoutRef.current = setTimeout(() => {
       setActiveDropdown(null);
-    }, 150); // Süreyi biraz kısalttık ama yeterli
+    }, 150);
   };
 
   // Keşfet mega menü içeriği
   const exploreContent = {
     sections: [
       {
-        title: "İçerikler",
+        title: t("nav.sections.content"),
         items: [
-          { title: "Blog Yazıları", href: "/blog", icon: Newspaper, description: "Finans ve girişimcilik içerikleri" },
-          { title: "Etkinlikler", href: "/events", icon: Calendar, description: "Yaklaşan ve geçmiş etkinlikler" },
+          { title: t("nav.menu.blog"), href: "/blog", icon: Newspaper, description: t("nav.menu.blog.desc") },
+          { title: t("nav.menu.events"), href: "/events", icon: Calendar, description: t("nav.menu.events.desc") },
         ]
       },
       {
-        title: "Topluluk",
+        title: t("nav.sections.community"),
         items: [
-          { title: "İşbirliklerimiz", href: "/partnerships", icon: Handshake, description: "Sponsor ve ortaklarımız" },
+          { title: t("nav.menu.partnerships"), href: "/partnerships", icon: Handshake, description: t("nav.menu.partnerships.desc") },
         ]
       },
       {
-        title: "Destek",
+        title: t("nav.sections.support"),
         items: [
-          { title: "SSS", href: "/sss", icon: HelpCircle, description: "Sıkça sorulan sorular" },
-          { title: "İletişim", href: "/contact", icon: Mail, description: "Bize ulaşın" },
+          { title: t("nav.menu.faq"), href: "/sss", icon: HelpCircle, description: t("nav.menu.faq.desc") },
+          { title: t("nav.menu.contact"), href: "/contact", icon: Mail, description: t("nav.menu.contact.desc") },
         ]
       },
     ],
@@ -118,12 +123,12 @@ export default function Navbar({ featuredData }: NavbarProps) {
 
   // Mobil menü items
   const mobileMenuItems = [
-    { title: "Hakkımızda", href: "/about", icon: Users },
-    { title: "Blog", href: "/blog", icon: Newspaper },
-    { title: "Etkinlikler", href: "/events", icon: Calendar },
-    { title: "İşbirliklerimiz", href: "/partnerships", icon: Handshake },
-    { title: "SSS", href: "/sss", icon: HelpCircle },
-    { title: "İletişim", href: "/contact", icon: Mail },
+    { title: t("nav.about"), href: "/about", icon: Users },
+    { title: t("nav.menu.blog"), href: "/blog", icon: Newspaper },
+    { title: t("nav.menu.events"), href: "/events", icon: Calendar },
+    { title: t("nav.menu.partnerships"), href: "/partnerships", icon: Handshake },
+    { title: t("nav.menu.faq"), href: "/sss", icon: HelpCircle },
+    { title: t("nav.menu.contact"), href: "/contact", icon: Mail },
   ];
 
   return (
@@ -131,13 +136,14 @@ export default function Navbar({ featuredData }: NavbarProps) {
       <nav
         className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
           isOpen || activeDropdown
-            ? "bg-[#0a0e17] border-b border-white/[0.08] py-3 shadow-lg" // Menü açıkken tam mat
+            ? "bg-[#0a0e17] border-b border-white/[0.08] shadow-lg"
             : scrolled
-              ? "bg-[#0a0e17]/80 backdrop-blur-md border-b border-white/[0.08] py-3 shadow-lg" // Scroll yaparken cam efekti
-              : "bg-transparent py-4 sm:py-5" // En tepedeyken şeffaf
+              ? "bg-[#0a0e17]/95 backdrop-blur-md border-b border-white/[0.08] shadow-lg"
+              : "bg-transparent"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <TradingViewTicker />
+        <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${isOpen || activeDropdown || scrolled ? 'py-3' : 'py-4 sm:py-5'}`}>
           <div className="flex items-center justify-between h-14 sm:h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-3 group relative z-[101]">
@@ -150,7 +156,6 @@ export default function Navbar({ featuredData }: NavbarProps) {
                 />
               </div>
               <span className={`font-bold transition-all duration-300 ${scrolled ? 'text-base' : 'text-lg'} tracking-tight text-white group-hover:text-primary shadow-black drop-shadow-md`}>
-                {/* Mobilde sadece "Startup & Finans", masaüstünde tam isim */}
                 <span className="lg:hidden">Startup & Finans</span>
                 <span className="hidden lg:inline">Startup & Finans Topluluğu</span>
               </span>
@@ -163,9 +168,9 @@ export default function Navbar({ featuredData }: NavbarProps) {
                 href="/about"
                 className={`px-4 py-2 font-medium text-white/90 hover:text-white transition-colors drop-shadow-md ${scrolled ? 'text-sm' : 'text-base'}`}
               >
-                Hakkımızda
+                {t("nav.about")}
               </Link>
-              
+
               {/* Keşfet Mega Menu */}
               <div
                 className="relative h-full flex items-center"
@@ -174,17 +179,17 @@ export default function Navbar({ featuredData }: NavbarProps) {
               >
                 <button
                   className={`flex items-center gap-1.5 px-4 py-2 font-medium transition-colors drop-shadow-md ${
-                    activeDropdown === 'explore' 
-                      ? 'text-white' 
+                    activeDropdown === 'explore'
+                      ? 'text-white'
                       : 'text-white/90 hover:text-white'
                   } ${scrolled ? 'text-sm' : 'text-base'}`}
                 >
-                  Keşfet
-                  <ChevronDown 
-                    className={`w-4 h-4 transition-transform duration-300 ${activeDropdown === 'explore' ? 'rotate-180' : ''}`} 
+                  {t("nav.explore")}
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform duration-300 ${activeDropdown === 'explore' ? 'rotate-180' : ''}`}
                   />
                 </button>
-                
+
                 {/* Mega Menu Dropdown */}
                 <AnimatePresence>
                   {activeDropdown === 'explore' && (
@@ -199,12 +204,12 @@ export default function Navbar({ featuredData }: NavbarProps) {
                   >
                     {/* Invisible bridge to prevent closing */}
                     <div className="absolute top-0 left-0 right-0 h-2 bg-transparent" />
-                    
+
                     {/* Glass card with SOLID dark background */}
                     <div className="relative bg-[#0c1222] border border-white/[0.1] rounded-3xl shadow-2xl shadow-black/50 overflow-hidden">
                         {/* Top gradient accent */}
                         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-                        
+
                         <div className="relative p-6 z-10">
                           {/* Main Grid */}
                           <div className="grid grid-cols-3 gap-6">
@@ -216,7 +221,7 @@ export default function Navbar({ featuredData }: NavbarProps) {
                                 <div className="space-y-1">
                                   {section.items.map((item) => (
                                     <Link
-                                      key={item.title}
+                                      key={item.href}
                                       href={item.href}
                                       onClick={() => setActiveDropdown(null)}
                                       className="flex items-start gap-3 p-3 rounded-2xl hover:bg-white/[0.04] transition-all duration-200 group"
@@ -243,7 +248,7 @@ export default function Navbar({ featuredData }: NavbarProps) {
                           {(featuredData?.latestPost || featuredData?.latestEvent) && (
                             <div className="mt-6 pt-6 border-t border-white/[0.06]">
                               <h4 className="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-4 px-3">
-                                Öne Çıkanlar
+                                {t("nav.sections.featured")}
                               </h4>
                               <div className="grid grid-cols-2 gap-4">
                                 {featuredData?.latestPost && (
@@ -257,10 +262,10 @@ export default function Navbar({ featuredData }: NavbarProps) {
                                     </div>
                                     <div className="flex-1 min-w-0">
                                       <div className="text-[10px] font-bold text-primary uppercase tracking-wider mb-1">
-                                        {featuredData.latestPost.isFeatured ? "Öne Çıkan Blog" : "Son Blog"}
+                                        {featuredData.latestPost.isFeatured ? t("nav.featured.blog") : t("nav.latest.blog")}
                                       </div>
                                       <div className="font-medium text-white/90 text-sm truncate group-hover:text-white transition-colors">
-                                        {featuredData.latestPost.title}
+                                        {language === 'en' ? (featuredData.latestPost.titleEn || featuredData.latestPost.title) : featuredData.latestPost.title}
                                       </div>
                                     </div>
                                     <ArrowRight className="w-4 h-4 text-white/30 group-hover:text-primary group-hover:translate-x-1 transition-all duration-300 shrink-0" />
@@ -277,10 +282,10 @@ export default function Navbar({ featuredData }: NavbarProps) {
                                     </div>
                                     <div className="flex-1 min-w-0">
                                       <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider mb-1">
-                                         {featuredData.latestEvent.isFeatured ? "Öne Çıkan Etkinlik" : "Yaklaşan Etkinlik"}
+                                        {featuredData.latestEvent.isFeatured ? t("nav.featured.event") : t("nav.upcoming.event")}
                                       </div>
                                       <div className="font-medium text-white/90 text-sm truncate group-hover:text-white transition-colors">
-                                        {featuredData.latestEvent.title}
+                                        {language === 'en' ? (featuredData.latestEvent.titleEn || featuredData.latestEvent.title) : featuredData.latestEvent.title}
                                       </div>
                                     </div>
                                     <ArrowRight className="w-4 h-4 text-white/30 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all duration-300 shrink-0" />
@@ -295,23 +300,26 @@ export default function Navbar({ featuredData }: NavbarProps) {
                   )}
                 </AnimatePresence>
               </div>
-              
+
               {/* İletişim */}
               <Link
                 href="/contact"
                 className={`px-4 py-2 font-medium text-white/90 hover:text-white transition-colors drop-shadow-md ${scrolled ? 'text-sm' : 'text-base'}`}
               >
-                İletişim
+                {t("nav.contact")}
               </Link>
+
+              {/* Language Toggle */}
+              <LanguageToggle />
 
               {/* CTA Button */}
               <a
                 href="https://chat.whatsapp.com/BTDpU4G758206p2s6JZlEc?mode=wwt"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`ml-4 bg-primary hover:bg-primary/90 text-white rounded-full font-semibold transition-all duration-300 shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:scale-[1.02] ${scrolled ? 'px-5 py-2 text-sm' : 'px-6 py-2.5 text-base'}`}
+                className={`ml-2 bg-primary hover:bg-primary/90 text-white rounded-full font-semibold transition-all duration-300 shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:scale-[1.02] ${scrolled ? 'px-5 py-2 text-sm' : 'px-6 py-2.5 text-base'}`}
               >
-                Kulübe Katıl
+                {t("nav.joinClub")}
               </a>
             </div>
 
@@ -335,7 +343,7 @@ export default function Navbar({ featuredData }: NavbarProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[90] bg-[#0a0e17] lg:hidden pt-28" // pt-28 (112px) increased from pt-20 to avoid overlap
+            className="fixed inset-0 z-[90] bg-[#0a0e17] lg:hidden pt-36"
           >
             <div className="h-full overflow-y-auto px-4 pb-10 flex flex-col">
               {/* Featured in Mobile */}
@@ -351,8 +359,8 @@ export default function Navbar({ featuredData }: NavbarProps) {
                         <Newspaper className="w-5 h-5 text-primary" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-[10px] font-bold text-primary uppercase tracking-wider">Son Blog</div>
-                        <div className="text-white/90 text-sm font-medium truncate mt-0.5">{featuredData.latestPost.title}</div>
+                        <div className="text-[10px] font-bold text-primary uppercase tracking-wider">{t("nav.latest.blog")}</div>
+                        <div className="text-white/90 text-sm font-medium truncate mt-0.5">{language === 'en' ? (featuredData.latestPost.titleEn || featuredData.latestPost.title) : featuredData.latestPost.title}</div>
                       </div>
                     </Link>
                   )}
@@ -366,8 +374,8 @@ export default function Navbar({ featuredData }: NavbarProps) {
                         <Calendar className="w-5 h-5 text-emerald-400" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Yaklaşan Etkinlik</div>
-                        <div className="text-white/90 text-sm font-medium truncate mt-0.5">{featuredData.latestEvent.title}</div>
+                        <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">{t("nav.upcoming.event")}</div>
+                        <div className="text-white/90 text-sm font-medium truncate mt-0.5">{language === 'en' ? (featuredData.latestEvent.titleEn || featuredData.latestEvent.title) : featuredData.latestEvent.title}</div>
                       </div>
                     </Link>
                   )}
@@ -378,7 +386,7 @@ export default function Navbar({ featuredData }: NavbarProps) {
               <div className="space-y-1 flex-1">
                 {mobileMenuItems.map((item, index) => (
                   <motion.div
-                    key={item.title}
+                    key={item.href}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
@@ -410,32 +418,42 @@ export default function Navbar({ featuredData }: NavbarProps) {
                     className="block w-full text-center bg-primary hover:bg-primary/90 text-white px-5 py-4 rounded-2xl font-semibold transition-all shadow-lg shadow-primary/20 text-lg"
                     onClick={() => setIsOpen(false)}
                   >
-                    Kulübe Katıl
+                    {t("nav.joinClub")}
                   </a>
+                </motion.div>
+
+                {/* Language Toggle - Mobile */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.35 }}
+                  className="flex justify-center"
+                >
+                  <LanguageToggle />
                 </motion.div>
 
                 {/* Social & Contact */}
                 <div className="flex flex-col items-center gap-4 pb-6">
                   <div className="flex items-center gap-4">
-                    <a 
-                      href="https://www.instagram.com/startupvefinanstoplulugu" 
-                      target="_blank" 
+                    <a
+                      href="https://www.instagram.com/startupvefinanstoplulugu"
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="p-3 bg-white/5 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors pointer-events-auto"
                     >
                       <Instagram className="w-5 h-5" />
                     </a>
-                    <a 
-                      href="https://www.linkedin.com/company/start-up-ve-finans-toplulu%C4%9Fuuu/posts/?feedView=all" 
-                      target="_blank" 
+                    <a
+                      href="https://www.linkedin.com/company/start-up-ve-finans-toplulu%C4%9Fuuu/posts/?feedView=all"
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="p-3 bg-white/5 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors pointer-events-auto"
                     >
                       <Linkedin className="w-5 h-5" />
                     </a>
-                    <a 
-                      href="https://chat.whatsapp.com/BTDpU4G758206p2s6JZlEc?mode=wwt" 
-                      target="_blank" 
+                    <a
+                      href="https://chat.whatsapp.com/BTDpU4G758206p2s6JZlEc?mode=wwt"
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="p-3 bg-white/5 rounded-full text-white/70 hover:text-green-500 hover:bg-white/10 transition-colors pointer-events-auto"
                     >
@@ -446,8 +464,8 @@ export default function Navbar({ featuredData }: NavbarProps) {
                     <div className="text-[10px] text-white/30 mt-2">
                       © {currentYear} Ankara Medipol Üniversitesi Startup & Finans Topluluğu.
                     </div>
-                    <div className="text-[10px] text-white/30 mt-2">      
-                        Tüm hakları saklıdır.
+                    <div className="text-[10px] text-white/30 mt-2">
+                      {t("nav.mobile.copyright")}
                     </div>
                   </div>
                 </div>

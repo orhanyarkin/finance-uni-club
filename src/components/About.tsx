@@ -2,10 +2,13 @@
 
 import { motion } from "framer-motion";
 import { Target, Eye, Heart } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function About() {
+  const { t } = useLanguage();
+
   return (
-    <section id="about" className="py-24 bg-background-secondary/50">
+    <section id="about" className="pb-24 bg-background-secondary/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
@@ -16,18 +19,13 @@ export default function About() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Hakkımızda
+              {t("about.title")}
             </h2>
             <p className="text-xl text-text-secondary mb-8 leading-relaxed">
-              Ankara Medipol Üniversitesi Start-up ve Finans Topluluğu, finans, işletme, teknoloji, 
-              sağlık ve girişimcilik gibi alanlarda kendini geliştirmek isteyen öğrencileri bir araya 
-              getiren dinamik ve yenilikçi bir öğrenci topluluğudur.
+              {t("about.desc1")}
             </p>
             <p className="text-lg text-text-secondary mb-8 leading-relaxed">
-              Sektör profesyonelleriyle buluşmalar, finansal okuryazarlık eğitimleri, teknik geziler, 
-              iş ve staj imkanları, interaktif workshoplar ve geniş network olanakları sunarak 
-              öğrencilerin hem teorik bilgilerini artırmalarına hem de pratik deneyim kazanmalarına 
-              destek oluyoruz.
+              {t("about.desc2")}
             </p>
 
             <div className="space-y-6">
@@ -36,11 +34,9 @@ export default function About() {
                   <Target className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold mb-2">Misyonumuz</h3>
+                  <h3 className="text-xl font-semibold mb-2">{t("about.mission.title")}</h3>
                   <p className="text-text-secondary">
-                    Üyelerimizin finans, teknoloji ve girişimcilik alanlarındaki gelişmeleri yakından 
-                    takip etmelerini sağlamak, onları iş dünyasına hazırlamak ve kariyer yolculuklarında 
-                    rehberlik etmek.
+                    {t("about.mission.desc")}
                   </p>
                 </div>
               </div>
@@ -50,10 +46,9 @@ export default function About() {
                   <Eye className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold mb-2">Vizyonumuz</h3>
+                  <h3 className="text-xl font-semibold mb-2">{t("about.vision.title")}</h3>
                   <p className="text-text-secondary">
-                    Girişimcilik ve finans dünyasına ilgi duyan herkesin kendini geliştirebileceği, 
-                    bilgiye ulaşabileceği ve değerli bağlantılar kurabileceği bir ortam oluşturmak.
+                    {t("about.vision.desc")}
                   </p>
                 </div>
               </div>
@@ -63,10 +58,9 @@ export default function About() {
                   <Heart className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold mb-2">Değerlerimiz</h3>
+                  <h3 className="text-xl font-semibold mb-2">{t("about.values.title")}</h3>
                   <p className="text-text-secondary">
-                    Finansal okuryazarlık, sürekli öğrenme, iş birliği, yenilikçilik ve 
-                    topluma değer katma ilkelerini benimsiyoruz.
+                    {t("about.values.desc")}
                   </p>
                 </div>
               </div>
@@ -84,32 +78,32 @@ export default function About() {
             <div className="glass-effect rounded-2xl p-8 space-y-6">
               <div className="bg-gradient-to-br from-primary to-accent-cyan rounded-xl p-8 text-center">
                 <div className="text-6xl font-bold text-white mb-2">2023</div>
-                <div className="text-xl text-white/80">Kuruluş Yılımız</div>
+                <div className="text-xl text-white/80">{t("about.founded")}</div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-background-tertiary rounded-xl p-6 text-center">
                   <div className="text-3xl font-bold text-primary mb-2">2+</div>
-                  <div className="text-sm text-text-secondary">Yıllık Deneyim</div>
+                  <div className="text-sm text-text-secondary">{t("about.yearsExp")}</div>
                 </div>
                 <div className="bg-background-tertiary rounded-xl p-6 text-center">
                   <div className="text-3xl font-bold text-primary mb-2">20+</div>
-                  <div className="text-sm text-text-secondary">Etkinlik</div>
+                  <div className="text-sm text-text-secondary">{t("about.eventsCount")}</div>
                 </div>
                 <div className="bg-background-tertiary rounded-xl p-6 text-center">
                   <div className="text-3xl font-bold text-primary mb-2">500+</div>
-                  <div className="text-sm text-text-secondary">Toplam Üye</div>
+                  <div className="text-sm text-text-secondary">{t("about.membersCount")}</div>
                 </div>
                 <div className="bg-background-tertiary rounded-xl p-6 text-center">
                   <div className="text-3xl font-bold text-primary mb-2">10+</div>
-                  <div className="text-sm text-text-secondary">İşbirliklerimiz</div>
+                  <div className="text-sm text-text-secondary">{t("about.partnershipsCount")}</div>
                 </div>
               </div>
 
               <div className="bg-background-tertiary rounded-xl p-6">
                 <p className="text-xl text-text-muted italic max-w-2xl mx-auto border-l-4 border-primary pl-4 py-2 bg-white/5 rounded-r-xl">
-          &quot;Geleceği şekillendiren girişimcilerin yetiştiği topluluk&quot;
-        </p>
+                  &quot;{t("about.quote")}&quot;
+                </p>
               </div>
             </div>
 
@@ -122,9 +116,3 @@ export default function About() {
     </section>
   );
 }
-
-
-
-
-
-

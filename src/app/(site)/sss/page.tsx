@@ -3,53 +3,29 @@
 import { motion } from "framer-motion";
 import { ChevronDown, ChevronUp, HelpCircle, MessageCircle } from "lucide-react";
 import { useState } from "react";
-
-interface FAQItem {
-  question: string;
-  answer: string;
-}
-
-const faqData: FAQItem[] = [
-  {
-    question: "Kulübe nasıl üye olabilirim?",
-    answer: "WhatsApp grubumuz üzerinden bize katılabilirsiniz. Üyelik ücretsizdir ve tüm öğrencilere açıktır. Etkinliklerimize katılarak aktif üye olabilirsiniz."
-  },
-  {
-    question: "Etkinlikler ücretsiz mi?",
-    answer: "Evet, tüm etkinliklerimiz kulüp üyelerine ve üniversite öğrencilerine ücretsizdir. İstisnai durumlarda ücret gerekebilir."
-  },
-  {
-    question: "Hangi üniversiteden öğrenciler katılabilir?",
-    answer: "Etkinliklerimiz tüm üniversitelerin öğrencilerine açıktır. Finans ve girişimcilik alanına ilgi duyan herkes aramıza katılabilir."
-  },
-  {
-    question: "Sponsorluklarınız nasıl çalışıyor?",
-    answer: "Partnerlerimiz üyelerimize özel indirimler ve fırsatlar sunuyor. Detaylı bilgi için İşbirliklerimiz sayfamızı ziyaret edebilirsiniz."
-  },
-  {
-    question: "Yönetim kuruluna nasıl başvurabilirim?",
-    answer: "Her akademik yılın başında yeni üye alımları gerçekleştiriyoruz. Başvuru dönemlerini Instagram hesabımızdan takip edebilirsiniz."
-  },
-  {
-    question: "Etkinlik önerisi yapabilir miyim?",
-    answer: "Tabii ki! Etkinlik önerilerinizi WhatsApp grubumuzdan veya e-posta ile bizimle paylaşabilirsiniz. Tüm öneriler değerlendirilir."
-  },
-  {
-    question: "İndirimlerden nasıl faydalanabilirim?",
-    answer: "Etkinliklerimizde veya açtığımız stantlarda topluluğumuza üye olarak S&F Üye Kartı edinebilir, bu kart sayesinde tüm indirimlerden yararlanabilirsiniz."
-  },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function SSSPage() {
+  const { t } = useLanguage();
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  const faqKeys = [
+    { q: "sss.q1", a: "sss.a1" },
+    { q: "sss.q2", a: "sss.a2" },
+    { q: "sss.q3", a: "sss.a3" },
+    { q: "sss.q4", a: "sss.a4" },
+    { q: "sss.q5", a: "sss.a5" },
+    { q: "sss.q6", a: "sss.a6" },
+    { q: "sss.q7", a: "sss.a7" },
+  ];
 
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
   return (
-    <main className="min-h-screen pt-20">
-      <section className="py-24 bg-background">
+    <main className="min-h-screen pt-36 sm:pt-40">
+      <section className="pb-24 bg-background">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <motion.div
@@ -62,16 +38,16 @@ export default function SSSPage() {
               <HelpCircle className="w-8 h-8 text-primary" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              <span className="gradient-text">Sıkça Sorulan Sorular</span>
+              <span className="gradient-text">{t("sss.title")}</span>
             </h1>
             <p className="text-xl text-text-secondary max-w-2xl mx-auto">
-              Kulübümüz hakkında merak ettiklerinizi burada bulabilirsiniz
+              {t("sss.subtitle")}
             </p>
           </motion.div>
 
           {/* FAQ Accordion */}
           <div className="space-y-4">
-            {faqData.map((faq, index) => (
+            {faqKeys.map((faq, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
@@ -84,7 +60,7 @@ export default function SSSPage() {
                   className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/5 transition-colors"
                 >
                   <span className="text-lg font-semibold text-white pr-4">
-                    {faq.question}
+                    {t(faq.q)}
                   </span>
                   <div className="shrink-0">
                     {openIndex === index ? (
@@ -103,7 +79,7 @@ export default function SSSPage() {
                     className="px-6 pb-5"
                   >
                     <p className="text-text-secondary leading-relaxed">
-                      {faq.answer}
+                      {t(faq.a)}
                     </p>
                   </motion.div>
                 )}
@@ -120,10 +96,10 @@ export default function SSSPage() {
           >
             <div className="glass-effect rounded-2xl p-8">
               <h3 className="text-2xl font-bold mb-4 text-white">
-                Sorunuz mu var?
+                {t("sss.cta.title")}
               </h3>
               <p className="text-text-secondary mb-6">
-                Burada cevabını bulamadığınız sorularınız için bize ulaşabilirsiniz
+                {t("sss.cta.desc")}
               </p>
               <a
                 href="https://chat.whatsapp.com/BTDpU4G758206p2s6JZlEc?mode=wwt"
@@ -132,7 +108,7 @@ export default function SSSPage() {
                 className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-bold transition-all duration-300 hover-lift"
               >
                 <MessageCircle className="w-5 h-5" />
-                WhatsApp&apos;tan Sor
+                {t("sss.cta.btn")}
               </a>
             </div>
           </motion.div>

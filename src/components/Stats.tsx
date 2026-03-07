@@ -1,34 +1,79 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
+import { motion, useInView } from "framer-motion";
 import { Users, Calendar, TrendingUp, Award, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useLanguage } from "@/contexts/LanguageContext";
+
+interface StatItem {
+  icon: React.ElementType;
+  value: string;
+  labelKey: string;
+  descKey: string;
+}
+
+function AnimatedCounter({ value }: { value: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true });
+  const [displayed, setDisplayed] = useState(0);
+
+  const match = value.match(/^(\d+)(.*)$/);
+  const targetNum = match ? parseInt(match[1]) : 0;
+  const suffix = match ? match[2] : "";
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    const duration = 1400;
+    const startTime = performance.now();
+
+    const tick = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplayed(Math.round(eased * targetNum));
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+
+    requestAnimationFrame(tick);
+  }, [isInView, targetNum]);
+
+  return (
+    <div ref={ref} className="text-4xl font-bold text-text-primary mb-2 tabular-nums">
+      {displayed}{suffix}
+    </div>
+  );
+}
 
 export default function Stats() {
-  const stats = [
+  const { t } = useLanguage();
+
+  const stats: StatItem[] = [
     {
       icon: Users,
       value: "500+",
-      label: "Toplam Üye",
-      description: "Farklı bölümlerden öğrenciler",
+      labelKey: "stats.members",
+      descKey: "stats.members.desc",
     },
     {
       icon: Calendar,
       value: "20+",
-      label: "Düzenlenen Etkinlik",
-      description: "Workshop, seminer ve networking",
+      labelKey: "stats.events",
+      descKey: "stats.events.desc",
     },
     {
       icon: TrendingUp,
       value: "2+",
-      label: "Yıllık Deneyim",
-      description: "2023'ten beri aktif",
+      labelKey: "stats.experience",
+      descKey: "stats.experience.desc",
     },
     {
       icon: Award,
       value: "10+",
-      label: "İşbirliklerimiz",
-      description: "Sektör liderleri ile partnerlikler",
+      labelKey: "stats.partnerships",
+      descKey: "stats.partnerships.desc",
     },
   ];
 
@@ -44,7 +89,8 @@ export default function Stats() {
         >
           <Link href="/about" className="group inline-block mb-4">
             <h2 className="text-4xl md:text-5xl font-bold transition-colors group-hover:text-primary">
-              Rakamlarla <span className="gradient-text">Kulübümüz</span>
+              {t("stats.title").split(" ").slice(0, -1).join(" ")}{" "}
+              <span className="gradient-text">{t("stats.title").split(" ").slice(-1)}</span>
               <motion.span
                 initial={{ x: -10, opacity: 0 }}
                 whileInView={{ x: 0, opacity: 1 }}
@@ -57,7 +103,7 @@ export default function Stats() {
             </h2>
           </Link>
           <p className="text-xl text-text-secondary max-w-2xl mx-auto">
-            Başarılarımız ve büyüyen topluluğumuz hakkında bilgiler
+            {t("stats.subtitle")}
           </p>
         </motion.div>
 
@@ -66,7 +112,7 @@ export default function Stats() {
             const Icon = stat.icon;
             return (
               <motion.div
-                key={stat.label}
+                key={stat.labelKey}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -76,14 +122,12 @@ export default function Stats() {
                 <div className="bg-primary/10 w-14 h-14 rounded-lg flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
                   <Icon className="w-7 h-7 text-primary" />
                 </div>
-                <div className="text-4xl font-bold text-text-primary mb-2">
-                  {stat.value}
-                </div>
+                <AnimatedCounter value={stat.value} />
                 <div className="text-lg font-semibold text-text-primary mb-1">
-                  {stat.label}
+                  {t(stat.labelKey)}
                 </div>
                 <div className="text-sm text-text-secondary">
-                  {stat.description}
+                  {t(stat.descKey)}
                 </div>
               </motion.div>
             );
@@ -93,9 +137,3 @@ export default function Stats() {
     </section>
   );
 }
-
-
-
-
-
-

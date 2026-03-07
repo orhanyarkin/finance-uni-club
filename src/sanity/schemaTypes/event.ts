@@ -103,6 +103,18 @@ export const event = defineType({
       },
       initialValue: 'Etkinlik',
     }),
+    defineField({
+      name: 'titleEn',
+      title: 'Etkinlik Adı (İngilizce)',
+      type: 'string',
+      description: 'İngilizce etkinlik adı — boş bırakılırsa Türkçe kullanılır',
+    }),
+    defineField({
+      name: 'descriptionEn',
+      title: 'Açıklama (İngilizce)',
+      type: 'text',
+      description: 'İngilizce açıklama — boş bırakılırsa Türkçe kullanılır',
+    }),
   ],
   preview: {
     select: {

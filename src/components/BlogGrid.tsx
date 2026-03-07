@@ -87,12 +87,12 @@ export default function BlogGrid({ limit, posts }: BlogGridProps) {
 
                 <Link href={`/blog/${post.slug.current}`} className="block group-hover:text-primary transition-colors">
                   <h3 className="text-xl font-bold text-text-primary mb-3 line-clamp-2 min-h-[56px]">
-                    {post.title}
+                    {language === 'en' ? (post.titleEn || post.title) : post.title}
                   </h3>
                 </Link>
 
                 <p className="text-text-secondary mb-4 line-clamp-3 min-h-[72px]">
-                  {post.excerpt}
+                  {language === 'en' ? (post.excerptEn || post.excerpt) : post.excerpt}
                 </p>
 
                 <div className="flex items-center justify-between">

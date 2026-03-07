@@ -7,6 +7,7 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { urlFor } from "@/sanity/lib/image";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface PartnerLogosProps {
   partners: any[];
@@ -14,6 +15,7 @@ interface PartnerLogosProps {
 
 export default function PartnerLogos({ partners }: PartnerLogosProps) {
   const { theme } = useTheme();
+  const { t } = useLanguage();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -33,7 +35,7 @@ export default function PartnerLogos({ partners }: PartnerLogosProps) {
       <div className="max-w-7xl mx-auto px-4 mb-12 text-center">
         <Link href="/partnerships" className="group inline-block">
           <h2 className="text-3xl md:text-4xl font-bold">
-            <span className="gradient-text group-hover:text-primary transition-colors">İşbirliklerimiz</span>
+            <span className="gradient-text group-hover:text-primary transition-colors">{t("partners.title")}</span>
             <motion.span
               initial={{ x: -10, opacity: 0 }}
               whileInView={{ x: 0, opacity: 1 }}
@@ -46,7 +48,7 @@ export default function PartnerLogos({ partners }: PartnerLogosProps) {
           </h2>
         </Link>
         <p className="text-lg text-text-secondary mt-4 max-w-2xl mx-auto">
-          Sektörün önde gelen şirketleriyle güçlü işbirlikleri
+          {t("partners.subtitle")}
         </p>
       </div>
       </div>

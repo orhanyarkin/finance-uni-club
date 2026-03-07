@@ -2,38 +2,41 @@
 
 import { motion } from "framer-motion";
 import { Lightbulb, Users2, BookOpen, Rocket, Network, Tag } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Features() {
+  const { t } = useLanguage();
+
   const features = [
     {
       icon: Lightbulb,
-      title: "Workshop ve Eğitimler",
-      description: "Girişimcilik, yatırım, blockchain ve fintech konularında uzmanlardan eğitimler alın.",
+      titleKey: "features.workshops.title",
+      descKey: "features.workshops.desc",
     },
     {
       icon: Users2,
-      title: "Networking Etkinlikleri",
-      description: "Sektör profesyonelleri, girişimciler ve yatırımcılarla tanışma fırsatı yakalayın.",
+      titleKey: "features.networking.title",
+      descKey: "features.networking.desc",
     },
     {
       icon: BookOpen,
-      title: "Mentörlük Programı",
-      description: "Deneyimli mentörlerden birebir rehberlik alarak kariyer yolculuğunuzu hızlandırın.",
+      titleKey: "features.mentorship.title",
+      descKey: "features.mentorship.desc",
     },
     {
       icon: Rocket,
-      title: "Girişimcilik Desteği",
-      description: "Etkinliklerimizde deneyimli girişimcilerin tecrübelerini dinleyin, fikir edinin ve bağlantılar kurun.",
+      titleKey: "features.startup.title",
+      descKey: "features.startup.desc",
     },
     {
       icon: Network,
-      title: "Sektör Bağlantıları",
-      description: "Finans ve teknoloji sektöründeki lider şirketlerle iş birliği imkanları.",
+      titleKey: "features.industry.title",
+      descKey: "features.industry.desc",
     },
     {
       icon: Tag,
-      title: "Üyelere Özel İndirimler",
-      description: "Anlaşmalı iş ortaklarımızda özel indirimler ve ayrıcalıklardan yararlanın.",
+      titleKey: "features.discounts.title",
+      descKey: "features.discounts.desc",
     },
   ];
 
@@ -48,10 +51,10 @@ export default function Features() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Neler <span className="gradient-text">Sunuyoruz?</span>
+            {t("features.title1")} <span className="gradient-text">{t("features.title2")}</span>
           </h2>
           <p className="text-xl text-text-secondary max-w-2xl mx-auto">
-            Üyelerimize sağladığımız fırsatlar ve imkanlar
+            {t("features.subtitle")}
           </p>
         </motion.div>
 
@@ -60,7 +63,7 @@ export default function Features() {
             const Icon = feature.icon;
             return (
               <motion.div
-                key={feature.title}
+                key={feature.titleKey}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -71,10 +74,10 @@ export default function Features() {
                   <Icon className="w-7 h-7 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-3">
-                  {feature.title}
+                  {t(feature.titleKey)}
                 </h3>
                 <p className="text-text-secondary leading-relaxed">
-                  {feature.description}
+                  {t(feature.descKey)}
                 </p>
               </motion.div>
             );
@@ -84,12 +87,3 @@ export default function Features() {
     </section>
   );
 }
-
-
-
-
-
-
-
-
-

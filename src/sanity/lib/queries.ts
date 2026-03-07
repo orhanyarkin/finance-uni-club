@@ -4,10 +4,12 @@ import { groq } from "next-sanity";
 export const POSTS_QUERY = groq`*[_type == "post" && defined(slug.current)] | order(publishedAt desc) {
   _id,
   title,
+  titleEn,
   slug,
   mainImage,
   publishedAt,
   excerpt,
+  excerptEn,
   author,
   categories,
   readTime
@@ -17,14 +19,17 @@ export const POSTS_QUERY = groq`*[_type == "post" && defined(slug.current)] | or
 export const POST_QUERY = groq`*[_type == "post" && slug.current == $slug][0] {
   _id,
   title,
+  titleEn,
   slug,
   mainImage,
   publishedAt,
   excerpt,
+  excerptEn,
   author,
   categories,
   readTime,
-  body
+  body,
+  bodyEn
 }`;
 
 // Get all partners
@@ -42,12 +47,14 @@ export const PARTNERS_QUERY = groq`*[_type == "partner" && isActive == true] {
 export const FEATURED_EVENT_QUERY = groq`*[_type == "event" && isFeatured == true] | order(_createdAt desc)[0] {
   _id,
   title,
+  titleEn,
   slug,
   date,
   location,
   locationLink,
   mapEmbedUrl,
   description,
+  descriptionEn,
   registrationLink,
   image,
   participants,
@@ -59,12 +66,14 @@ export const FEATURED_EVENT_QUERY = groq`*[_type == "event" && isFeatured == tru
 export const EVENTS_QUERY = groq`*[_type == "event"] | order(date asc) {
   _id,
   title,
+  titleEn,
   slug,
   date,
   location,
   locationLink,
   mapEmbedUrl,
   description,
+  descriptionEn,
   registrationLink,
   image,
   participants,
@@ -89,12 +98,14 @@ export const TEAM_QUERY = groq`*[_type == "teamMember"] | order(order asc) {
 export const ALL_EVENTS_QUERY = groq`*[_type == "event"] | order(date desc) {
   _id,
   title,
+  titleEn,
   slug,
   date,
   location,
   locationLink,
   mapEmbedUrl,
   description,
+  descriptionEn,
   registrationLink,
   image,
   isFeatured,
@@ -107,12 +118,14 @@ export const ALL_EVENTS_QUERY = groq`*[_type == "event"] | order(date desc) {
 export const EVENT_BY_SLUG_QUERY = groq`*[_type == "event" && slug.current == $slug][0] {
   _id,
   title,
+  titleEn,
   slug,
   date,
   location,
   locationLink,
   mapEmbedUrl,
   description,
+  descriptionEn,
   registrationLink,
   image,
   category,
@@ -125,11 +138,13 @@ export const EVENT_BY_SLUG_QUERY = groq`*[_type == "event" && slug.current == $s
 export const NAVBAR_CONTENT_QUERY = groq`{
   "latestPost": *[_type == "post" && defined(slug.current)] | order(isFeatured desc, publishedAt desc)[0] {
     title,
+    titleEn,
     slug,
     isFeatured
   },
   "latestEvent": *[_type == "event"] | order(isFeatured desc, date desc)[0] {
     title,
+    titleEn,
     slug,
     isFeatured
   }

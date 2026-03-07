@@ -74,5 +74,25 @@ export const post = defineType({
       type: 'array',
       of: [{ type: 'block' }],
     }),
+    defineField({
+      name: 'titleEn',
+      title: 'Başlık (İngilizce)',
+      type: 'string',
+      description: 'İngilizce başlık — boş bırakılırsa Türkçe başlık kullanılır',
+    }),
+    defineField({
+      name: 'excerptEn',
+      title: 'Özet (İngilizce)',
+      type: 'text',
+      rows: 3,
+      description: 'İngilizce özet — boş bırakılırsa Türkçe özet kullanılır',
+    }),
+    defineField({
+      name: 'bodyEn',
+      title: 'İçerik (İngilizce)',
+      type: 'array',
+      of: [{ type: 'block' }],
+      description: 'İngilizce içerik — boş bırakılırsa Türkçe içerik kullanılır',
+    }),
   ],
 })

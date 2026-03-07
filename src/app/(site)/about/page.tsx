@@ -16,7 +16,7 @@ export default async function AboutPage() {
   const teamMembers = await client.fetch(TEAM_QUERY);
 
   return (
-    <main className="min-h-screen pt-20">
+    <main className="min-h-screen pt-36 sm:pt-40">
       <About />
       <Team members={teamMembers} />
       <Features />

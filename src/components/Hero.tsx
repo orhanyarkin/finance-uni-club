@@ -12,10 +12,10 @@ interface HeroProps {
 }
 
 export default function Hero({ featuredEvent }: HeroProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-28 sm:pt-24 lg:pt-20">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-40 sm:pt-36 lg:pt-32">
       {/* Keynote style is cleaner, relying on the global gradient */}
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
@@ -79,17 +79,17 @@ export default function Hero({ featuredEvent }: HeroProps) {
             >
               <div className="text-center lg:text-left">
                 <div className="text-2xl sm:text-3xl font-bold text-white mb-1">500+</div>
-                <div className="text-xs sm:text-sm uppercase tracking-wider">Aktif Üye</div>
+                <div className="text-xs sm:text-sm uppercase tracking-wider">{t("hero.stat1.label")}</div>
               </div>
               <div className="w-px h-12 bg-white/10"></div>
               <div className="text-center lg:text-left">
                 <div className="text-2xl sm:text-3xl font-bold text-white mb-1">20+</div>
-                <div className="text-xs sm:text-sm uppercase tracking-wider">Etkinlik</div>
+                <div className="text-xs sm:text-sm uppercase tracking-wider">{t("hero.stat2.label")}</div>
               </div>
               <div className="w-px h-12 bg-white/10"></div>
               <div className="text-center lg:text-left">
                 <div className="text-2xl sm:text-3xl font-bold text-white mb-1">10+</div>
-                <div className="text-xs sm:text-sm uppercase tracking-wider">Partner</div>
+                <div className="text-xs sm:text-sm uppercase tracking-wider">{t("hero.stat3.label")}</div>
               </div>
             </motion.div>
           </div>
@@ -118,14 +118,14 @@ export default function Hero({ featuredEvent }: HeroProps) {
                     </div>
                   )}
                   <div className="absolute bottom-4 left-6">
-                    <span className="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Öne Çıkan Etkinlik</span>
+                    <span className="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">{t("hero.featuredEvent")}</span>
                   </div>
                 </div>
                 
                 <div className="p-5 sm:p-8 relative z-10">
                   <div className="flex justify-between items-start mb-6">
                     <Link href={`/events/${featuredEvent.slug?.current}`}>
-                      <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white leading-tight hover:text-primary transition-colors cursor-pointer">{featuredEvent.title}</h3>
+                      <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white leading-tight hover:text-primary transition-colors cursor-pointer">{language === 'en' ? (featuredEvent.titleEn || featuredEvent.title) : featuredEvent.title}</h3>
                     </Link>
                   </div>
 
@@ -136,10 +136,10 @@ export default function Hero({ featuredEvent }: HeroProps) {
                         <Clock className="w-5 h-5 text-primary" />
                       </div>
                       <div>
-                        <div className="text-sm text-slate-500">Zaman</div>
+                        <div className="text-sm text-slate-500">{t("hero.time")}</div>
                         <div className="font-medium">
                           <time suppressHydrationWarning>
-                            {new Date(featuredEvent.date).toLocaleDateString("tr-TR", { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
+                            {new Date(featuredEvent.date).toLocaleDateString(language === 'en' ? 'en-US' : 'tr-TR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
                           </time>
                         </div>
                       </div>
@@ -149,7 +149,7 @@ export default function Hero({ featuredEvent }: HeroProps) {
                         <MapPin className="w-5 h-5 text-primary" />
                       </div>
                       <div>
-                        <div className="text-sm text-slate-500">Lokasyon</div>
+                        <div className="text-sm text-slate-500">{t("hero.location")}</div>
                         <div className="font-medium relative z-20">
                           {featuredEvent.locationLink ? (
                             <a 
@@ -178,7 +178,7 @@ export default function Hero({ featuredEvent }: HeroProps) {
                       const isPast = status === 'past';
                       
                       const link = isOpen ? (featuredEvent.registrationLink || "#") : undefined;
-                      const text = isOpen ? "Kayıt Ol" : isClosed ? "Kayıtlar Tamamlandı" : isPast ? "Etkinlik Tamamlandı" : "Yakında";
+                      const text = isOpen ? t("events.register") : isClosed ? t("events.status.closedBtn") : isPast ? t("events.status.pastBtn") : t("events.status.upcomingBtn");
                       const disabledClass = !isOpen ? "opacity-75 cursor-not-allowed bg-slate-200 text-slate-500" : "bg-white text-black hover:bg-slate-200";
 
                       return (

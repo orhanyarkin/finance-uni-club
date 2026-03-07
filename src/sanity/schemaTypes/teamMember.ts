@@ -16,6 +16,12 @@ export const teamMember = defineType({
       type: 'string',
     }),
     defineField({
+      name: 'roleEn',
+      title: 'Görev / Unvan (İngilizce)',
+      type: 'string',
+      description: 'İngilizce unvan — boş bırakılırsa Türkçe kullanılır (örn: President, Treasurer, Secretary)',
+    }),
+    defineField({
       name: 'image',
       title: 'Fotoğraf',
       type: 'image',

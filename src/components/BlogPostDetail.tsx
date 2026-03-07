@@ -8,10 +8,40 @@ import { PortableText } from "@portabletext/react";
 import { urlFor } from "@/sanity/lib/image";
 import { useState, useEffect } from "react";
 import ShareButton from "./ShareButton";
+import { useLanguage } from "@/contexts/LanguageContext";
+
+// Blog category translation map (Sanity TR value → EN display)
+const blogCategoryEn: Record<string, string> = {
+  "Fintech": "Fintech",
+  "Girişimcilik": "Entrepreneurship",
+  "Yatırım": "Investment",
+  "Teknoloji": "Technology",
+  "Ekonomi": "Economics",
+};
+
+// Smart readTime formatter: "5 dk" → "5 min read"
+const formatReadTime = (readTime: string, lang: string): string => {
+  if (!readTime) return "";
+  if (lang !== "en") return readTime;
+  const match = readTime.match(/\d+/);
+  return match ? `${match[0]} min read` : readTime;
+};
 
 export default function BlogPostDetail({ post }: { post: any }) {
+  const { t, language } = useLanguage();
   const [readingProgress, setReadingProgress] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
+
+  // Bilingual content
+  const displayTitle = language === "en" ? (post.titleEn || post.title) : post.title;
+  const displayBody = language === "en" ? (post.bodyEn || post.body) : post.body;
+  const displayCategory = language === "en"
+    ? (blogCategoryEn[post.categories] || post.categories)
+    : post.categories;
+  const displayReadTime = language === "en"
+    ? (post.readTimeEn || formatReadTime(post.readTime, "en"))
+    : post.readTime;
+  const dateLocale = language === "en" ? "en-US" : "tr-TR";
 
   useEffect(() => {
     const updateProgress = () => {
@@ -45,7 +75,7 @@ export default function BlogPostDetail({ post }: { post: any }) {
           {post.mainImage ? (
             <Image
               src={urlFor(post.mainImage).url()}
-              alt={post.title}
+              alt={displayTitle}
               fill
               className="object-cover"
               priority
@@ -72,7 +102,7 @@ export default function BlogPostDetail({ post }: { post: any }) {
                 className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors mb-6 group"
               >
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                <span className="text-sm font-medium">Tüm Yazılar</span>
+                <span className="text-sm font-medium">{t("blog.detail.allPosts")}</span>
               </Link>
             </motion.div>
 
@@ -84,7 +114,7 @@ export default function BlogPostDetail({ post }: { post: any }) {
                 transition={{ duration: 0.5, delay: 0.1 }}
               >
                 <span className="inline-block bg-primary/90 backdrop-blur-sm px-4 py-1.5 rounded-full text-xs font-semibold text-white uppercase tracking-wider mb-4">
-                  {post.categories}
+                  {displayCategory}
                 </span>
               </motion.div>
             )}
@@ -96,7 +126,7 @@ export default function BlogPostDetail({ post }: { post: any }) {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
             >
-              {post.title}
+              {displayTitle}
             </motion.h1>
 
             {/* Meta Info */}
@@ -118,7 +148,7 @@ export default function BlogPostDetail({ post }: { post: any }) {
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
                     <time className="text-sm" suppressHydrationWarning>
-                      {new Date(post.publishedAt).toLocaleDateString("tr-TR", {
+                      {new Date(post.publishedAt).toLocaleDateString(dateLocale, {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'
@@ -126,10 +156,10 @@ export default function BlogPostDetail({ post }: { post: any }) {
                     </time>
                   </div>
               )}
-              {post.readTime && (
+              {displayReadTime && (
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4" />
-                  <span className="text-sm">{post.readTime}</span>
+                  <span className="text-sm">{displayReadTime}</span>
                 </div>
               )}
             </motion.div>
@@ -166,7 +196,7 @@ export default function BlogPostDetail({ post }: { post: any }) {
                 prose-img:rounded-2xl prose-img:shadow-lg
               ">
                 <PortableText
-                  value={post.body}
+                  value={displayBody}
                   components={{
                     block: {
                       h1: ({ children }) => (
@@ -237,9 +267,9 @@ export default function BlogPostDetail({ post }: { post: any }) {
                         </code>
                       ),
                       link: ({ children, value }) => (
-                        <a 
-                          href={value?.href} 
-                          target="_blank" 
+                        <a
+                          href={value?.href}
+                          target="_blank"
                           rel="noopener noreferrer"
                           className="text-primary hover:underline"
                         >
@@ -256,23 +286,23 @@ export default function BlogPostDetail({ post }: { post: any }) {
             <div className="px-6 sm:px-10 py-8 border-t border-white/10 bg-background-tertiary/30">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="text-text-secondary text-sm">
-                  Bu yazı faydalı olduysa paylaşmayı unutmayın!
+                  {t("blog.detail.shareMsg")}
                 </div>
                 <div className="flex items-center gap-3">
-                  {/* Share Button Entegrasyonu */}
+                  {/* Share Button */}
                   <div className="w-40">
-                    <ShareButton 
-                      title={post.title} 
-                      text={`${post.title} | Blog –`}
+                    <ShareButton
+                      title={displayTitle}
+                      text={`${displayTitle} | Blog –`}
                     />
                   </div>
-                  
+
                   <Link
                     href="/blog"
                     className="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5"
                   >
                     <ArrowLeft className="w-4 h-4" />
-                    Diğer Yazılar
+                    {t("blog.detail.otherPosts")}
                   </Link>
                 </div>
               </div>
@@ -286,16 +316,15 @@ export default function BlogPostDetail({ post }: { post: any }) {
             transition={{ duration: 0.6, delay: 0.6 }}
             className="mt-16 mb-20"
           >
-            <h3 className="text-2xl font-bold text-text-primary mb-8">Benzer Yazılar</h3>
+            <h3 className="text-2xl font-bold text-text-primary mb-8">{t("blog.detail.relatedTitle")}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {/* Placeholder cards - can be populated with actual related posts */}
               <Link href="/blog" className="group">
                 <div className="bg-background-secondary/60 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-primary/30 transition-all duration-300 hover:-translate-y-1">
-                  <div className="text-xs text-primary font-semibold uppercase tracking-wider mb-2">Finans</div>
+                  <div className="text-xs text-primary font-semibold uppercase tracking-wider mb-2">Blog</div>
                   <h4 className="text-lg font-semibold text-text-primary group-hover:text-primary transition-colors">
-                    Daha fazla yazı keşfet →
+                    {t("blog.detail.discoverMore")}
                   </h4>
-                  <p className="text-text-secondary text-sm mt-2">Blog sayfamızda tüm içeriklerimize göz atın.</p>
+                  <p className="text-text-secondary text-sm mt-2">{t("blog.detail.discoverDesc")}</p>
                 </div>
               </Link>
             </div>

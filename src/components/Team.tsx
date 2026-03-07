@@ -1,19 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { User, Crown, DollarSign, FileText, Users2, Megaphone, Target, Calendar, Shield, Share2 } from "lucide-react";
+import { User, Crown, DollarSign, FileText, Megaphone, Target, Calendar, Shield, Share2 } from "lucide-react";
 import Image from "next/image";
-
-
-
 import { urlFor } from "@/sanity/lib/image";
 import Link from "next/link";
 import { Linkedin } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface TeamMember {
   _id: string;
   name: string;
   role: string;
+  roleEn?: string;
   image: any;
   committee: string;
   comingSoon?: boolean;
@@ -25,33 +24,40 @@ interface TeamProps {
 }
 
 export default function Team({ members = [] }: TeamProps) {
+  const { t, language } = useLanguage();
+
   // Yönetim Kurulu
   const board = members.filter(m => m.committee === 'Board');
 
-  // Komiteler (Konfigürasyon)
+  // Komiteler (Konfigürasyon) — name stays Turkish to match Sanity data; labelKey used for display
   const committeeConfig = [
     {
       name: "Kurumsal İletişim",
+      labelKey: "team.committee.corporate",
       icon: Megaphone,
       color: "from-blue-500 to-cyan-500",
     },
     {
       name: "Sponsorluk",
+      labelKey: "team.committee.sponsorship",
       icon: Target,
       color: "from-purple-500 to-pink-500",
     },
     {
       name: "Etkinlik",
+      labelKey: "team.committee.events",
       icon: Calendar,
       color: "from-green-500 to-emerald-500",
     },
     {
       name: "Denetim Kurulu",
+      labelKey: "team.committee.audit",
       icon: Shield,
       color: "from-orange-500 to-red-500",
     },
     {
       name: "Sosyal Medya",
+      labelKey: "team.committee.social",
       icon: Share2,
       color: "from-cyan-500 to-blue-500",
     },
@@ -61,6 +67,7 @@ export default function Team({ members = [] }: TeamProps) {
     ...c,
     members: members.filter(m => m.committee === c.name)
   }));
+
   const getBoardIcon = (role: string) => {
     if (role.includes("Başkan")) return Crown;
     if (role.toLowerCase().includes("sayman")) return DollarSign;
@@ -71,9 +78,8 @@ export default function Team({ members = [] }: TeamProps) {
   return (
     <section id="team" className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Yönetim Kurulu */}
+        {/* Yönetim Kurulu / Board of Directors */}
         <motion.div
-  // ... (header animation code remains the same, assuming it's above line 172 in original, but here limited context. I'll include the header for safety or skip to the grid)
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -81,10 +87,10 @@ export default function Team({ members = [] }: TeamProps) {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            <span className="gradient-text">Yönetim Kurulu</span>
+            <span className="gradient-text">{t("team.board.title")}</span>
           </h2>
           <p className="text-xl text-text-secondary max-w-2xl mx-auto">
-            Kulübümüzü yöneten liderlik ekibimiz ve komite üyelerimiz
+            {t("team.board.subtitle")}
           </p>
         </motion.div>
 
@@ -103,13 +109,11 @@ export default function Team({ members = [] }: TeamProps) {
                 }`}
               >
                 <div className="relative">
-
                   {member.comingSoon ? (
-                    // Yakında tasarımı
                     <div className="aspect-square overflow-hidden bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
                       <div className="text-center">
                         <Icon className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-                        <p className="text-gray-400 text-lg font-semibold">Yakında</p>
+                        <p className="text-gray-400 text-lg font-semibold">{t("team.comingSoon")}</p>
                       </div>
                     </div>
                   ) : (
@@ -119,7 +123,7 @@ export default function Team({ members = [] }: TeamProps) {
                         alt={member.name}
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-500"
-                        unoptimized={!member.image} // External avatars might need unoptimized if not in config, but they are in config. Still safe.
+                        unoptimized={!member.image}
                       />
                     </div>
                   )}
@@ -138,7 +142,7 @@ export default function Team({ members = [] }: TeamProps) {
                 <div className="p-6 text-center">
                   <h3 className="text-xl font-bold text-white mb-1">{member.name}</h3>
                   <p className={`font-semibold ${member.comingSoon ? 'text-gray-500' : 'text-primary'}`}>
-                    {member.role}
+                    {language === "en" ? (member.roleEn || member.role) : member.role}
                   </p>
                 </div>
               </motion.div>
@@ -146,7 +150,7 @@ export default function Team({ members = [] }: TeamProps) {
           })}
         </div>
 
-        {/* Komiteler */}
+        {/* Komitelerimiz / Our Committees */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -155,10 +159,10 @@ export default function Team({ members = [] }: TeamProps) {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            <span className="gradient-text">Komitelerimiz</span>
+            <span className="gradient-text">{t("team.committees.title")}</span>
           </h2>
           <p className="text-xl text-text-secondary max-w-2xl mx-auto">
-            Yönetim kurulu üyelerimizin komite bazında görev dağılımı
+            {t("team.committees.subtitle")}
           </p>
         </motion.div>
 
@@ -181,7 +185,7 @@ export default function Team({ members = [] }: TeamProps) {
                   >
                     <Icon className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-3xl font-bold text-white">{committee.name}</h3>
+                  <h3 className="text-3xl font-bold text-white">{t(committee.labelKey)}</h3>
                 </div>
 
                 {/* Komite Üyeleri */}
@@ -200,7 +204,6 @@ export default function Team({ members = [] }: TeamProps) {
                       <div className="flex flex-col items-center text-center">
                         <div className="relative mb-4">
                           {member.comingSoon ? (
-                            // Yakında tasarımı
                             <div
                               className={`w-32 h-32 rounded-full bg-gradient-to-r from-gray-700 to-gray-800 flex items-center justify-center border-4 border-gray-600`}
                             >
@@ -210,21 +213,21 @@ export default function Team({ members = [] }: TeamProps) {
                             <div
                               className={`relative w-32 h-32 rounded-full overflow-hidden border-4 border-transparent bg-gradient-to-r ${committee.color} p-1`}
                             >
-                                <Image
-                                  src={member.image ? urlFor(member.image).url() : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=0b0f1a&color=fff&size=200`}
-                                  alt={member.name}
-                                  fill
-                                  className="rounded-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                  unoptimized={!member.image}
-                                />
+                              <Image
+                                src={member.image ? urlFor(member.image).url() : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=0b0f1a&color=fff&size=200`}
+                                alt={member.name}
+                                fill
+                                className="rounded-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                unoptimized={!member.image}
+                              />
                             </div>
                           )}
                         </div>
                         <h4 className={`text-lg font-bold mb-1 ${member.comingSoon ? 'text-gray-500' : 'text-white'}`}>
-                          {member.name}
+                          {member.comingSoon ? t("team.comingSoon") : member.name}
                         </h4>
                         <p className={`text-sm ${member.comingSoon ? 'text-gray-600' : 'text-text-secondary'} mb-2`}>
-                          {member.role}
+                          {language === "en" ? (member.roleEn || member.role) : member.role}
                         </p>
                         {member.linkedin && !member.comingSoon && (
                           <Link href={member.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors">
@@ -243,4 +246,3 @@ export default function Team({ members = [] }: TeamProps) {
     </section>
   );
 }
-

@@ -3,27 +3,29 @@
 import { Mail, Instagram, MessageCircle, MapPin, Linkedin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Footer() {
+  const { t } = useLanguage();
   const currentYear = new Date().getFullYear();
 
   const footerLinks = {
     club: [
-      { title: "Hakkımızda", href: "/about" },
-      { title: "Etkinlikler", href: "/events" },
-      { title: "Ekibimiz", href: "/about#team" },
-      { title: "İletişim", href: "https://chat.whatsapp.com/BTDpU4G758206p2s6JZlEc?mode=wwt", external: true },
+      { titleKey: "footer.club.about", href: "/about" },
+      { titleKey: "footer.club.events", href: "/events" },
+      { titleKey: "footer.club.team", href: "/about#team" },
+      { titleKey: "footer.club.contact", href: "https://chat.whatsapp.com/BTDpU4G758206p2s6JZlEc?mode=wwt", external: true },
     ],
     resources: [
-      { title: "Blog", href: "/blog" },
-      { title: "Haberler", href: "#", comingSoon: true },
-      { title: "SSS", href: "/sss" },
-      { title: "Kaynaklar", href: "#", comingSoon: true },
+      { titleKey: "footer.resources.blog", href: "/blog" },
+      { titleKey: "footer.resources.news", href: "#", comingSoon: true },
+      { titleKey: "footer.resources.faq", href: "/sss" },
+      { titleKey: "footer.resources.other", href: "#", comingSoon: true },
     ],
     legal: [
-      { title: "Gizlilik Politikası", href: "/legal/privacy" },
-      { title: "Kullanım Şartları", href: "/legal/terms" },
-      { title: "Çerez Politikası", href: "/legal/cookies" },
+      { titleKey: "footer.legal.privacy", href: "/legal/privacy" },
+      { titleKey: "footer.legal.terms", href: "/legal/terms" },
+      { titleKey: "footer.legal.cookies", href: "/legal/cookies" },
     ],
   };
 
@@ -43,14 +45,13 @@ export default function Footer() {
                 />
               </div>
               <span className="text-lg font-bold text-white group-hover:text-primary transition-colors">
-                Startup & Finans
+                {t("brand.shortName")}
               </span>
             </Link>
             <p className="text-slate-400 mb-6 leading-relaxed font-normal text-sm">
-              Girişimcilik ve finans dünyasında kariyer yapmak isteyen öğrencilerin 
-              buluşma noktası. Geleceği birlikte inşa ediyoruz.
+              {t("footer.brand.desc")}
             </p>
-            <a 
+            <a
               href="https://maps.app.goo.gl/syUu7YhmeRPrmfjG7"
               target="_blank"
               rel="noopener noreferrer"
@@ -97,12 +98,14 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Links - Kulübümüz */}
+          {/* Links - Kulübümüz / Our Club */}
           <div>
-            <h4 className="text-sm font-bold mb-6 text-white uppercase tracking-wider">Kulübümüz</h4>
+            <h4 className="text-sm font-bold mb-6 text-white uppercase tracking-wider">
+              {t("footer.club.title")}
+            </h4>
             <ul className="space-y-3">
               {footerLinks.club.map((link) => (
-                <li key={link.title}>
+                <li key={link.titleKey}>
                   {link.external ? (
                     <a
                       href={link.href}
@@ -110,14 +113,14 @@ export default function Footer() {
                       rel="noopener noreferrer"
                       className="text-slate-400 hover:text-primary transition-colors text-sm"
                     >
-                      {link.title}
+                      {t(link.titleKey)}
                     </a>
                   ) : (
                     <Link
                       href={link.href}
                       className="text-slate-400 hover:text-primary transition-colors text-sm"
                     >
-                      {link.title}
+                      {t(link.titleKey)}
                     </Link>
                   )}
                 </li>
@@ -125,22 +128,24 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Links - Kaynaklar */}
+          {/* Links - Kaynaklar / Resources */}
           <div>
-            <h4 className="text-sm font-bold mb-6 text-white uppercase tracking-wider">Kaynaklar</h4>
+            <h4 className="text-sm font-bold mb-6 text-white uppercase tracking-wider">
+              {t("footer.resources.title")}
+            </h4>
             <ul className="space-y-3">
               {footerLinks.resources.map((link) => (
-                <li key={link.title}>
+                <li key={link.titleKey}>
                   {link.comingSoon ? (
                     <span className="text-slate-600 text-sm cursor-not-allowed">
-                      {link.title} <span className="text-xs">(Yakında)</span>
+                      {t(link.titleKey)} <span className="text-xs">({t("footer.resources.comingSoon")})</span>
                     </span>
                   ) : (
                     <Link
                       href={link.href}
                       className="text-slate-400 hover:text-primary transition-colors text-sm"
                     >
-                      {link.title}
+                      {t(link.titleKey)}
                     </Link>
                   )}
                 </li>
@@ -148,17 +153,19 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Links - Yasal */}
+          {/* Links - Yasal / Legal */}
           <div>
-            <h4 className="text-sm font-bold mb-6 text-white uppercase tracking-wider">Yasal</h4>
+            <h4 className="text-sm font-bold mb-6 text-white uppercase tracking-wider">
+              {t("footer.legal.title")}
+            </h4>
             <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
-                <li key={link.title}>
+                <li key={link.titleKey}>
                   <Link
                     href={link.href}
                     className="text-slate-400 hover:text-primary transition-colors text-sm"
                   >
-                    {link.title}
+                    {t(link.titleKey)}
                   </Link>
                 </li>
               ))}
@@ -170,7 +177,7 @@ export default function Footer() {
         <div className="border-t border-white/10 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-slate-500 text-sm">
-              © {currentYear} Ankara Medipol Üniversitesi Startup & Finans Topluluğu. Tüm hakları saklıdır.
+              © {currentYear} {t("footer.university")} {t("footer.copyrightText")}
             </p>
           </div>
         </div>

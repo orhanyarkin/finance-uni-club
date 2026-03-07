@@ -225,6 +225,81 @@ const translations = {
     "contact.email.action": "Mail Gönder",
     "contact.visitUs": "Bizi Ziyaret Edin",
     "contact.getDirections": "Haritada Yol Tarifi Al",
+    "contact.email.title": "E-Posta",
+    "contact.university": "Ankara Medipol Üniversitesi",
+
+    // Team section
+    "team.board.title": "Yönetim Kurulu",
+    "team.board.subtitle": "Kulübümüzü yöneten liderlik ekibimiz ve komite üyelerimiz",
+    "team.committees.title": "Komitelerimiz",
+    "team.committees.subtitle": "Yönetim kurulu üyelerimizin komite bazında görev dağılımı",
+    "team.comingSoon": "Yakında",
+    "team.committee.corporate": "Kurumsal İletişim",
+    "team.committee.sponsorship": "Sponsorluk",
+    "team.committee.events": "Etkinlik",
+    "team.committee.audit": "Denetim Kurulu",
+    "team.committee.social": "Sosyal Medya",
+
+    // Footer
+    "footer.brand.desc": "Girişimcilik ve finans dünyasında kariyer yapmak isteyen öğrencilerin buluşma noktası. Geleceği birlikte inşa ediyoruz.",
+    "footer.club.title": "Kulübümüz",
+    "footer.club.about": "Hakkımızda",
+    "footer.club.events": "Etkinlikler",
+    "footer.club.team": "Ekibimiz",
+    "footer.club.contact": "İletişim",
+    "footer.resources.title": "Kaynaklar",
+    "footer.resources.blog": "Blog",
+    "footer.resources.news": "Haberler",
+    "footer.resources.faq": "SSS",
+    "footer.resources.other": "Kaynaklar",
+    "footer.resources.comingSoon": "Yakında",
+    "footer.legal.title": "Yasal",
+    "footer.legal.privacy": "Gizlilik Politikası",
+    "footer.legal.terms": "Kullanım Şartları",
+    "footer.legal.cookies": "Çerez Politikası",
+    "footer.university": "Ankara Medipol Üniversitesi",
+    "footer.copyrightText": "Startup & Finans Topluluğu. Tüm hakları saklıdır.",
+
+    // Brand
+    "brand.shortName": "Startup & Finans",
+    "brand.fullName": "Startup & Finans Topluluğu",
+
+    // Blog detail page
+    "blog.detail.allPosts": "Tüm Yazılar",
+    "blog.detail.shareMsg": "Bu yazı faydalı olduysa paylaşmayı unutmayın!",
+    "blog.detail.otherPosts": "Diğer Yazılar",
+    "blog.detail.relatedTitle": "Benzer Yazılar",
+    "blog.detail.discoverMore": "Daha fazla yazı keşfet →",
+    "blog.detail.discoverDesc": "Blog sayfamızda tüm içeriklerimize göz atın.",
+
+    // Event detail page
+    "event.detail.allEvents": "Tüm Etkinlikler",
+    "event.detail.date": "Tarih",
+    "event.detail.time": "Saat",
+    "event.detail.location": "Konum",
+    "event.detail.aboutTitle": "Etkinlik Hakkında",
+    "event.detail.shareMsg": "Bu etkinliği arkadaşlarınla paylaş!",
+    "event.detail.viewOnMap": "Haritada Görüntüle",
+    "event.detail.detailsTitle": "Katılım Detayları",
+    "event.detail.participants": "Katılımcı",
+    "event.detail.peopleUnit": "Kişi",
+    "event.detail.register": "Kayıt Ol",
+    "event.detail.closed": "Kayıtlar Tamamlandı",
+    "event.detail.ended": "Bir Dahaki Sefere",
+    "event.detail.soon": "Yakında",
+    "event.detail.backAll": "Tüm Etkinliklere Dön",
+    "event.detail.relatedTitle": "Yaklaşan Diğer Etkinlikler",
+    "event.detail.comingSoon": "Yakında",
+    "event.detail.discoverMore": "Daha fazla etkinlik keşfet →",
+    "event.detail.discoverDesc": "Etkinlik takvimimize göz atın ve yerinizi ayırtın.",
+    "event.detail.shareInvite": "Startup & Finans Topluluğu seni etkinliğe bekliyor 🚀",
+
+    // Share button
+    "share.button": "Paylaş",
+    "share.title": "Paylaşım Seçenekleri",
+    "share.copyNote": "(Link kopyalanır)",
+    "share.copied": "Kopyalandı!",
+    "share.copy": "Linki Kopyala",
   },
   en: {
     // Navbar - ana linkler
@@ -437,16 +512,97 @@ const translations = {
     "contact.email.action": "Send Email",
     "contact.visitUs": "Visit Us",
     "contact.getDirections": "Get Directions on Map",
+    "contact.email.title": "Email",
+    "contact.university": "Ankara Medipol University",
+
+    // Team section
+    "team.board.title": "Board of Directors",
+    "team.board.subtitle": "Our leadership team and committee members who run the club",
+    "team.committees.title": "Our Committees",
+    "team.committees.subtitle": "Task distribution of our board members by committee",
+    "team.comingSoon": "Coming Soon",
+    "team.committee.corporate": "Corporate Communications",
+    "team.committee.sponsorship": "Sponsorship",
+    "team.committee.events": "Events",
+    "team.committee.audit": "Audit Board",
+    "team.committee.social": "Social Media",
+
+    // Footer
+    "footer.brand.desc": "Meeting point for students who want to build a career in entrepreneurship and finance. Building the future together.",
+    "footer.club.title": "Our Club",
+    "footer.club.about": "About Us",
+    "footer.club.events": "Events",
+    "footer.club.team": "Our Team",
+    "footer.club.contact": "Contact",
+    "footer.resources.title": "Resources",
+    "footer.resources.blog": "Blog",
+    "footer.resources.news": "News",
+    "footer.resources.faq": "FAQ",
+    "footer.resources.other": "Resources",
+    "footer.resources.comingSoon": "Coming Soon",
+    "footer.legal.title": "Legal",
+    "footer.legal.privacy": "Privacy Policy",
+    "footer.legal.terms": "Terms of Use",
+    "footer.legal.cookies": "Cookie Policy",
+    "footer.university": "Ankara Medipol University",
+    "footer.copyrightText": "Startup & Finance Community. All rights reserved.",
+
+    // Brand
+    "brand.shortName": "Startup & Finance",
+    "brand.fullName": "Startup & Finance Community",
+
+    // Blog detail page
+    "blog.detail.allPosts": "All Posts",
+    "blog.detail.shareMsg": "If you found this post helpful, don't forget to share!",
+    "blog.detail.otherPosts": "Other Posts",
+    "blog.detail.relatedTitle": "Related Posts",
+    "blog.detail.discoverMore": "Discover more posts →",
+    "blog.detail.discoverDesc": "Browse all our content on the blog page.",
+
+    // Event detail page
+    "event.detail.allEvents": "All Events",
+    "event.detail.date": "Date",
+    "event.detail.time": "Time",
+    "event.detail.location": "Location",
+    "event.detail.aboutTitle": "About the Event",
+    "event.detail.shareMsg": "Share this event with your friends!",
+    "event.detail.viewOnMap": "View on Map",
+    "event.detail.detailsTitle": "Participation Details",
+    "event.detail.participants": "Participants",
+    "event.detail.peopleUnit": "People",
+    "event.detail.register": "Register",
+    "event.detail.closed": "Registration Closed",
+    "event.detail.ended": "Maybe Next Time",
+    "event.detail.soon": "Coming Soon",
+    "event.detail.backAll": "Back to All Events",
+    "event.detail.relatedTitle": "Other Upcoming Events",
+    "event.detail.comingSoon": "Coming Soon",
+    "event.detail.discoverMore": "Discover more events →",
+    "event.detail.discoverDesc": "Check our event calendar and reserve your spot.",
+    "event.detail.shareInvite": "Startup & Finance Community is waiting for you at the event 🚀",
+
+    // Share button
+    "share.button": "Share",
+    "share.title": "Share Options",
+    "share.copyNote": "(Link will be copied)",
+    "share.copied": "Copied!",
+    "share.copy": "Copy Link",
   },
 };
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>("tr");
 
-  // Persist language preference in localStorage
+  // On mount: restore saved preference OR detect browser language
   useEffect(() => {
     const saved = localStorage.getItem("lang") as Language | null;
-    if (saved === "en" || saved === "tr") setLanguage(saved);
+    if (saved === "en" || saved === "tr") {
+      setLanguage(saved);
+    } else {
+      // No saved preference — use browser language
+      const browserLang = (navigator.language || "").toLowerCase();
+      if (browserLang.startsWith("en")) setLanguage("en");
+    }
   }, []);
 
   const handleSetLanguage = (lang: Language) => {

@@ -63,6 +63,12 @@ export const post = defineType({
       type: 'string',
     }),
     defineField({
+      name: 'readTimeEn',
+      title: 'Okuma Süresi (İngilizce, örn: 5 min read)',
+      type: 'string',
+      description: 'İngilizce okuma süresi — boş bırakılırsa otomatik dönüştürülür',
+    }),
+    defineField({
       name: 'excerpt',
       title: 'Özet (Kartta görünecek)',
       type: 'text',

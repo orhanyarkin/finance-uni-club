@@ -1,17 +1,24 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Calendar, Clock, MapPin, ArrowLeft, Users, ChevronUp, Share2, ArrowRight } from "lucide-react";
+import { Calendar, Clock, MapPin, ArrowLeft, Users, ChevronUp, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/image";
 import { useState, useEffect } from "react";
 import ShareButton from "./ShareButton";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function EventDetail({ event }: { event: any }) {
+  const { t, language } = useLanguage();
   const [readingProgress, setReadingProgress] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const eventDate = new Date(event.date);
+
+  // Bilingual content
+  const displayTitle = language === "en" ? (event.titleEn || event.title) : event.title;
+  const displayDescription = language === "en" ? (event.descriptionEn || event.description) : event.description;
+  const dateLocale = language === "en" ? "en-US" : "tr-TR";
 
   useEffect(() => {
     const updateProgress = () => {
@@ -30,6 +37,14 @@ export default function EventDetail({ event }: { event: any }) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // Registration button text
+  const getRegisterLabel = () => {
+    if (event.status === 'open') return t("event.detail.register");
+    if (event.status === 'closed') return t("event.detail.closed");
+    if (event.status === 'past') return t("event.detail.ended");
+    return t("event.detail.soon");
+  };
+
   return (
     <main className="min-h-screen bg-background">
       {/* Reading Progress Bar */}
@@ -45,7 +60,7 @@ export default function EventDetail({ event }: { event: any }) {
           {event.image ? (
             <Image
               src={urlFor(event.image).url()}
-              alt={event.title}
+              alt={displayTitle}
               fill
               className="object-cover"
               priority
@@ -72,7 +87,7 @@ export default function EventDetail({ event }: { event: any }) {
                 className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors mb-6 group"
               >
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                <span className="text-sm font-medium">Tüm Etkinlikler</span>
+                <span className="text-sm font-medium">{t("event.detail.allEvents")}</span>
               </Link>
             </motion.div>
 
@@ -96,7 +111,7 @@ export default function EventDetail({ event }: { event: any }) {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
             >
-              {event.title}
+              {displayTitle}
             </motion.h1>
 
             {/* Meta Info */}
@@ -111,18 +126,22 @@ export default function EventDetail({ event }: { event: any }) {
                   <Calendar className="w-5 h-5 text-primary-light" />
                 </div>
                 <div>
-                  <div className="text-xs text-white/60">Tarih</div>
-                  <time className="text-sm font-medium" suppressHydrationWarning>{eventDate.toLocaleDateString("tr-TR", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Europe/Istanbul' })}</time>
+                  <div className="text-xs text-white/60">{t("event.detail.date")}</div>
+                  <time className="text-sm font-medium" suppressHydrationWarning>
+                    {eventDate.toLocaleDateString(dateLocale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Europe/Istanbul' })}
+                  </time>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-white/10 rounded-lg backdrop-blur-sm">
                   <Clock className="w-5 h-5 text-primary-light" />
                 </div>
                 <div>
-                  <div className="text-xs text-white/60">Saat</div>
-                  <time className="text-sm font-medium" suppressHydrationWarning>{eventDate.toLocaleTimeString("tr-TR", { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Istanbul' })}</time>
+                  <div className="text-xs text-white/60">{t("event.detail.time")}</div>
+                  <time className="text-sm font-medium" suppressHydrationWarning>
+                    {eventDate.toLocaleTimeString(dateLocale, { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Istanbul' })}
+                  </time>
                 </div>
               </div>
 
@@ -131,7 +150,7 @@ export default function EventDetail({ event }: { event: any }) {
                   <MapPin className="w-5 h-5 text-primary-light" />
                 </div>
                 <div>
-                  <div className="text-xs text-white/60">Konum</div>
+                  <div className="text-xs text-white/60">{t("event.detail.location")}</div>
                   <div className="text-sm font-medium">{event.location}</div>
                 </div>
               </div>
@@ -154,30 +173,30 @@ export default function EventDetail({ event }: { event: any }) {
               {/* Description Card */}
               <div className="bg-background-secondary/80 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl shadow-black/10 overflow-hidden">
                 <div className="p-8 sm:p-10">
-                  <h2 className="text-2xl font-bold mb-6 text-text-primary">Etkinlik Hakkında</h2>
+                  <h2 className="text-2xl font-bold mb-6 text-text-primary">{t("event.detail.aboutTitle")}</h2>
                   <div className="prose prose-lg prose-invert max-w-none text-text-secondary leading-relaxed whitespace-pre-line">
-                    {event.description}
+                    {displayDescription}
                   </div>
                 </div>
 
-                {/* Bottom Actions - Matching Blog Style */}
+                {/* Bottom Actions */}
                 <div className="px-8 sm:px-10 py-8 border-t border-white/10 bg-background-tertiary/30">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="text-text-secondary text-sm">
-                      Bu etkinliği arkadaşlarınla paylaş!
+                      {t("event.detail.shareMsg")}
                     </div>
-                      <div className="flex items-center gap-3 w-full sm:w-auto">
-                        <div className="w-full sm:w-40">
-                          <ShareButton 
-                            title={event.title} 
-                            text={
-                              (event.status === 'open' || event.status === 'upcoming' || !event.status)
-                                ? `Startup & Finans Topluluğu seni etkinliğe bekliyor 🚀 | ${event.title}`
-                                : `${event.title} -`
-                            }
-                          />
-                        </div>
+                    <div className="flex items-center gap-3 w-full sm:w-auto">
+                      <div className="w-full sm:w-40">
+                        <ShareButton
+                          title={displayTitle}
+                          text={
+                            (event.status === 'open' || event.status === 'upcoming' || !event.status)
+                              ? `${t("event.detail.shareInvite")} | ${displayTitle}`
+                              : `${displayTitle} -`
+                          }
+                        />
                       </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -195,14 +214,14 @@ export default function EventDetail({ event }: { event: any }) {
                     src={event.mapEmbedUrl || `https://maps.google.com/maps?q=${encodeURIComponent(event.location)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
                     className="grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
                   ></iframe>
-                  <a 
+                  <a
                     href={event.locationLink}
                     target="_blank"
                     rel="noreferrer"
                     className="absolute bottom-6 right-6 bg-white text-black px-5 py-3 rounded-xl text-sm font-bold hover:bg-gray-100 transition-all shadow-xl hover:-translate-y-1 flex items-center gap-2 z-10"
                   >
                     <MapPin className="w-4 h-4" />
-                    Haritada Görüntüle
+                    {t("event.detail.viewOnMap")}
                   </a>
                 </div>
               )}
@@ -218,8 +237,8 @@ export default function EventDetail({ event }: { event: any }) {
               <div className="sticky top-24 space-y-6">
                 {/* Info Card */}
                 <div className="bg-background-secondary/80 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl shadow-black/10 p-6">
-                  <h3 className="text-xl font-bold mb-6 text-text-primary">Katılım Detayları</h3>
-                  
+                  <h3 className="text-xl font-bold mb-6 text-text-primary">{t("event.detail.detailsTitle")}</h3>
+
                   <div className="space-y-5 mb-8">
                     {event.participants && (
                       <div className="flex items-center gap-4 p-4 rounded-2xl bg-background-tertiary/50">
@@ -227,28 +246,25 @@ export default function EventDetail({ event }: { event: any }) {
                           <Users className="w-5 h-5" />
                         </div>
                         <div>
-                          <div className="text-xs text-text-muted uppercase tracking-wide">Katılımcı</div>
-                          <div className="font-semibold text-text-primary">{event.participants} Kişi</div>
+                          <div className="text-xs text-text-muted uppercase tracking-wide">{t("event.detail.participants")}</div>
+                          <div className="font-semibold text-text-primary">{event.participants} {t("event.detail.peopleUnit")}</div>
                         </div>
                       </div>
                     )}
-                    
-                    <a 
+
+                    <a
                       href={event.status === 'open' ? (event.registrationLink || '#') : undefined}
                       target={event.status === 'open' ? "_blank" : undefined}
                       className={`w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 shadow-lg ${
                         event.status !== 'open'
-                          ? 'bg-gray-700/50 cursor-not-allowed text-gray-400' 
+                          ? 'bg-gray-700/50 cursor-not-allowed text-gray-400'
                           : 'bg-primary hover:bg-primary-dark text-white hover:shadow-primary/30 hover:-translate-y-1'
                       }`}
                       onClick={(e) => {
                         if (event.status !== 'open') e.preventDefault();
                       }}
                     >
-                      {event.status === 'open' ? 'Kayıt Ol' : 
-                       event.status === 'closed' ? 'Kayıtlar Tamamlandı' : 
-                       event.status === 'past' ? 'Bir Dahaki Sefere' : 
-                       'Yakında'}
+                      {getRegisterLabel()}
                       {event.status === 'open' && <ArrowRight className="w-5 h-5" />}
                     </a>
                   </div>
@@ -259,7 +275,7 @@ export default function EventDetail({ event }: { event: any }) {
                       className="inline-flex w-full justify-center items-center gap-2 text-text-secondary hover:text-primary transition-colors text-sm font-medium"
                     >
                       <ArrowLeft className="w-4 h-4" />
-                      Tüm Etkinliklere Dön
+                      {t("event.detail.backAll")}
                     </Link>
                   </div>
                 </div>
@@ -274,17 +290,16 @@ export default function EventDetail({ event }: { event: any }) {
             transition={{ duration: 0.6, delay: 0.6 }}
             className="mt-16 mb-20"
           >
-            <h3 className="text-2xl font-bold text-text-primary mb-8">Yaklaşan Diğer Etkinlikler</h3>
+            <h3 className="text-2xl font-bold text-text-primary mb-8">{t("event.detail.relatedTitle")}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* Placeholder cards */}
               <Link href="/events" className="group">
                 <div className="bg-background-secondary/60 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-primary/30 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col justify-between">
                   <div>
-                    <div className="text-xs text-emerald-400 font-semibold uppercase tracking-wider mb-2">Yakında</div>
+                    <div className="text-xs text-emerald-400 font-semibold uppercase tracking-wider mb-2">{t("event.detail.comingSoon")}</div>
                     <h4 className="text-lg font-semibold text-text-primary group-hover:text-primary transition-colors mb-2">
-                      Daha fazla etkinlik keşfet →
+                      {t("event.detail.discoverMore")}
                     </h4>
-                    <p className="text-text-secondary text-sm">Etkinlik takvimimize göz atın ve yerinizi ayırtın.</p>
+                    <p className="text-text-secondary text-sm">{t("event.detail.discoverDesc")}</p>
                   </div>
                 </div>
               </Link>

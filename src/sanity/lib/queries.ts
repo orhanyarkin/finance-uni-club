@@ -12,7 +12,8 @@ export const POSTS_QUERY = groq`*[_type == "post" && defined(slug.current)] | or
   excerptEn,
   author,
   categories,
-  readTime
+  readTime,
+  readTimeEn
 }`;
 
 // Get a single post by slug
@@ -28,6 +29,7 @@ export const POST_QUERY = groq`*[_type == "post" && slug.current == $slug][0] {
   author,
   categories,
   readTime,
+  readTimeEn,
   body,
   bodyEn
 }`;
@@ -40,7 +42,8 @@ export const PARTNERS_QUERY = groq`*[_type == "partner" && isActive == true] {
   website,
   googleMapsUrl,
   discount,
-  description
+  description,
+  descriptionEn
 }`;
 
 // Get featured event (single)
@@ -86,6 +89,7 @@ export const TEAM_QUERY = groq`*[_type == "teamMember"] | order(order asc) {
   _id,
   name,
   role,
+  roleEn,
   image,
   linkedin,
   twitter,

@@ -41,6 +41,12 @@ export const partner = defineType({
       description: 'İş ortağı hakkında kısa açıklama',
     }),
     defineField({
+      name: 'descriptionEn',
+      title: 'Açıklama (İngilizce)',
+      type: 'text',
+      description: 'İngilizce açıklama — boş bırakılırsa Türkçe kullanılır',
+    }),
+    defineField({
       name: 'isActive',
       title: 'Sitede Yayınla',
       type: 'boolean',

@@ -7,6 +7,23 @@ import Image from "next/image";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { urlFor } from "@/sanity/lib/image";
 
+// Blog category translation map (Sanity TR value → EN display)
+const blogCategoryEn: Record<string, string> = {
+  "Fintech": "Fintech",
+  "Girişimcilik": "Entrepreneurship",
+  "Yatırım": "Investment",
+  "Teknoloji": "Technology",
+  "Ekonomi": "Economics",
+};
+
+// Smart readTime formatter: "5 dk" → "5 min read" (fallback when readTimeEn not set)
+const formatReadTime = (readTime: string, lang: string): string => {
+  if (!readTime) return "";
+  if (lang !== "en") return readTime;
+  const match = readTime.match(/\d+/);
+  return match ? `${match[0]} min read` : readTime;
+};
+
 interface BlogGridProps {
   limit?: number;
   posts: any[];
@@ -15,6 +32,7 @@ interface BlogGridProps {
 export default function BlogGrid({ limit, posts }: BlogGridProps) {
   const { language, t } = useLanguage();
   const displayPosts = limit ? posts.slice(0, limit) : posts;
+  const dateLocale = language === "en" ? "en-US" : "tr-TR";
 
   return (
     <section className="py-12 md:py-20 bg-background-secondary/30">
@@ -46,75 +64,87 @@ export default function BlogGrid({ limit, posts }: BlogGridProps) {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {displayPosts.map((post, index) => (
-            <motion.div
-              key={post.slug.current}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group flex flex-col h-full bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl hover:border-primary/50 transition-all duration-300 hover:-translate-y-1"
-            >
-              {/* Cover Image */}
-              <Link href={`/blog/${post.slug.current}`} className="block relative h-48 overflow-hidden bg-gradient-to-br from-primary to-accent-cyan cursor-pointer">
-                {post.mainImage && (
-                  <Image
-                    src={urlFor(post.mainImage).url()}
-                    alt={post.title}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                )}
-                {post.categories && (
-                  <div className="absolute top-4 left-4 bg-white text-gray-900 font-semibold px-3 py-1 rounded-full text-sm shadow-sm z-10">
-                    {post.categories}
-                  </div>
-                )}
-              </Link>
+          {displayPosts.map((post, index) => {
+            const displayTitle = language === "en" ? (post.titleEn || post.title) : post.title;
+            const displayExcerpt = language === "en" ? (post.excerptEn || post.excerpt) : post.excerpt;
+            const displayCategory = language === "en"
+              ? (blogCategoryEn[post.categories] || post.categories)
+              : post.categories;
+            const displayReadTime = language === "en"
+              ? (post.readTimeEn || formatReadTime(post.readTime, "en"))
+              : post.readTime;
 
-              {/* Content */}
-              <div className="flex flex-col flex-grow p-6">
-                <div className="flex items-center gap-4 text-sm text-text-secondary mb-4">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    <span>{new Date(post.publishedAt).toLocaleDateString(language)}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    <span>{post.readTime}</span>
-                  </div>
-                </div>
-
-                <Link href={`/blog/${post.slug.current}`} className="block group-hover:text-primary transition-colors">
-                  <h3 className="text-xl font-bold text-text-primary mb-3 line-clamp-2 min-h-[56px]">
-                    {language === 'en' ? (post.titleEn || post.title) : post.title}
-                  </h3>
+            return (
+              <motion.div
+                key={post.slug.current}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="group flex flex-col h-full bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl hover:border-primary/50 transition-all duration-300 hover:-translate-y-1"
+              >
+                {/* Cover Image */}
+                <Link href={`/blog/${post.slug.current}`} className="block relative h-48 overflow-hidden bg-gradient-to-br from-primary to-accent-cyan cursor-pointer">
+                  {post.mainImage && (
+                    <Image
+                      src={urlFor(post.mainImage).url()}
+                      alt={displayTitle}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                  )}
+                  {post.categories && (
+                    <div className="absolute top-4 left-4 bg-white text-gray-900 font-semibold px-3 py-1 rounded-full text-sm shadow-sm z-10">
+                      {displayCategory}
+                    </div>
+                  )}
                 </Link>
 
-                <p className="text-text-secondary mb-4 line-clamp-3 min-h-[72px]">
-                  {language === 'en' ? (post.excerptEn || post.excerpt) : post.excerpt}
-                </p>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-sm text-text-muted">
-                    <User className="w-4 h-4" />
-                    <span>{post.author}</span>
+                {/* Content */}
+                <div className="flex flex-col flex-grow p-6">
+                  <div className="flex items-center gap-4 text-sm text-text-secondary mb-4">
+                    <div className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      <span>{new Date(post.publishedAt).toLocaleDateString(dateLocale)}</span>
+                    </div>
+                    {displayReadTime && (
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-4 h-4" />
+                        <span>{displayReadTime}</span>
+                      </div>
+                    )}
                   </div>
 
-                  <Link
-                    href={`/blog/${post.slug.current}`}
-                    className="flex items-center gap-2 text-primary hover:text-primary-light transition-colors font-semibold"
-                  >
-                    {t("blog.readMore")}
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <Link href={`/blog/${post.slug.current}`} className="block group-hover:text-primary transition-colors">
+                    <h3 className="text-xl font-bold text-text-primary mb-3 line-clamp-2 min-h-[56px]">
+                      {displayTitle}
+                    </h3>
                   </Link>
+
+                  <p className="text-text-secondary mb-4 line-clamp-3 min-h-[72px]">
+                    {displayExcerpt}
+                  </p>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-sm text-text-muted">
+                      <User className="w-4 h-4" />
+                      <span>{post.author}</span>
+                    </div>
+
+                    <Link
+                      href={`/blog/${post.slug.current}`}
+                      className="flex items-center gap-2 text-primary hover:text-primary-light transition-colors font-semibold"
+                    >
+                      {t("blog.readMore")}
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
-

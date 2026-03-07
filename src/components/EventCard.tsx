@@ -25,6 +25,17 @@ interface EventCardProps {
   config?: any;
 }
 
+const eventCategoryEn: Record<string, string> = {
+  "Workshop": "Workshop",
+  "Seminer": "Seminar",
+  "Networking": "Networking",
+  "Panel": "Panel",
+  "Eğitim": "Training",
+  "Etkinlik": "Event",
+  "Konferans": "Conference",
+  "Webinar": "Webinar",
+};
+
 const statusStyles = {
   open: {
     color: "from-green-600 to-emerald-600",
@@ -74,7 +85,9 @@ export default function EventCard({ event, config }: EventCardProps) {
       <div className={`bg-gradient-to-br ${styles.color} p-4 sm:p-6 relative min-h-[140px] flex flex-col`}>
         <div className="flex justify-between items-start mb-3 sm:mb-4">
           <span className="bg-white text-gray-900 font-semibold px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm shadow-sm">
-            {event.category || t("events.defaultCategory")}
+            {language === "en"
+              ? (eventCategoryEn[event.category || ""] || event.category || t("events.defaultCategory"))
+              : (event.category || t("events.defaultCategory"))}
           </span>
           <span className={`${styles.badgeColor} backdrop-blur-sm px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm`}>
             {badgeLabel}

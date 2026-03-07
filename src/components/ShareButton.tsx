@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Share2, Check, Copy, MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // X (Twitter) icon - custom since lucide doesn't have the new X logo
 const XIcon = () => (
@@ -25,7 +26,8 @@ interface ShareButtonProps {
   text?: string;
 }
 
-export default function ShareButton({ title = "Bu içeriği paylaş", text }: ShareButtonProps) {
+export default function ShareButton({ title = "", text }: ShareButtonProps) {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -39,7 +41,7 @@ export default function ShareButton({ title = "Bu içeriği paylaş", text }: Sh
         setIsOpen(false);
       }, 1500);
     } catch (err) {
-      console.error("Kopyalama başarısız:", err);
+      console.error("Copy failed:", err);
     }
   };
 
@@ -67,7 +69,6 @@ export default function ShareButton({ title = "Bu içeriği paylaş", text }: Sh
       name: "WhatsApp",
       icon: <MessageCircle className="w-5 h-5" />,
       color: "hover:bg-green-500/20 hover:text-green-400",
-      // WhatsApp allows specialized formatting. We use the custom text + URL.
       url: `https://wa.me/?text=${encodeURIComponent(shareText + " " + shareUrl)}`,
     },
     {
@@ -81,7 +82,7 @@ export default function ShareButton({ title = "Bu içeriği paylaş", text }: Sh
       icon: <InstagramIcon />,
       color: "hover:bg-pink-500/20 hover:text-pink-400",
       action: handleCopy,
-      note: "(Link kopyalanır)",
+      note: t("share.copyNote"),
     },
   ];
 
@@ -92,7 +93,7 @@ export default function ShareButton({ title = "Bu içeriği paylaş", text }: Sh
         className="w-full py-3 rounded-xl font-medium border border-white/10 hover:bg-white/5 transition-colors flex items-center justify-center gap-2 text-text-secondary active:scale-95 duration-200"
       >
         <Share2 className="w-4 h-4" />
-        Paylaş
+        {t("share.button")}
       </button>
 
       {/* Dropdown Menu */}
@@ -106,9 +107,9 @@ export default function ShareButton({ title = "Bu içeriği paylaş", text }: Sh
             className="absolute bottom-full left-0 mb-3 w-64 bg-[#0B0F1A] border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden"
           >
             <div className="p-3 border-b border-white/10 bg-white/5">
-              <p className="text-xs font-medium text-text-muted text-center uppercase tracking-wider">Paylaşım Seçenekleri</p>
+              <p className="text-xs font-medium text-text-muted text-center uppercase tracking-wider">{t("share.title")}</p>
             </div>
-            
+
             <div className="p-2 space-y-1">
               {shareOptions.map((option) => (
                 <a
@@ -137,7 +138,7 @@ export default function ShareButton({ title = "Bu içeriği paylaş", text }: Sh
                   </div>
                 </a>
               ))}
-              
+
               <div className="h-px bg-white/5 my-1" />
 
               {/* Copy Link */}
@@ -153,7 +154,7 @@ export default function ShareButton({ title = "Bu içeriği paylaş", text }: Sh
                   )}
                 </div>
                 <span className="text-sm font-medium">
-                  {copied ? "Kopyalandı!" : "Linki Kopyala"}
+                  {copied ? t("share.copied") : t("share.copy")}
                 </span>
               </button>
             </div>

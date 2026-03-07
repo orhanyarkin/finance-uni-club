@@ -32,7 +32,7 @@ export default function ContactPage() {
     },
     {
       icon: Mail,
-      title: "E-Posta",
+      title: t("contact.email.title"),
       descKey: "contact.email.desc",
       actionKey: "contact.email.action",
       href: "mailto:startupvefinanstoplulugu@gmail.com",
@@ -114,7 +114,7 @@ export default function ContactPage() {
               <div>
                 <h3 className="text-xl font-bold text-white mb-2">{t("contact.visitUs")}</h3>
                 <p className="text-lg text-text-secondary mb-1 font-medium">
-                  Ankara Medipol Üniversitesi
+                  {t("contact.university")}
                 </p>
                 <p className="text-text-muted leading-relaxed">
                   Hacı Bayram, Talatpaşa Blv No: 4<br />

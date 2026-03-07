@@ -156,8 +156,8 @@ export default function Navbar({ featuredData }: NavbarProps) {
                 />
               </div>
               <span className={`font-bold transition-all duration-300 ${scrolled ? 'text-base' : 'text-lg'} tracking-tight text-white group-hover:text-primary shadow-black drop-shadow-md`}>
-                <span className="lg:hidden">Startup & Finans</span>
-                <span className="hidden lg:inline">Startup & Finans Topluluğu</span>
+                <span className="lg:hidden">{t("brand.shortName")}</span>
+                <span className="hidden lg:inline">{t("brand.fullName")}</span>
               </span>
             </Link>
 
@@ -323,14 +323,17 @@ export default function Navbar({ featuredData }: NavbarProps) {
               </a>
             </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden text-white hover:text-primary transition-colors p-2 relative z-[101]"
-              aria-label="Toggle menu"
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            {/* Mobile: Language Toggle + Menu Button */}
+            <div className="lg:hidden flex items-center gap-1 relative z-[101]">
+              <LanguageToggle />
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="text-white hover:text-primary transition-colors p-2"
+                aria-label="Toggle menu"
+              >
+                {isOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
           </div>
         </div>
       </nav>
@@ -343,7 +346,7 @@ export default function Navbar({ featuredData }: NavbarProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[90] bg-[#0a0e17] lg:hidden pt-36"
+            className="fixed inset-0 z-[90] bg-[#0a0e17] lg:hidden pt-44"
           >
             <div className="h-full overflow-y-auto px-4 pb-10 flex flex-col">
               {/* Featured in Mobile */}
@@ -422,16 +425,6 @@ export default function Navbar({ featuredData }: NavbarProps) {
                   </a>
                 </motion.div>
 
-                {/* Language Toggle - Mobile */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.35 }}
-                  className="flex justify-center"
-                >
-                  <LanguageToggle />
-                </motion.div>
-
                 {/* Social & Contact */}
                 <div className="flex flex-col items-center gap-4 pb-6">
                   <div className="flex items-center gap-4">
@@ -462,7 +455,7 @@ export default function Navbar({ featuredData }: NavbarProps) {
                   </div>
                   <div className="text-center">
                     <div className="text-[10px] text-white/30 mt-2">
-                      © {currentYear} Ankara Medipol Üniversitesi Startup & Finans Topluluğu.
+                      © {currentYear} {t("contact.university")} {t("brand.fullName")}.
                     </div>
                     <div className="text-[10px] text-white/30 mt-2">
                       {t("nav.mobile.copyright")}

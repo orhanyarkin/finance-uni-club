@@ -10,6 +10,7 @@ interface Partner {
   _id: string;
   name: string;
   description?: string;
+  descriptionEn?: string;
   discount?: string;
   logo?: Record<string, unknown>;
   website?: string;
@@ -21,7 +22,7 @@ interface PartnershipsPageContentProps {
 }
 
 export default function PartnershipsPageContent({ partners }: PartnershipsPageContentProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <main className="min-h-screen pt-36 sm:pt-40 pb-12 bg-background">
@@ -72,7 +73,9 @@ export default function PartnershipsPageContent({ partners }: PartnershipsPageCo
                   {partner.name}
                 </h3>
                 <p className="text-text-secondary text-sm mb-6 min-h-[48px]">
-                  {partner.description || t("partnerships.defaultDesc")}
+                  {language === "en"
+                    ? (partner.descriptionEn || partner.description || t("partnerships.defaultDesc"))
+                    : (partner.description || t("partnerships.defaultDesc"))}
                 </p>
 
                 {/* Action Link */}

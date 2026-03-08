@@ -127,11 +127,12 @@ export default function DataChart({
     return String(val);
   };
 
-  const formatTooltipLabel = (val: number) => {
+  const formatTooltipLabel = (val: unknown) => {
+    const num = typeof val === "number" ? val : Number(val);
     if (dateMode === "timestamp") {
-      return new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(new Date(val));
+      return new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(new Date(num));
     }
-    return String(val);
+    return String(num);
   };
 
   const xAxisProps = {

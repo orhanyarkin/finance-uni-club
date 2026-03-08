@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Menu, X, ChevronDown, HelpCircle, Calendar, Newspaper, Users, Handshake, Mail, ArrowRight, Instagram, Linkedin, MessageCircle } from "lucide-react";
+import { Menu, X, ChevronDown, HelpCircle, Calendar, Newspaper, Users, Handshake, Mail, ArrowRight, Instagram, Linkedin, MessageCircle, BarChart2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -106,6 +106,12 @@ export default function Navbar({ featuredData }: NavbarProps) {
         ]
       },
       {
+        title: t("nav.sections.data"),
+        items: [
+          { title: t("datahub.nav.label"), href: "/data-hub", icon: BarChart2, description: t("datahub.nav.desc") },
+        ]
+      },
+      {
         title: t("nav.sections.community"),
         items: [
           { title: t("nav.menu.partnerships"), href: "/partnerships", icon: Handshake, description: t("nav.menu.partnerships.desc") },
@@ -126,6 +132,7 @@ export default function Navbar({ featuredData }: NavbarProps) {
     { title: t("nav.about"), href: "/about", icon: Users },
     { title: t("nav.menu.blog"), href: "/blog", icon: Newspaper },
     { title: t("nav.menu.events"), href: "/events", icon: Calendar },
+    { title: t("datahub.nav.label"), href: "/data-hub", icon: BarChart2 },
     { title: t("nav.menu.partnerships"), href: "/partnerships", icon: Handshake },
     { title: t("nav.menu.faq"), href: "/sss", icon: HelpCircle },
     { title: t("nav.menu.contact"), href: "/contact", icon: Mail },
@@ -198,7 +205,7 @@ export default function Navbar({ featuredData }: NavbarProps) {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.98 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full right-0 pt-2 w-[600px] xl:w-[680px] origin-top-right"
+                    className="absolute top-full right-0 pt-2 w-[720px] xl:w-[820px] origin-top-right"
                     onMouseEnter={() => handleMouseEnter('explore')}
                     onMouseLeave={handleMouseLeave}
                   >
@@ -212,7 +219,7 @@ export default function Navbar({ featuredData }: NavbarProps) {
 
                         <div className="relative p-6 z-10">
                           {/* Main Grid */}
-                          <div className="grid grid-cols-3 gap-6">
+                          <div className="grid grid-cols-4 gap-5">
                             {exploreContent.sections.map((section) => (
                               <div key={section.title}>
                                 <h4 className="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-4 px-3">

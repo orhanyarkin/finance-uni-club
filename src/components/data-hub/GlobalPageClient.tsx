@@ -1,27 +1,45 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { Search, BarChart2, TrendingUp, Globe } from "lucide-react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { motion } from "framer-motion";
+import { Search, BarChart2, ChevronDown } from "lucide-react";
+import * as AllFlags from "country-flag-icons/react/3x2";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { DataPoint, IndicatorKey, CountryCode, getLatest } from "@/lib/worldbank";
 import KPICard from "@/components/data-hub/KPICard";
 import DataChart from "@/components/data-hub/DataChart";
 import ContextBox from "@/components/data-hub/ContextBox";
 
+function FlagIcon({ iso2, className }: { iso2: string; className?: string }) {
+  const Comp = AllFlags[iso2.toUpperCase() as keyof typeof AllFlags] as React.FC<{ className?: string; title?: string }> | undefined;
+  if (!Comp) return null;
+  return <Comp className={className} title="" />;
+}
+
 type PeriodKey = "10" | "20" | "30" | "all";
 type ChartType = "line" | "bar";
 
 const CURRENT_YEAR = new Date().getFullYear();
 
-const COUNTRIES: { code: CountryCode; flag: string }[] = [
-  { code: "TUR", flag: "🇹🇷" },
-  { code: "USA", flag: "🇺🇸" },
-  { code: "DEU", flag: "🇩🇪" },
-  { code: "CHN", flag: "🇨🇳" },
-  { code: "KOR", flag: "🇰🇷" },
-  { code: "BRA", flag: "🇧🇷" },
-  { code: "IND", flag: "🇮🇳" },
-  { code: "JPN", flag: "🇯🇵" },
+/** ISO 3166-1 alpha-3 → alpha-2 mapping for country-flag-icons */
+const COUNTRY_ISO2: Record<string, string> = {
+  TUR: "tr", USA: "us", CHN: "cn", JPN: "jp", DEU: "de", IND: "in",
+  GBR: "gb", FRA: "fr", ITA: "it", BRA: "br", CAN: "ca", RUS: "ru",
+  KOR: "kr", AUS: "au", ESP: "es", MEX: "mx", IDN: "id", SAU: "sa",
+  NLD: "nl", CHE: "ch", ARG: "ar", POL: "pl", SWE: "se", BEL: "be",
+  NOR: "no", ARE: "ae", ISR: "il", SGP: "sg", HKG: "hk", MYS: "my",
+  THA: "th", PHL: "ph", VNM: "vn", BGD: "bd", PAK: "pk", EGY: "eg",
+  NGA: "ng", ZAF: "za", COL: "co", CHL: "cl", AUT: "at", DNK: "dk",
+  FIN: "fi", GRC: "gr", PRT: "pt", CZE: "cz", ROU: "ro", HUN: "hu",
+  UKR: "ua", KAZ: "kz", NZL: "nz",
+};
+
+const COUNTRIES: CountryCode[] = [
+  "TUR", "USA", "CHN", "JPN", "DEU", "IND", "GBR", "FRA", "ITA", "BRA",
+  "CAN", "RUS", "KOR", "AUS", "ESP", "MEX", "IDN", "SAU", "NLD", "CHE",
+  "ARG", "POL", "SWE", "BEL", "NOR", "ARE", "ISR", "SGP", "HKG", "MYS",
+  "THA", "PHL", "VNM", "BGD", "PAK", "EGY", "NGA", "ZAF", "COL", "CHL",
+  "AUT", "DNK", "FIN", "GRC", "PRT", "CZE", "ROU", "HUN", "UKR", "KAZ", "NZL",
 ];
 
 const INDICATORS: IndicatorKey[] = [
@@ -86,6 +104,8 @@ export default function GlobalPageClient({ initialData }: Props) {
   const [loadingChart, setLoadingChart] = useState(false);
   const [loadingKpis, setLoadingKpis] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const { from, to } = getPeriodYears(period);
 
@@ -132,10 +152,28 @@ export default function GlobalPageClient({ initialData }: Props) {
   useEffect(() => { loadChart(); }, [loadChart]);
   useEffect(() => { loadKpis(); }, [loadKpis]);
 
-  const filteredCountries = COUNTRIES.filter((c) =>
-    t(`datahub.country.${c.code}`)
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const filteredCountries = COUNTRIES.filter((code) =>
+    t(`datahub.country.${code}`)
       .toLowerCase()
       .includes(searchQuery.toLowerCase())
+  );
+
+  const sortedFilteredCountries = [...filteredCountries].sort((a, b) =>
+    t(`datahub.country.${a}`).localeCompare(
+      t(`datahub.country.${b}`),
+      language === "tr" ? "tr" : "en"
+    )
   );
 
   const periods: PeriodKey[] = ["10", "20", "30", "all"];
@@ -143,76 +181,83 @@ export default function GlobalPageClient({ initialData }: Props) {
 
   return (
     <div className="space-y-6">
-      {/* Hero */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-3xl p-6 sm:p-8">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent" />
-        <div className="relative flex flex-col sm:flex-row sm:items-center gap-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
-              <Globe className="w-5 h-5 text-blue-400" />
-              <span className="text-xs font-semibold text-blue-400 uppercase tracking-wider">
-                {t("datahub.global.sourceBadge")}
-              </span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1">
-              {t("datahub.global.heroTitle")}
-            </h1>
-            <p className="text-sm text-slate-400">{t("datahub.global.heroSub")}</p>
-          </div>
-        </div>
-      </div>
-
       {/* Country Selector */}
-      <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4">
-        <div className="relative mb-3">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-          <input
-            type="text"
-            placeholder={t("datahub.global.searchPlaceholder")}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2.5 bg-slate-700/50 border border-slate-600 rounded-xl text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-blue-500/50 transition-colors"
-          />
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {filteredCountries.map(({ code, flag }) => (
-            <button
-              key={code}
-              onClick={() => setCountry(code)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium transition-all ${
-                country === code
-                  ? "bg-blue-500/20 text-blue-400 border border-blue-500/40"
-                  : "bg-slate-700/50 text-slate-300 border border-slate-600/50 hover:bg-slate-700 hover:text-white"
-              }`}
-            >
-              <span>{flag}</span>
-              <span>{t(`datahub.country.${code}`)}</span>
-            </button>
-          ))}
+      <div className="bg-slate-900/80 border border-white/[0.07] rounded p-4">
+        <div className="relative" ref={dropdownRef}>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+            <input
+              type="text"
+              placeholder={t("datahub.global.searchPlaceholder")}
+              value={searchQuery}
+              onChange={(e) => { setSearchQuery(e.target.value); setShowDropdown(true); }}
+              onFocus={() => setShowDropdown(true)}
+              className="w-full pl-9 pr-10 py-2.5 bg-slate-800/60 border border-white/[0.07] rounded-sm text-sm text-slate-200 placeholder:text-slate-600 placeholder:font-mono placeholder:text-xs focus:outline-none focus:border-blue-500/40 transition-colors"
+            />
+            <ChevronDown
+              className={`absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 transition-transform duration-200 ${showDropdown ? "rotate-180" : ""}`}
+            />
+          </div>
+
+          {showDropdown && (
+            <div className="absolute top-full left-0 right-0 mt-1 bg-[#0a1929] border border-white/[0.07] rounded-sm shadow-2xl z-20 overflow-hidden">
+              <div className="max-h-72 overflow-y-auto">
+                {sortedFilteredCountries.length === 0 ? (
+                  <div className="px-4 py-3 font-mono text-xs text-slate-500 uppercase tracking-widest">
+                    {language === "tr" ? "Sonuç bulunamadı" : "No results"}
+                  </div>
+                ) : (
+                  sortedFilteredCountries.map((code) => (
+                    <button
+                      key={code}
+                      onClick={() => {
+                        setCountry(code);
+                        setSearchQuery("");
+                        setShowDropdown(false);
+                      }}
+                      className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${
+                        country === code
+                          ? "bg-blue-500/15 text-blue-300"
+                          : "text-slate-300 hover:bg-slate-800/80 hover:text-white"
+                      }`}
+                    >
+                      <FlagIcon iso2={COUNTRY_ISO2[code] ?? ""} className="w-5 h-4 rounded-[2px] flex-shrink-0" />
+                      <span className="flex-1">{t(`datahub.country.${code}`)}</span>
+                      {country === code && (
+                        <span className="font-mono text-[10px] text-blue-400">✓</span>
+                      )}
+                    </button>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Country Banner + Period Selector */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-blue-500/10 rounded-xl">
-            <TrendingUp className="w-5 h-5 text-blue-400" />
-          </div>
+          <span className="w-9 h-9 flex items-center justify-center bg-slate-800/60 border border-white/[0.07] rounded-sm">
+            <FlagIcon iso2={COUNTRY_ISO2[country] ?? ""} className="w-7 h-5 rounded-[2px]" />
+          </span>
           <div>
             <div className="font-semibold text-white">{t(`datahub.country.${country}`)}</div>
-            <div className="text-xs text-slate-500">{country}</div>
+            <div className="font-mono text-[10px] text-slate-500 uppercase tracking-widest">{country}</div>
           </div>
         </div>
-        <div className="flex items-center gap-1.5">
-          <span className="text-xs text-slate-500 mr-1">{t("datahub.global.periodLabel")}:</span>
+        <div className="flex items-center gap-1">
+          <span className="font-mono text-[10px] text-slate-500 uppercase tracking-widest mr-1.5">
+            {t("datahub.global.periodLabel")}
+          </span>
           {periods.map((p) => (
             <button
               key={p}
               onClick={() => setPeriod(p)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+              className={`px-3 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-wider transition-all ${
                 period === p
-                  ? "bg-blue-500 text-white"
-                  : "bg-slate-700/50 text-slate-400 hover:text-white hover:bg-slate-700"
+                  ? "bg-blue-600/80 text-white"
+                  : "bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-800 border border-white/[0.07]"
               }`}
             >
               {t(`datahub.period.${p}`)}
@@ -222,25 +267,31 @@ export default function GlobalPageClient({ initialData }: Props) {
       </div>
 
       {/* KPI Row */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-        {KPI_INDICATORS.map((ind) => {
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 min-h-[100px]">
+        {KPI_INDICATORS.map((ind, i) => {
           const pts = kpiData[ind];
           const latest = pts ? getLatest(pts) : null;
           return (
-            <KPICard
+            <motion.div
               key={ind}
-              label={t(`datahub.ind.${ind}.label`)}
-              value={latest?.value ?? null}
-              unit={t(`datahub.ind.${ind}.unit`)}
-              year={latest?.year}
-              loading={loadingKpis}
-              locale={locale}
-              colorMode={
-                ind === "inflation" ? "negative" :
-                ind === "unemployment" ? "negative" :
-                "auto"
-              }
-            />
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.06, duration: 0.35, ease: "easeOut" }}
+            >
+              <KPICard
+                label={t(`datahub.ind.${ind}.label`)}
+                value={latest?.value ?? null}
+                unit={t(`datahub.ind.${ind}.unit`)}
+                year={latest?.year}
+                loading={loadingKpis}
+                locale={locale}
+                colorMode={
+                  ind === "inflation" ? "negative" :
+                  ind === "unemployment" ? "negative" :
+                  "auto"
+                }
+              />
+            </motion.div>
           );
         })}
       </div>
@@ -251,10 +302,10 @@ export default function GlobalPageClient({ initialData }: Props) {
           <button
             key={ind}
             onClick={() => setActiveIndicator(ind)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
+            className={`px-3 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-wider transition-all ${
               activeIndicator === ind
                 ? "text-white border"
-                : "bg-slate-700/40 text-slate-400 border border-transparent hover:text-white hover:bg-slate-700"
+                : "bg-slate-800/60 text-slate-400 border border-white/[0.07] hover:text-white hover:bg-slate-800"
             }`}
             style={
               activeIndicator === ind
@@ -272,35 +323,43 @@ export default function GlobalPageClient({ initialData }: Props) {
       </div>
 
       {/* Main Chart */}
-      <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4 overflow-hidden"
+      >
+        {/* Left accent bar on hover */}
+        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-sm font-semibold text-slate-200">
+            <h3 className="text-sm font-semibold text-slate-200 mb-0.5">
               {t(`datahub.ind.${activeIndicator}.label`)}
             </h3>
             {latestYear && (
-              <span className="text-xs text-slate-500">
+              <span className="font-mono text-[10px] text-slate-500">
                 {latestYear} {t("datahub.global.dataNoteYear")}
               </span>
             )}
           </div>
           {/* Chart type toggle */}
-          <div className="flex items-center gap-1 bg-slate-700/50 rounded-lg p-1">
+          <div className="flex items-center gap-1 bg-slate-800/60 border border-white/[0.07] rounded-sm p-1">
             <button
               onClick={() => setChartType("line")}
-              className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                chartType === "line" ? "bg-slate-600 text-white" : "text-slate-400 hover:text-white"
+              className={`px-2.5 py-1 rounded-sm font-mono text-[10px] uppercase tracking-wider transition-all ${
+                chartType === "line" ? "bg-slate-700 text-white" : "text-slate-400 hover:text-white"
               }`}
             >
               {t("datahub.global.lineChart")}
             </button>
             <button
               onClick={() => setChartType("bar")}
-              className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                chartType === "bar" ? "bg-slate-600 text-white" : "text-slate-400 hover:text-white"
+              className={`px-2.5 py-1 rounded-sm font-mono text-[10px] uppercase tracking-wider transition-all flex items-center gap-1 ${
+                chartType === "bar" ? "bg-slate-700 text-white" : "text-slate-400 hover:text-white"
               }`}
             >
-              <BarChart2 className="w-3.5 h-3.5 inline mr-1" />
+              <BarChart2 className="w-3 h-3" />
               {t("datahub.global.barChart")}
             </button>
           </div>
@@ -311,30 +370,42 @@ export default function GlobalPageClient({ initialData }: Props) {
             <span className="text-sm">{error}</span>
             <button
               onClick={loadChart}
-              className="px-4 py-2 text-xs bg-blue-500/20 text-blue-400 rounded-xl hover:bg-blue-500/30 transition-colors"
+              className="px-4 py-2 font-mono text-[10px] uppercase tracking-wider bg-blue-500/20 text-blue-400 rounded-sm hover:bg-blue-500/30 transition-colors"
             >
               {t("datahub.global.retry")}
             </button>
           </div>
         ) : (
-          <DataChart
-            data={chartData}
-            type={chartType}
-            color={INDICATOR_COLORS[activeIndicator]}
-            unit={t(`datahub.ind.${activeIndicator}.unit`)}
-            label={t(`datahub.ind.${activeIndicator}.label`)}
-            locale={locale}
-            loading={loadingChart}
-            height={300}
-          />
+          <>
+            <DataChart
+              data={chartData}
+              type={chartType}
+              color={INDICATOR_COLORS[activeIndicator]}
+              unit={t(`datahub.ind.${activeIndicator}.unit`)}
+              label={t(`datahub.ind.${activeIndicator}.label`)}
+              locale={locale}
+              loading={loadingChart}
+              height={300}
+            />
+            <div className="flex justify-end mt-2">
+              <span className="font-mono text-[10px] text-slate-600">{t("datahub.global.sourceLabel")}</span>
+            </div>
+          </>
         )}
-      </div>
+      </motion.div>
 
       {/* Mini Chart Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Inflation vs Unemployment */}
-        <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4">
-          <h4 className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.45, ease: "easeOut" }}
+          className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4 overflow-hidden"
+        >
+          <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
+          <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-500 mb-3">
             {t("datahub.ind.inflation.label")} vs {t("datahub.ind.unemployment.label")}
           </h4>
           <DataChart
@@ -350,11 +421,18 @@ export default function GlobalPageClient({ initialData }: Props) {
             loading={loadingKpis}
             height={180}
           />
-        </div>
+        </motion.div>
 
         {/* GDP per Capita */}
-        <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4">
-          <h4 className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.45, delay: 0.08, ease: "easeOut" }}
+          className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4 overflow-hidden"
+        >
+          <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
+          <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-500 mb-3">
             {t("datahub.ind.gdp_per_capita.label")}
           </h4>
           <DataChart
@@ -366,7 +444,7 @@ export default function GlobalPageClient({ initialData }: Props) {
             loading={loadingKpis}
             height={180}
           />
-        </div>
+        </motion.div>
       </div>
 
       {/* Context Box */}

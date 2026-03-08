@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { DataPoint } from "@/lib/worldbank";
 import KPICard from "@/components/data-hub/KPICard";
@@ -228,43 +229,27 @@ export default function TurkeyPageClient() {
 
   return (
     <div className="space-y-6">
-      {/* Hero */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-3xl p-6 sm:p-8">
-        <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent" />
-        <div className="relative">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-lg">🇹🇷</span>
-            <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400 uppercase tracking-wider">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-              </span>
-              {t("datahub.turkey.liveBadge")}
-            </span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1">
-            {t("datahub.turkey.heroTitle")}
-          </h1>
-          <p className="text-sm text-slate-400">{t("datahub.turkey.heroSub")}</p>
-        </div>
-      </div>
-
       {/* KPI Row */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {KPI_INDICATORS.map((ind) => {
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 min-h-[100px]">
+        {KPI_INDICATORS.map((ind, i) => {
           const meta = kpiMeta[ind];
           return (
-            <KPICard
+            <motion.div
               key={ind}
-              label={t(`datahub.ind.${ind}.label`)}
-              value={meta?.value ?? null}
-              unit={t(`datahub.ind.${ind}.unit`)}
-              year={meta?.date}
-              live
-              loading={meta?.loading}
-              locale={locale}
-              colorMode="neutral"
-            />
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.06, duration: 0.35, ease: "easeOut" }}
+            >
+              <KPICard
+                label={t(`datahub.ind.${ind}.label`)}
+                value={meta?.value ?? null}
+                unit={t(`datahub.ind.${ind}.unit`)}
+                year={meta?.date}
+                loading={meta?.loading}
+                locale={locale}
+                colorMode="neutral"
+              />
+            </motion.div>
           );
         })}
       </div>
@@ -276,10 +261,10 @@ export default function TurkeyPageClient() {
             <button
               key={ind}
               onClick={() => setActiveIndicator(ind)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
+              className={`px-3 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-wider transition-all ${
                 activeIndicator === ind
                   ? "text-white border"
-                  : "bg-slate-700/40 text-slate-400 border border-transparent hover:text-white hover:bg-slate-700"
+                  : "bg-slate-800/60 text-slate-400 border border-white/[0.07] hover:text-white hover:bg-slate-800"
               }`}
               style={
                 activeIndicator === ind
@@ -300,10 +285,10 @@ export default function TurkeyPageClient() {
             <button
               key={p}
               onClick={() => setPeriod(p)}
-              className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+              className={`px-2.5 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-wider transition-all ${
                 period === p
-                  ? "bg-blue-500 text-white"
-                  : "bg-slate-700/50 text-slate-400 hover:text-white hover:bg-slate-700"
+                  ? "bg-blue-600/80 text-white"
+                  : "bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-800 border border-white/[0.07]"
               }`}
             >
               {t(`datahub.turkey.period.${p}`)}
@@ -313,21 +298,24 @@ export default function TurkeyPageClient() {
       </div>
 
       {/* Main Chart */}
-      <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4 overflow-hidden"
+      >
+        {/* Left accent bar on hover */}
+        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-sm font-semibold text-slate-200">
+            <h3 className="text-sm font-semibold text-slate-200 mb-0.5">
               {t(`datahub.ind.${activeIndicator}.label`)}
             </h3>
-            {latestDate && <span className="text-xs text-slate-500">{latestDate}</span>}
+            {latestDate && (
+              <span className="font-mono text-[10px] text-slate-500">{latestDate}</span>
+            )}
           </div>
-          <span className="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-            </span>
-            EVDS3
-          </span>
         </div>
 
         {error ? (
@@ -335,59 +323,92 @@ export default function TurkeyPageClient() {
             <span className="text-sm">{error}</span>
             <button
               onClick={loadChart}
-              className="px-4 py-2 text-xs bg-blue-500/20 text-blue-400 rounded-xl hover:bg-blue-500/30 transition-colors"
+              className="px-4 py-2 font-mono text-[10px] uppercase tracking-wider bg-blue-500/20 text-blue-400 rounded-sm hover:bg-blue-500/30 transition-colors"
             >
               {t("datahub.global.retry")}
             </button>
           </div>
         ) : (
-          <DataChart
-            data={chartData}
-            type="line"
-            color={INDICATOR_COLORS[activeIndicator]}
-            unit={t(`datahub.ind.${activeIndicator}.unit`)}
-            label={t(`datahub.ind.${activeIndicator}.label`)}
-            locale={locale}
-            loading={loadingChart}
-            height={300}
-            dateMode="timestamp"
-          />
+          <>
+            <DataChart
+              data={chartData}
+              type="line"
+              color={INDICATOR_COLORS[activeIndicator]}
+              unit={t(`datahub.ind.${activeIndicator}.unit`)}
+              label={t(`datahub.ind.${activeIndicator}.label`)}
+              locale={locale}
+              loading={loadingChart}
+              height={300}
+              dateMode="timestamp"
+            />
+            <div className="flex justify-end mt-2">
+              <span className="font-mono text-[10px] text-slate-600">{t("datahub.turkey.sourceLabel")}</span>
+            </div>
+          </>
         )}
-      </div>
+      </motion.div>
 
       {/* 2x2 Mini Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* TÜFE vs Policy Rate */}
-        <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4">
-          <h4 className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.45, ease: "easeOut" }}
+          className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4 overflow-hidden"
+        >
+          <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
+          <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-500 mb-3">
             {t("datahub.ind.cpi_annual.label")} vs {t("datahub.ind.policy_rate.label")}
           </h4>
           <MiniChart indicator="cpi_annual" indicator2="policy_rate" period={period} locale={locale} t={t} />
-        </div>
+        </motion.div>
 
         {/* BIST 100 */}
-        <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4">
-          <h4 className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.45, delay: 0.07, ease: "easeOut" }}
+          className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4 overflow-hidden"
+        >
+          <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-emerald-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
+          <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-500 mb-3">
             {t("datahub.ind.bist100.label")}
           </h4>
           <MiniChart indicator="bist100" period={period} locale={locale} t={t} />
-        </div>
+        </motion.div>
 
         {/* Reserves */}
-        <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4">
-          <h4 className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.45, delay: 0.07, ease: "easeOut" }}
+          className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4 overflow-hidden"
+        >
+          <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-cyan-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
+          <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-500 mb-3">
             {t("datahub.ind.reserves.label")}
           </h4>
           <MiniChart indicator="reserves" period={period} locale={locale} t={t} />
-        </div>
+        </motion.div>
 
         {/* Trade Balance */}
-        <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4">
-          <h4 className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.45, delay: 0.14, ease: "easeOut" }}
+          className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4 overflow-hidden"
+        >
+          <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-orange-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
+          <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-500 mb-3">
             {t("datahub.ind.trade_balance.label")}
           </h4>
           <MiniChart indicator="trade_balance" period={period} locale={locale} t={t} />
-        </div>
+        </motion.div>
       </div>
 
       {/* Context Box */}

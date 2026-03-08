@@ -1,11 +1,12 @@
 "use client";
 
+import { useId } from "react";
 import {
   ResponsiveContainer,
-  LineChart,
+  AreaChart,
   BarChart,
   Bar,
-  Line,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -71,10 +72,15 @@ export default function DataChart({
   height = 280,
   dateMode = "year",
 }: DataChartProps) {
+  // Unique IDs to avoid SVG gradient conflicts when multiple charts render simultaneously
+  const uid = useId().replace(/:/g, "");
+  const gradPrimary = `gp${uid}`;
+  const gradSecondary = `gs${uid}`;
+
   if (loading) {
     return (
       <div
-        className="bg-slate-800/50 rounded-2xl animate-pulse"
+        className="bg-slate-900/60 border border-white/[0.07] rounded animate-pulse"
         style={{ height }}
       />
     );
@@ -83,7 +89,7 @@ export default function DataChart({
   if (!data || data.length === 0) {
     return (
       <div
-        className="bg-slate-800/30 rounded-2xl flex items-center justify-center text-slate-500 text-sm"
+        className="bg-slate-900/40 border border-white/[0.07] rounded flex items-center justify-center text-slate-500 text-sm"
         style={{ height }}
       >
         No data
@@ -110,7 +116,7 @@ export default function DataChart({
 
   const gridProps = {
     strokeDasharray: "3 3",
-    stroke: "#334155", // slate-700
+    stroke: "#1e293b",
     vertical: false,
   };
 
@@ -130,14 +136,14 @@ export default function DataChart({
 
   const xAxisProps = {
     dataKey: "year",
-    tick: { fill: "#94A3B8", fontSize: 11 },
-    axisLine: { stroke: "#334155" },
+    tick: { fill: "#64748B", fontSize: 10 },
+    axisLine: { stroke: "#1e293b" },
     tickLine: false,
     tickFormatter: formatXTick,
   };
 
   const yAxisProps = {
-    tick: { fill: "#94A3B8", fontSize: 11 },
+    tick: { fill: "#64748B", fontSize: 10 },
     axisLine: false,
     tickLine: false,
     tickFormatter: formatY,
@@ -145,45 +151,65 @@ export default function DataChart({
 
   const tooltipProps = {
     contentStyle: {
-      backgroundColor: "#1E293B",
-      border: "1px solid #334155",
-      borderRadius: "12px",
-      fontSize: "12px",
+      backgroundColor: "#0f1f33",
+      border: "1px solid rgba(255,255,255,0.08)",
+      borderRadius: "4px",
+      fontSize: "11px",
       color: "#F1F5F9",
+      padding: "10px 13px",
     },
     formatter: formatTooltipValue,
     labelFormatter: formatTooltipLabel,
+    cursor: { stroke: "rgba(255,255,255,0.06)", strokeWidth: 1 },
   };
 
   if (dualAxis && data2 && data2.length > 0) {
     return (
       <ResponsiveContainer width="100%" height={height}>
         <ComposedChart {...commonProps}>
+          <defs>
+            <linearGradient id={gradPrimary} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={color} stopOpacity={0.22} />
+              <stop offset="95%" stopColor={color} stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id={gradSecondary} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={SECONDARY_COLOR} stopOpacity={0.22} />
+              <stop offset="95%" stopColor={SECONDARY_COLOR} stopOpacity={0} />
+            </linearGradient>
+          </defs>
           <CartesianGrid {...gridProps} />
           <XAxis {...xAxisProps} />
           <YAxis yAxisId="left" {...yAxisProps} />
           <YAxis yAxisId="right" orientation="right" {...yAxisProps} />
           <Tooltip {...tooltipProps} />
-          <Legend wrapperStyle={{ fontSize: "11px", color: "#94A3B8" }} />
-          <Line
+          <Legend wrapperStyle={{ fontSize: "10px", color: "#64748B" }} />
+          <Area
             yAxisId="left"
             type="monotone"
             dataKey="primary"
             stroke={color}
             strokeWidth={2}
+            fill={`url(#${gradPrimary})`}
             dot={false}
+            activeDot={{ r: 4, strokeWidth: 0, fill: color }}
             name={label}
             connectNulls
+            animationDuration={700}
+            animationEasing="ease-out"
           />
-          <Line
+          <Area
             yAxisId="right"
             type="monotone"
             dataKey="secondary"
             stroke={SECONDARY_COLOR}
             strokeWidth={2}
+            fill={`url(#${gradSecondary})`}
             dot={false}
+            activeDot={{ r: 4, strokeWidth: 0, fill: SECONDARY_COLOR }}
             name={label2}
             connectNulls
+            animationDuration={700}
+            animationEasing="ease-out"
           />
         </ComposedChart>
       </ResponsiveContainer>
@@ -202,30 +228,43 @@ export default function DataChart({
             dataKey="primary"
             fill={color}
             name={label}
-            radius={[4, 4, 0, 0]}
+            radius={[3, 3, 0, 0]}
+            maxBarSize={40}
+            fillOpacity={0.85}
           />
         </BarChart>
       </ResponsiveContainer>
     );
   }
 
+  // Default: Area chart with gradient fill
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <LineChart {...commonProps}>
+      <AreaChart {...commonProps}>
+        <defs>
+          <linearGradient id={gradPrimary} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor={color} stopOpacity={0.22} />
+            <stop offset="95%" stopColor={color} stopOpacity={0} />
+          </linearGradient>
+        </defs>
         <CartesianGrid {...gridProps} />
         <XAxis {...xAxisProps} />
         <YAxis {...yAxisProps} />
         <Tooltip {...tooltipProps} />
-        <Line
+        <Area
           type="monotone"
           dataKey="primary"
           stroke={color}
-          strokeWidth={2.5}
+          strokeWidth={2}
+          fill={`url(#${gradPrimary})`}
           dot={false}
+          activeDot={{ r: 4, strokeWidth: 0, fill: color }}
           name={label}
           connectNulls
+          animationDuration={700}
+          animationEasing="ease-out"
         />
-      </LineChart>
+      </AreaChart>
     </ResponsiveContainer>
   );
 }

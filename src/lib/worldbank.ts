@@ -17,7 +17,12 @@ export const WB_INDICATORS: Record<IndicatorKey, string> = {
   fdi: "WB_WDI_BX_KLT_DINV_CD_WD",
 };
 
-export type CountryCode = "TUR" | "USA" | "DEU" | "CHN" | "KOR" | "BRA" | "IND" | "JPN";
+export type CountryCode =
+  | "TUR" | "USA" | "CHN" | "JPN" | "DEU" | "IND" | "GBR" | "FRA" | "ITA" | "BRA"
+  | "CAN" | "RUS" | "KOR" | "AUS" | "ESP" | "MEX" | "IDN" | "SAU" | "NLD" | "CHE"
+  | "ARG" | "POL" | "SWE" | "BEL" | "NOR" | "ARE" | "ISR" | "SGP" | "HKG" | "MYS"
+  | "THA" | "PHL" | "VNM" | "BGD" | "PAK" | "EGY" | "NGA" | "ZAF" | "COL" | "CHL"
+  | "AUT" | "DNK" | "FIN" | "GRC" | "PRT" | "CZE" | "ROU" | "HUN" | "UKR" | "KAZ" | "NZL";
 
 export interface DataPoint {
   year: number;

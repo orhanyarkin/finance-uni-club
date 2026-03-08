@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
   try {
     const res = await fetch(url, {
       headers: { key: apiKey },
-      next: { revalidate: 300 },
+      next: { revalidate: 3600 },
     });
 
     if (!res.ok) {
@@ -43,7 +43,9 @@ export async function GET(request: NextRequest) {
     }
 
     const data = await res.json();
-    return NextResponse.json(data);
+    return NextResponse.json(data, {
+      headers: { "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=3600" },
+    });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });

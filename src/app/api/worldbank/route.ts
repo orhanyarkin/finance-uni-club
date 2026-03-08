@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
   const url = `${BASE_URL}/data360/data?DATABASE_ID=WB_WDI&INDICATOR=${indicatorId}&REF_AREA=${country}&timePeriodFrom=${from}&timePeriodTo=${to}`;
 
   try {
-    const res = await fetch(url, { next: { revalidate: 3600 } });
+    const res = await fetch(url, { next: { revalidate: 86400 } });
 
     if (!res.ok) {
       return NextResponse.json(
@@ -51,7 +51,9 @@ export async function GET(request: NextRequest) {
       points = scaleToBillions(points);
     }
 
-    return NextResponse.json({ data: points });
+    return NextResponse.json({ data: points }, {
+      headers: { "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=86400" },
+    });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });

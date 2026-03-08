@@ -1,13 +1,24 @@
 import "./globals.css";
 import RollbarProvider from "@/components/RollbarProvider";
-import { Inter, Outfit, Plus_Jakarta_Sans } from "next/font/google"; // Keep fonts if used globally, or move to site layout
+import { Inter, Outfit, Plus_Jakarta_Sans, Cormorant_Garamond, IBM_Plex_Mono } from "next/font/google";
 import { Metadata } from "next";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
-const plusJakarta = Plus_Jakarta_Sans({ 
-  subsets: ["latin"], 
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
   variable: "--font-plus-jakarta",
+});
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["300", "400", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-cormorant",
+});
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-plex-mono",
 });
 
 export const metadata: Metadata = {
@@ -70,7 +81,7 @@ export default function RootLayout({
   
   return (
     <html lang="tr" suppressHydrationWarning>
-      <body className={`${inter.variable} ${outfit.variable} ${plusJakarta.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${outfit.variable} ${plusJakarta.variable} ${cormorant.variable} ${plexMono.variable} font-sans antialiased`}>
         <RollbarProvider />
         <script
           type="application/ld+json"

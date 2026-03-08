@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
+import { animate } from "framer-motion";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 
 interface KPICardProps {
@@ -39,12 +41,30 @@ export default function KPICard({
   locale = "tr-TR",
   colorMode = "auto",
 }: KPICardProps) {
+  const [displayValue, setDisplayValue] = useState<number | null>(null);
+  const prevValueRef = useRef<number>(0);
+
+  useEffect(() => {
+    if (value === null) {
+      setDisplayValue(null);
+      return;
+    }
+    const from = prevValueRef.current;
+    prevValueRef.current = value;
+    const controls = animate(from, value, {
+      duration: 1.0,
+      ease: "easeOut",
+      onUpdate: (v) => setDisplayValue(v),
+    });
+    return controls.stop;
+  }, [value]);
+
   if (loading) {
     return (
-      <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4 animate-pulse">
-        <div className="h-3 bg-slate-700 rounded w-2/3 mb-3" />
-        <div className="h-7 bg-slate-700 rounded w-1/2 mb-2" />
-        <div className="h-3 bg-slate-700 rounded w-1/3" />
+      <div className="bg-slate-900/80 border border-white/[0.07] rounded p-4 animate-pulse">
+        <div className="h-2.5 bg-slate-800 rounded w-2/3 mb-3" />
+        <div className="h-8 bg-slate-800 rounded w-1/2 mb-2" />
+        <div className="h-2.5 bg-slate-800 rounded w-1/3" />
       </div>
     );
   }
@@ -68,38 +88,31 @@ export default function KPICard({
   const ChangeIcon = change == null ? null : change > 0 ? TrendingUp : change < 0 ? TrendingDown : Minus;
 
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4 hover:border-slate-600 transition-colors">
+    <div className="bg-slate-900/80 border border-white/[0.07] rounded p-4 hover:border-blue-500/25 transition-colors">
       {/* Header */}
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-medium text-slate-400 leading-tight">{label}</span>
-        {live && (
-          <span className="flex items-center gap-1 text-[10px] text-emerald-400 font-medium">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-            </span>
-            LIVE
-          </span>
-        )}
+        <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 leading-tight">
+          {label}
+        </span>
       </div>
 
       {/* Value */}
-      <div className={`text-2xl font-bold ${getColor()} leading-none mb-1`}>
-        {value === null ? (
-          <span className="text-slate-500 text-base">—</span>
+      <div className={`text-3xl font-bold tracking-tight ${getColor()} leading-none mb-1`}>
+        {displayValue === null ? (
+          <span className="text-slate-500 text-2xl">—</span>
         ) : (
           <>
-            {formatValue(value, unit, locale)}
-            {unit && <span className="text-sm font-normal text-slate-400 ml-1">{unit}</span>}
+            {formatValue(displayValue, unit, locale)}
+            {unit && <span className="font-mono text-sm font-normal text-slate-400 ml-1.5">{unit}</span>}
           </>
         )}
       </div>
 
       {/* Footer */}
       <div className="flex items-center justify-between mt-2">
-        {year && <span className="text-[10px] text-slate-500">{year}</span>}
+        {year && <span className="font-mono text-[10px] text-slate-500">{year}</span>}
         {change !== null && change !== undefined && ChangeIcon && (
-          <span className={`flex items-center gap-0.5 text-xs font-medium ${getChangeColor(change)}`}>
+          <span className={`flex items-center gap-0.5 font-mono text-[10px] ${getChangeColor(change)}`}>
             <ChangeIcon className="w-3 h-3" />
             {Math.abs(change).toFixed(2)}%
           </span>

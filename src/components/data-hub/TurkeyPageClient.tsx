@@ -5,8 +5,9 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { DataPoint } from "@/lib/worldbank";
 import KPICard from "@/components/data-hub/KPICard";
-import DataChart from "@/components/data-hub/DataChart";
-import ContextBox from "@/components/data-hub/ContextBox";
+import DataChart, { MultiSeriesItem } from "@/components/data-hub/DataChart";
+// ContextBox removed — replaced by static description card
+import InfoTooltip from "@/components/data-hub/InfoTooltip";
 
 type TurkeyPeriod = "1m" | "3m" | "1y" | "5y" | "all";
 type TurkeyIndicator =
@@ -15,20 +16,36 @@ type TurkeyIndicator =
   | "cpi_annual"
   | "policy_rate"
   | "bist100"
-  | "reserves"
-  | "trade_balance";
+  | "reserves_total"
+  | "reserves_fx"
+  | "reserves_gold"
+  | "trade_balance"
+  | "cpi_tuik";
 
 const EVDS_SERIES: Record<TurkeyIndicator, string> = {
   usd_try: "TP.DK.USD.A.YTL",
   eur_try: "TP.DK.EUR.A.YTL",
   cpi_annual: "TP.GENENDEKS.T1",      // CPI index (2003=100), fetched with formulas=3 for YoY%
-  policy_rate: "TP.PY.P02.ON",        // TCMB overnight lending rate
+  policy_rate: "TP.BISTTLREF.ORAN",   // BIST TLREF overnight reference rate
   bist100: "TP.MK.F.BILESIK",         // BIST 100 closing price
-  reserves: "TP.AB.B1",
-  trade_balance: "TP.ODANA6.Q04",     // Mal Dengesi (current account)
+  reserves_total: "TP.AB.TOPLAM",     // Total reserves (Million USD)
+  reserves_fx: "TP.AB.C2",            // FX reserves (Million USD)
+  reserves_gold: "TP.AB.C1",          // Gold reserves (Million USD)
+  trade_balance: "TP.ODANA6.Q04",     // Trade balance (current account)
+  cpi_tuik: "TP.GENENDEKS.T1",       // TURKSTAT CPI (2003=100), fetched with formulas=1 for monthly %
 };
 
-/** Series that should be fetched with formulas=3 (annual YoY % change) */
+/**
+ * Per-indicator EVDS formulas code:
+ *   "3" = annual YoY % change
+ *   "1" = period-over-period (monthly) % change
+ */
+const FORMULA_SERIES: Partial<Record<TurkeyIndicator, string>> = {
+  cpi_annual: "3",
+  cpi_tuik: "1",
+};
+
+/** @deprecated kept only for loadKpis filter — use FORMULA_SERIES elsewhere */
 const YOY_SERIES = new Set<TurkeyIndicator>(["cpi_annual"]);
 
 const INDICATOR_COLORS: Record<TurkeyIndicator, string> = {
@@ -37,8 +54,11 @@ const INDICATOR_COLORS: Record<TurkeyIndicator, string> = {
   cpi_annual: "#F87171",
   policy_rate: "#FBBF24",
   bist100: "#34D399",
-  reserves: "#22D3EE",
+  reserves_total: "#22D3EE",
+  reserves_fx: "#38BDF8",
+  reserves_gold: "#F59E0B",
   trade_balance: "#FB923C",
+  cpi_tuik: "#F97316",
 };
 
 const KPI_INDICATORS: TurkeyIndicator[] = ["usd_try", "cpi_annual", "policy_rate", "bist100"];
@@ -48,7 +68,7 @@ const TAB_INDICATORS: TurkeyIndicator[] = [
   "cpi_annual",
   "policy_rate",
   "bist100",
-  "reserves",
+  "reserves_total",
   "trade_balance",
 ];
 
@@ -73,12 +93,9 @@ interface EVDSItem {
   [key: string]: string;
 }
 
-function parseEVDSData(json: { items: EVDSItem[] }, seriesCode: string): DataPoint[] {
+function parseEVDSData(json: { items: EVDSItem[] }, seriesCode: string, scaleBillion = false): DataPoint[] {
   if (!json?.items || json.items.length === 0) return [];
-  // EVDS3 response uses underscores: "TP.DK.USD.A.YTL" → "TP_DK_USD_A_YTL"
-  // When formulas param is used, field name gets a suffix: "TP_GENENDEKS_T1-3"
   const baseKey = seriesCode.replace(/\./g, "_");
-  // Dynamically find the matching field key in the response (handles formula suffixes)
   const sampleItem = json.items[0];
   const fieldKey =
     Object.keys(sampleItem).find(
@@ -88,9 +105,9 @@ function parseEVDSData(json: { items: EVDSItem[] }, seriesCode: string): DataPoi
     .map((item: EVDSItem) => {
       const dateStr: string = item.Tarih ?? "";
       const valStr: string = item[fieldKey] ?? "";
-      const value = parseFloat(valStr.replace(",", "."));
-      if (isNaN(value)) return null;
-      // Parse date: "01-01-2024" or "2024-01-01" or "Oca 2024"
+      const rawValue = parseFloat(valStr.replace(",", "."));
+      if (isNaN(rawValue)) return null;
+      const value = scaleBillion ? rawValue / 1000 : rawValue;
       let date: Date | null = null;
       if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) {
         const [d, m, y] = dateStr.split("-");
@@ -132,8 +149,9 @@ export default function TurkeyPageClient() {
   const locale = language === "tr" ? "tr-TR" : "en-US";
 
   const [period, setPeriod] = useState<TurkeyPeriod>("1y");
-  const [activeIndicator, setActiveIndicator] = useState<TurkeyIndicator>("usd_try");
+  const [activeIndicator, setActiveIndicator] = useState<TurkeyIndicator>("reserves_total");
   const [chartData, setChartData] = useState<DataPoint[]>([]);
+  const [reservesMulti, setReservesMulti] = useState<MultiSeriesItem[]>([]);
   const [loadingChart, setLoadingChart] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [kpiMeta, setKpiMeta] = useState<Record<TurkeyIndicator, KpiMeta>>(() => {
@@ -145,14 +163,12 @@ export default function TurkeyPageClient() {
   const loadKpis = useCallback(async () => {
     const { startDate } = getDateRange("1y");
 
-    // Separate YoY series (need formulas=3) from level series
     const levelIndicators = KPI_INDICATORS.filter((k) => !YOY_SERIES.has(k));
     const yoyIndicators = KPI_INDICATORS.filter((k) => YOY_SERIES.has(k));
 
     try {
       const newMeta: Partial<Record<TurkeyIndicator, KpiMeta>> = {};
 
-      // Fetch level series combined
       if (levelIndicators.length > 0) {
         const combined = levelIndicators.map((k) => EVDS_SERIES[k]).join("-");
         const url = `/api/evds?series=${encodeURIComponent(combined)}&startDate=${startDate}&endDate=01-01-2999`;
@@ -173,7 +189,6 @@ export default function TurkeyPageClient() {
         }
       }
 
-      // Fetch YoY series individually with formulas=3
       await Promise.all(
         yoyIndicators.map(async (ind) => {
           try {
@@ -204,7 +219,32 @@ export default function TurkeyPageClient() {
     setLoadingChart(true);
     setError(null);
     const { startDate, endDate } = getDateRange(period);
-    const formulas = YOY_SERIES.has(activeIndicator) ? "3" : undefined;
+
+    // Reserves tab: fetch all 3 series simultaneously
+    if (activeIndicator === "reserves_total") {
+      try {
+        const [total, fx, gold] = await Promise.all([
+          fetchEVDS(EVDS_SERIES.reserves_total, startDate, endDate),
+          fetchEVDS(EVDS_SERIES.reserves_fx, startDate, endDate),
+          fetchEVDS(EVDS_SERIES.reserves_gold, startDate, endDate),
+        ]);
+        const scale = (pts: DataPoint[]) => pts.map((p) => ({ ...p, value: p.value / 1000 }));
+        setReservesMulti([
+          { data: scale(total), color: INDICATOR_COLORS.reserves_total, label: t("datahub.ind.reserves_total.label") },
+          { data: scale(fx),    color: INDICATOR_COLORS.reserves_fx,    label: t("datahub.ind.reserves_fx.label") },
+          { data: scale(gold),  color: INDICATOR_COLORS.reserves_gold,  label: t("datahub.ind.reserves_gold.label") },
+        ]);
+        setChartData([]);
+      } catch {
+        setError(t("datahub.turkey.error"));
+      } finally {
+        setLoadingChart(false);
+      }
+      return;
+    }
+
+    setReservesMulti([]);
+    const formulas = FORMULA_SERIES[activeIndicator];
     try {
       const data = await fetchEVDS(EVDS_SERIES[activeIndicator], startDate, endDate, formulas);
       setChartData(data);
@@ -248,6 +288,8 @@ export default function TurkeyPageClient() {
                 loading={meta?.loading}
                 locale={locale}
                 colorMode="neutral"
+                indicatorKey={ind}
+                tooltipSource="evds"
               />
             </motion.div>
           );
@@ -303,16 +345,16 @@ export default function TurkeyPageClient() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4 overflow-hidden"
+        className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4"
       >
-        {/* Left accent bar on hover */}
         <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-sm font-semibold text-slate-200 mb-0.5">
+            <h3 className="text-sm font-semibold text-slate-200 mb-0.5 flex items-center gap-1">
               {t(`datahub.ind.${activeIndicator}.label`)}
+              <InfoTooltip indicatorKey={activeIndicator} source="evds" />
             </h3>
-            {latestDate && (
+            {latestDate && !reservesMulti.length && (
               <span className="font-mono text-[10px] text-slate-500">{latestDate}</span>
             )}
           </div>
@@ -328,6 +370,20 @@ export default function TurkeyPageClient() {
               {t("datahub.global.retry")}
             </button>
           </div>
+        ) : activeIndicator === "reserves_total" ? (
+          <>
+            <DataChart
+              multiSeries={reservesMulti}
+              unit="Milyar USD"
+              locale={locale}
+              loading={loadingChart}
+              height={300}
+              dateMode="timestamp"
+            />
+            <div className="flex justify-end mt-2">
+              <span className="font-mono text-[10px] text-slate-600">{t("datahub.turkey.sourceLabel")}</span>
+            </div>
+          </>
         ) : (
           <>
             <DataChart
@@ -356,11 +412,12 @@ export default function TurkeyPageClient() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.45, ease: "easeOut" }}
-          className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4 overflow-hidden"
+          className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4"
         >
           <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
-          <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-500 mb-3">
+          <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-300 mb-3 flex items-center gap-1">
             {t("datahub.ind.cpi_annual.label")} vs {t("datahub.ind.policy_rate.label")}
+            <InfoTooltip indicatorKey="cpi_annual" source="evds" />
           </h4>
           <MiniChart indicator="cpi_annual" indicator2="policy_rate" period={period} locale={locale} t={t} />
         </motion.div>
@@ -371,28 +428,30 @@ export default function TurkeyPageClient() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.45, delay: 0.07, ease: "easeOut" }}
-          className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4 overflow-hidden"
+          className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4"
         >
           <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-emerald-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
-          <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-500 mb-3">
+          <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-300 mb-3 flex items-center gap-1">
             {t("datahub.ind.bist100.label")}
+            <InfoTooltip indicatorKey="bist100" source="evds" />
           </h4>
           <MiniChart indicator="bist100" period={period} locale={locale} t={t} />
         </motion.div>
 
-        {/* Reserves */}
+        {/* TÜİK CPI Monthly */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.45, delay: 0.07, ease: "easeOut" }}
-          className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4 overflow-hidden"
+          className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4"
         >
-          <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-cyan-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
-          <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-500 mb-3">
-            {t("datahub.ind.reserves.label")}
+          <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-orange-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
+          <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-300 mb-3 flex items-center gap-1">
+            {t("datahub.ind.cpi_tuik.label")}
+            <InfoTooltip indicatorKey="cpi_tuik" source="evds" />
           </h4>
-          <MiniChart indicator="reserves" period={period} locale={locale} t={t} />
+          <MiniChart indicator="cpi_tuik" period={period} locale={locale} t={t} />
         </motion.div>
 
         {/* Trade Balance */}
@@ -401,26 +460,26 @@ export default function TurkeyPageClient() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.45, delay: 0.14, ease: "easeOut" }}
-          className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4 overflow-hidden"
+          className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4"
         >
           <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-orange-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
-          <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-500 mb-3">
+          <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-300 mb-3 flex items-center gap-1">
             {t("datahub.ind.trade_balance.label")}
+            <InfoTooltip indicatorKey="trade_balance" source="evds" />
           </h4>
           <MiniChart indicator="trade_balance" period={period} locale={locale} t={t} />
         </motion.div>
       </div>
 
-      {/* Context Box */}
-      <ContextBox
-        indicatorKey={
-          activeIndicator === "usd_try" || activeIndicator === "eur_try"
-            ? "usd_try"
-            : activeIndicator === "cpi_annual"
-            ? "cpi_annual"
-            : activeIndicator
-        }
-      />
+      {/* Data Importance Description */}
+      <div className="bg-slate-900/60 border border-white/[0.07] rounded p-5">
+        <h4 className="text-sm font-semibold text-slate-200 mb-2">
+          {t("datahub.turkey.aboutData.title")}
+        </h4>
+        <p className="text-sm text-slate-400 leading-relaxed">
+          {t("datahub.turkey.aboutData.body")}
+        </p>
+      </div>
     </div>
   );
 }
@@ -432,12 +491,14 @@ function MiniChart({
   period,
   locale,
   t,
+  scaleBillion = false,
 }: {
   indicator: TurkeyIndicator;
   indicator2?: TurkeyIndicator;
   period: TurkeyPeriod;
   locale: string;
   t: (key: string) => string;
+  scaleBillion?: boolean;
 }) {
   const [data, setData] = useState<DataPoint[]>([]);
   const [data2, setData2] = useState<DataPoint[]>([]);
@@ -447,34 +508,37 @@ function MiniChart({
     setLoading(true);
     const { startDate, endDate } = getDateRange(period);
 
-    // If either series needs YoY, fetch them separately; otherwise combine
-    const needsYoy1 = YOY_SERIES.has(indicator);
-    const needsYoy2 = indicator2 ? YOY_SERIES.has(indicator2) : false;
+    const formula1 = FORMULA_SERIES[indicator];
+    const formula2 = indicator2 ? FORMULA_SERIES[indicator2] : undefined;
 
-    if (needsYoy1 || needsYoy2) {
-      // Fetch separately to apply individual formulas
-      const p1 = fetchEVDS(EVDS_SERIES[indicator], startDate, endDate, needsYoy1 ? "3" : undefined);
+    const applyScale = (pts: DataPoint[]) =>
+      scaleBillion ? pts.map((p) => ({ ...p, value: p.value / 1000 })) : pts;
+
+    if (formula1 || formula2) {
+      // Need per-series formula → fetch each series independently
+      const p1 = fetchEVDS(EVDS_SERIES[indicator], startDate, endDate, formula1);
       const p2 = indicator2
-        ? fetchEVDS(EVDS_SERIES[indicator2], startDate, endDate, needsYoy2 ? "3" : undefined)
+        ? fetchEVDS(EVDS_SERIES[indicator2], startDate, endDate, formula2)
         : Promise.resolve([]);
       Promise.all([p1, p2])
-        .then(([d1, d2]) => { setData(d1); if (indicator2) setData2(d2); })
+        .then(([d1, d2]) => { setData(applyScale(d1)); if (indicator2) setData2(d2); })
         .catch(() => {})
         .finally(() => setLoading(false));
     } else {
+      // No formula needed → batch both series in one request
       const series = indicator2
         ? `${EVDS_SERIES[indicator]}-${EVDS_SERIES[indicator2]}`
         : EVDS_SERIES[indicator];
       fetch(`/api/evds?series=${encodeURIComponent(series)}&startDate=${startDate}&endDate=${endDate}`)
         .then((r) => r.json())
         .then((json) => {
-          setData(parseEVDSData(json, EVDS_SERIES[indicator]));
+          setData(applyScale(parseEVDSData(json, EVDS_SERIES[indicator])));
           if (indicator2) setData2(parseEVDSData(json, EVDS_SERIES[indicator2]));
         })
         .catch(() => {})
         .finally(() => setLoading(false));
     }
-  }, [indicator, indicator2, period]);
+  }, [indicator, indicator2, period, scaleBillion]);
 
   return (
     <DataChart

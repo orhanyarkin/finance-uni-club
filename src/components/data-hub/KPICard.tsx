@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { animate } from "framer-motion";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
+import InfoTooltip from "@/components/data-hub/InfoTooltip";
 
 interface KPICardProps {
   label: string;
@@ -15,6 +16,9 @@ interface KPICardProps {
   locale?: string;
   /** Force color regardless of value sign */
   colorMode?: "positive" | "negative" | "neutral" | "auto";
+  /** If set, renders an InfoTooltip icon next to the label */
+  indicatorKey?: string;
+  tooltipSource?: "evds" | "worldbank";
 }
 
 function formatValue(value: number, unit: string, locale: string): string {
@@ -40,6 +44,8 @@ export default function KPICard({
   loading = false,
   locale = "tr-TR",
   colorMode = "auto",
+  indicatorKey,
+  tooltipSource,
 }: KPICardProps) {
   const [displayValue, setDisplayValue] = useState<number | null>(null);
   const prevValueRef = useRef<number>(0);
@@ -90,10 +96,13 @@ export default function KPICard({
   return (
     <div className="bg-slate-900/80 border border-white/[0.07] rounded p-4 hover:border-blue-500/25 transition-colors">
       {/* Header */}
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center gap-1 mb-2">
         <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 leading-tight">
           {label}
         </span>
+        {indicatorKey && (
+          <InfoTooltip indicatorKey={indicatorKey} source={tooltipSource} />
+        )}
       </div>
 
       {/* Value */}

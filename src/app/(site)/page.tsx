@@ -3,6 +3,7 @@ import BlogGrid from "@/components/BlogGrid";
 import EventsCarousel from "@/components/EventsCarousel";
 import Stats from "@/components/Stats";
 import PartnerLogos from "@/components/PartnerLogos";
+import DataHubPreview from "@/components/DataHubPreview";
 import { client } from "@/sanity/lib/client";
 import { POSTS_QUERY, PARTNERS_QUERY, FEATURED_EVENT_QUERY, EVENTS_QUERY } from "@/sanity/lib/queries";
 
@@ -19,6 +20,7 @@ export default async function Home() {
       <Hero featuredEvent={featuredEvent} />
       <Stats />
       <PartnerLogos partners={partners} />
+      <DataHubPreview />
       <BlogGrid posts={posts} limit={3} />
       <EventsCarousel events={events} />
     </main>

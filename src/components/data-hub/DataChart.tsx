@@ -1,6 +1,6 @@
 "use client";
 
-import { useId } from "react";
+import { useId, useState } from "react";
 import {
   ResponsiveContainer,
   AreaChart,
@@ -23,10 +23,19 @@ interface SeriesConfig {
   yAxisId?: "left" | "right";
 }
 
-interface DataChartProps {
+/** Multi-series item for togglable multi-line charts (e.g. reserves breakdown) */
+export interface MultiSeriesItem {
   data: DataPoint[];
+  color: string;
+  label: string;
+}
+
+interface DataChartProps {
+  data?: DataPoint[];
   /** Second series for dual-axis charts */
   data2?: DataPoint[];
+  /** Multi-series mode: renders N lines with toggle badges. When provided, data/data2 are ignored. */
+  multiSeries?: MultiSeriesItem[];
   type?: "line" | "bar";
   series?: SeriesConfig[];
   color?: string;
@@ -45,6 +54,18 @@ interface DataChartProps {
 const DEFAULT_COLOR = "#60A5FA"; // blue-400
 const SECONDARY_COLOR = "#F59E0B"; // amber-400
 
+function mergeMultiSeries(series: MultiSeriesItem[]): Record<string, unknown>[] {
+  const map: Record<number, Record<string, unknown>> = {};
+  series.forEach((s, i) => {
+    const key = `s${i}`;
+    s.data.forEach((p) => {
+      if (!map[p.year]) map[p.year] = { year: p.year };
+      map[p.year][key] = p.value;
+    });
+  });
+  return Object.values(map).sort((a, b) => (a.year as number) - (b.year as number));
+}
+
 function mergeData(primary: DataPoint[], secondary?: DataPoint[]): Record<string, unknown>[] {
   if (!secondary) return primary.map((p) => ({ year: p.year, primary: p.value }));
 
@@ -60,6 +81,7 @@ function mergeData(primary: DataPoint[], secondary?: DataPoint[]): Record<string
 export default function DataChart({
   data,
   data2,
+  multiSeries,
   type = "line",
   color = DEFAULT_COLOR,
   unit = "",
@@ -76,6 +98,7 @@ export default function DataChart({
   const uid = useId().replace(/:/g, "");
   const gradPrimary = `gp${uid}`;
   const gradSecondary = `gs${uid}`;
+  const [hiddenSeries, setHiddenSeries] = useState<Set<number>>(new Set());
 
   if (loading) {
     return (
@@ -86,7 +109,7 @@ export default function DataChart({
     );
   }
 
-  if (!data || data.length === 0) {
+  if (!multiSeries && (!data || data.length === 0)) {
     return (
       <div
         className="bg-slate-900/40 border border-white/[0.07] rounded flex items-center justify-center text-slate-500 text-sm"
@@ -97,7 +120,7 @@ export default function DataChart({
     );
   }
 
-  const merged = mergeData(data, data2);
+  const merged = mergeData(data ?? [], data2);
 
   const formatY = (val: number) =>
     new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(val);
@@ -163,6 +186,92 @@ export default function DataChart({
     labelFormatter: formatTooltipLabel,
     cursor: { stroke: "rgba(255,255,255,0.06)", strokeWidth: 1 },
   };
+
+  // ── Multi-series mode (e.g. reserves breakdown with toggle) ──────────────
+  if (multiSeries && multiSeries.length > 0) {
+    const allEmpty = multiSeries.every((s) => s.data.length === 0);
+    if (allEmpty) {
+      return (
+        <div className="bg-slate-900/40 border border-white/[0.07] rounded flex items-center justify-center text-slate-500 text-sm" style={{ height }}>
+          No data
+        </div>
+      );
+    }
+    const msData = mergeMultiSeries(multiSeries);
+    const toggleSeries = (i: number) => {
+      setHiddenSeries((prev) => {
+        const next = new Set(prev);
+        if (next.has(i)) next.delete(i); else next.add(i);
+        return next;
+      });
+    };
+    const msTooltipFormatter = (val: unknown, name: unknown): [string, string] => {
+      const numVal = typeof val === "number" ? val : parseFloat(String(val ?? 0));
+      const nameStr = String(name ?? "");
+      return [new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(numVal) + (unit ? ` ${unit}` : ""), nameStr];
+    };
+    return (
+      <div>
+        {/* Toggle badges */}
+        <div className="flex flex-wrap gap-1.5 mb-3">
+          {multiSeries.map((s, i) => (
+            <button
+              key={i}
+              onClick={() => toggleSeries(i)}
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-sm font-mono text-[10px] uppercase tracking-wider border transition-all ${
+                hiddenSeries.has(i)
+                  ? "bg-transparent text-slate-500 border-white/[0.07]"
+                  : "text-white border-transparent"
+              }`}
+              style={hiddenSeries.has(i) ? {} : { backgroundColor: `${s.color}20`, borderColor: `${s.color}50`, color: s.color }}
+            >
+              <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: hiddenSeries.has(i) ? "#475569" : s.color }} />
+              {s.label}
+            </button>
+          ))}
+        </div>
+        <ResponsiveContainer width="100%" height={height}>
+          <ComposedChart data={msData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+            <defs>
+              {multiSeries.map((s, i) => (
+                <linearGradient key={i} id={`${uid}ms${i}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={s.color} stopOpacity={0.2} />
+                  <stop offset="95%" stopColor={s.color} stopOpacity={0} />
+                </linearGradient>
+              ))}
+            </defs>
+            <CartesianGrid {...gridProps} />
+            <XAxis {...xAxisProps} />
+            <YAxis {...yAxisProps} />
+            <Tooltip
+              contentStyle={tooltipProps.contentStyle}
+              formatter={msTooltipFormatter}
+              labelFormatter={formatTooltipLabel}
+              cursor={tooltipProps.cursor}
+            />
+            {multiSeries.map((s, i) => (
+              <Area
+                key={i}
+                type="monotone"
+                dataKey={`s${i}`}
+                stroke={s.color}
+                strokeWidth={hiddenSeries.has(i) ? 0 : 2}
+                fill={`url(#${uid}ms${i})`}
+                fillOpacity={hiddenSeries.has(i) ? 0 : 1}
+                dot={false}
+                activeDot={hiddenSeries.has(i) ? false : { r: 4, strokeWidth: 0, fill: s.color }}
+                name={s.label}
+                connectNulls
+                animationDuration={700}
+                animationEasing="ease-out"
+                hide={hiddenSeries.has(i)}
+              />
+            ))}
+          </ComposedChart>
+        </ResponsiveContainer>
+      </div>
+    );
+  }
 
   if (dualAxis && data2 && data2.length > 0) {
     return (

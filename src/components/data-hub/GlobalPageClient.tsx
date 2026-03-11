@@ -8,7 +8,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { DataPoint, IndicatorKey, CountryCode, getLatest } from "@/lib/worldbank";
 import KPICard from "@/components/data-hub/KPICard";
 import DataChart from "@/components/data-hub/DataChart";
-import ContextBox from "@/components/data-hub/ContextBox";
+// ContextBox removed — replaced by static description card
+import InfoTooltip from "@/components/data-hub/InfoTooltip";
 
 function FlagIcon({ iso2, className }: { iso2: string; className?: string }) {
   const Comp = AllFlags[iso2.toUpperCase() as keyof typeof AllFlags] as React.FC<{ className?: string; title?: string }> | undefined;
@@ -290,6 +291,8 @@ export default function GlobalPageClient({ initialData }: Props) {
                   ind === "unemployment" ? "negative" :
                   "auto"
                 }
+                indicatorKey={ind}
+                tooltipSource="worldbank"
               />
             </motion.div>
           );
@@ -328,14 +331,15 @@ export default function GlobalPageClient({ initialData }: Props) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4 overflow-hidden"
+        className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4"
       >
         {/* Left accent bar on hover */}
         <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-sm font-semibold text-slate-200 mb-0.5">
+            <h3 className="text-sm font-semibold text-slate-200 mb-0.5 flex items-center gap-1">
               {t(`datahub.ind.${activeIndicator}.label`)}
+              <InfoTooltip indicatorKey={activeIndicator} source="worldbank" />
             </h3>
             {latestYear && (
               <span className="font-mono text-[10px] text-slate-500">
@@ -402,11 +406,12 @@ export default function GlobalPageClient({ initialData }: Props) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.45, ease: "easeOut" }}
-          className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4 overflow-hidden"
+          className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4"
         >
           <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
-          <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-500 mb-3">
+          <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-300 mb-3 flex items-center gap-1">
             {t("datahub.ind.inflation.label")} vs {t("datahub.ind.unemployment.label")}
+            <InfoTooltip indicatorKey="inflation" source="worldbank" />
           </h4>
           <DataChart
             data={kpiData["inflation"] ?? []}
@@ -429,11 +434,12 @@ export default function GlobalPageClient({ initialData }: Props) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.45, delay: 0.08, ease: "easeOut" }}
-          className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4 overflow-hidden"
+          className="group relative bg-slate-900/80 border border-white/[0.07] rounded p-4"
         >
           <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
-          <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-500 mb-3">
+          <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-300 mb-3 flex items-center gap-1">
             {t("datahub.ind.gdp_per_capita.label")}
+            <InfoTooltip indicatorKey="gdp_per_capita" source="worldbank" />
           </h4>
           <DataChart
             data={kpiData["gdp_per_capita"] ?? []}
@@ -447,8 +453,15 @@ export default function GlobalPageClient({ initialData }: Props) {
         </motion.div>
       </div>
 
-      {/* Context Box */}
-      <ContextBox indicatorKey={activeIndicator} />
+      {/* Data Importance Description */}
+      <div className="bg-slate-900/60 border border-white/[0.07] rounded p-5">
+        <h4 className="text-sm font-semibold text-slate-200 mb-2">
+          {t("datahub.global.aboutData.title")}
+        </h4>
+        <p className="text-sm text-slate-400 leading-relaxed">
+          {t("datahub.global.aboutData.body")}
+        </p>
+      </div>
     </div>
   );
 }
